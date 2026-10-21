@@ -31,12 +31,11 @@ updating the references in the HTML).
 
 ## Known limitations
 
-- The "Useful links" section on the homepage still points to UAE government
-  sites (RTA, Dubai Police, Abu Dhabi Police) — left over from the original
-  reference site and inconsistent with the Jordan theme; worth replacing
-  with Jordanian equivalents.
 - The wishlist heart, theme toggle, and mobile hamburger menu icons in the
   header are decorative only.
 - Language choice is passed between pages via a `?lang=ar` URL parameter,
   not persisted storage — it survives normal in-site navigation but resets
   if a URL is opened directly.
+
+## Accounts (demo)
+Register: username, first name, last name, phone, password. Login: username + password. Usernames are unique (case-insensitive). Accounts are stored in the browser (localStorage) with salted SHA-256 password hashes. This is a front-end demo only; a real backend is needed for production.
