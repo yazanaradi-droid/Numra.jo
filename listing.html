@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Listing | x plate.jo</title>
+<meta name="description" content="License plate or mobile number listing on x plate.jo.">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a class="logo" href="index.html">
+      <span class="x">X</span> x plate.jo
+    </a>
+    <nav class="primary">
+      <ul>
+        <li><a href="index.html" onclick="navTo('index.html', event)" data-i18n="nav.home">Home</a></li>
+        <li><a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="nav.plates">License Plates ▾</a>
+          <div class="dropdown">
+            <a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="nav.plates.all">See Plates (All)</a>
+            <a href="#" onclick="openUpload('plate', event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
+            <a href="#" onclick="openUpload('plate', event)" data-i18n="nav.uploadOnCar">Upload Plate On Car</a>
+          </div>
+        </li>
+        <li><a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers">Mobile Numbers ▾</a>
+          <div class="dropdown">
+            <a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers.all">See Mobile Numbers (All)</a>
+            <a href="#" onclick="openUpload('number', event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
+            <a href="#" onclick="openUpload('number', event)" data-i18n="nav.uploadNumberBg">Upload Number On Background</a>
+          </div>
+        </li>
+        <li><a href="#" data-i18n="nav.more">More ▾</a>
+          <div class="dropdown">
+            <a href="#" onclick="openInfo('contact', event)" data-i18n="nav.contact">Contact Us</a>
+            <a href="#" onclick="openInfo('about', event)" data-i18n="nav.about">About Us</a>
+            <a href="#" onclick="openInfo('privacy', event)" data-i18n="nav.privacy">Privacy Policy</a>
+            <a href="#" onclick="openInfo('terms', event)" data-i18n="nav.terms">Terms</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" title="Wishlist">♡</button>
+      <button class="icon-btn" id="langToggle" title="Language" onclick="toggleLang()">EN</button>
+      <button class="icon-btn" title="Theme">◐</button>
+      <span class="auth-guest" id="authGuest">
+        <a class="btn btn-ghost" href="#" onclick="openAuth('login',event)" data-i18n="nav.login">Login</a>
+        <a class="btn btn-ghost" href="#" onclick="openAuth('register',event)" data-i18n="nav.register">Register</a>
+      </span>
+      <span class="auth-user" id="authUser" style="display:none;">
+        <span class="user-chip" id="userChip"></span>
+        <a class="btn btn-ghost" href="#" onclick="logout(event)" data-i18n="nav.logout">Logout</a>
+      </span>
+      <button class="icon-btn menu-toggle" title="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html" onclick="navTo('index.html', event)" data-i18n="nav.home">Home</a> / <a id="detailCrumbType" href="plates.html"></a></div>
+  </div>
+</section>
+
+<section id="listingDetail">
+  <div class="wrap detail-wrap">
+    <div id="detailMsg" class="listing-empty" style="display:block;" data-i18n="detail.loading">Loading...</div>
+    <div id="detailBody" style="display:none;">
+      <h1 id="detailTitle" class="detail-title"></h1>
+
+      <div class="detail-card">
+        <div id="detailVisual" class="detail-visual"></div>
+        <div class="seller-row">
+          <div class="avatar" id="sellerAvatar"></div>
+          <div>
+            <div><span class="by" data-i18n="detail.by">By</span> <strong id="sellerName"></strong></div>
+            <div class="time" id="sellerDate"></div>
+          </div>
+        </div>
+        <div class="detail-price" id="detailPrice"></div>
+        <button type="button" class="contact-btn" id="contactBtn" disabled></button>
+      </div>
+
+      <div class="important-box">
+        <h3>⚠ <span data-i18n="detail.important">Important information</span></h3>
+        <ul>
+          <li data-i18n="detail.tip1">Do not transfer money directly.</li>
+          <li data-i18n="detail.tip2">Meet the seller in person.</li>
+          <li data-i18n="detail.tip3">Verify ownership and transfer procedures before paying.</li>
+        </ul>
+      </div>
+
+      <div id="similarWrap" style="display:none;">
+        <h2 class="similar-title" data-i18n="detail.similar">Similar listings</h2>
+        <div id="similarGrid" class="listings-grid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><span class="x">X</span> x plate.jo</a>
+        <p style="color:var(--muted); font-size:.85rem; margin-top:14px; max-width:260px;" data-i18n="footer.tagline">The biggest marketplace for license plates and mobile numbers.</p>
+      </div>
+      <div>
+        <h5 data-i18n="footer.marketplace">Marketplace</h5>
+        <ul>
+          <li><a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="stats.plates">License Plates</a></li>
+          <li><a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="stats.numbers">Mobile Numbers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 data-i18n="footer.company">Company</h5>
+        <ul>
+          <li><a href="#" onclick="openInfo('about', event)" data-i18n="nav.about">About Us</a></li>
+          <li><a href="#" onclick="openInfo('contact', event)" data-i18n="nav.contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 data-i18n="footer.legal">Legal</h5>
+        <ul>
+          <li><a href="#" onclick="openInfo('privacy', event)" data-i18n="nav.privacy">Privacy Policy</a></li>
+          <li><a href="#" onclick="openInfo('terms', event)" data-i18n="nav.terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="footer.copyright">© 2026 X PLATE.JO Commercial Broker</span>
+      <div style="display:flex; gap:10px;">
+        <a class="social-dot" href="https://instagram.com/xplatecom" target="_blank" rel="noopener">IG</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="registerOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeRegister()">✕</button>
+
+    <div id="registerForm">
+      <h3 data-i18n="modal.title">Create your account</h3>
+      <p class="sub" data-i18n="modal.subtitle">Register with a username to list, buy and negotiate plates and numbers.</p>
+      <form onsubmit="return submitRegister(event)" novalidate autocomplete="off">
+        <div class="upload-error-banner" id="regGlobalErr"></div>
+        <div class="field">
+          <label for="regUsername" data-i18n="modal.username">Username</label>
+          <input id="regUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.usernamePlaceholder" placeholder="e.g. ahmad_k">
+          <div class="hint" id="regUsernameHint" data-i18n="modal.usernameHint">3–20 characters: letters, numbers, . or _</div>
+          <div class="hint error" id="regUsernameErr"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="regFirst" data-i18n="modal.first">First name</label>
+            <input id="regFirst" type="text" autocomplete="given-name" data-i18n-placeholder="modal.firstPlaceholder" placeholder="Ahmad">
+            <div class="hint error" id="regFirstErr"></div>
+          </div>
+          <div class="field">
+            <label for="regLast" data-i18n="modal.last">Last name</label>
+            <input id="regLast" type="text" autocomplete="family-name" data-i18n-placeholder="modal.lastPlaceholder" placeholder="Khalil">
+            <div class="hint error" id="regLastErr"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="regPhone" data-i18n="modal.phone">Phone number</label>
+          <input id="regPhone" type="tel" autocomplete="tel" data-i18n-placeholder="modal.phonePlaceholder" placeholder="079 123 4567">
+          <div class="hint error" id="regPhoneErr"></div>
+        </div>
+        <div class="field">
+          <label for="regPassword" data-i18n="modal.password">Password</label>
+          <input id="regPassword" type="password" autocomplete="new-password" data-i18n-placeholder="modal.passwordPlaceholder" placeholder="At least 6 characters">
+          <div class="hint error" id="regPasswordErr"></div>
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="modal.submit">Create Account</button>
+        <p class="auth-switch"><span data-i18n="modal.haveAccount">Already have an account?</span> <a href="#" onclick="openAuth('login',event)" data-i18n="modal.goLogin">Log in</a></p>
+      </form>
+    </div>
+
+    <div id="loginForm" style="display:none;">
+      <h3 data-i18n="login.title">Log in</h3>
+      <p class="sub" data-i18n="login.subtitle">Enter your username and password.</p>
+      <div class="hint" id="loginNote" style="display:none; color:var(--text); margin-bottom:10px;" data-i18n="login.needed">Please log in (or register) to list a plate or number.</div>
+      <form onsubmit="return submitLogin(event)" novalidate>
+        <div class="upload-error-banner" id="loginErr" data-i18n="login.err">Incorrect username or password.</div>
+        <div class="field">
+          <label for="loginUsername" data-i18n="modal.username">Username</label>
+          <input id="loginUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.usernamePlaceholder" placeholder="e.g. ahmad_k">
+        </div>
+        <div class="field">
+          <label for="loginPassword" data-i18n="modal.password">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" data-i18n-placeholder="login.passwordPlaceholder" placeholder="Your password">
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="login.submit">Log in</button>
+        <p class="auth-switch"><span data-i18n="modal.noAccount">New here?</span> <a href="#" onclick="openAuth('register',event)" data-i18n="modal.goRegister">Create an account</a></p>
+      </form>
+    </div>
+
+    <div id="registerSuccess" class="modal-success">
+      <div class="check">✓</div>
+      <h3 data-i18n="modal.successTitle">Account created!</h3>
+      <p data-i18n="modal.successDesc">Welcome — you are now signed in. This is a demo: your account is stored only in this browser.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="uploadOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeUpload()">✕</button>
+    <div id="uploadForm">
+      <h3 id="uploadTitle" data-i18n="upload.title.plate">List a license plate</h3>
+      <p class="sub" id="uploadSubtitle" data-i18n="upload.subtitle">Fill in the details below — buyers will see this listing.</p>
+      <div class="upload-error-banner" id="uploadErrorBanner" data-i18n="upload.errorBanner">Please check the highlighted fields.</div>
+      <form onsubmit="return submitUpload(event)" novalidate>
+        <div class="field" id="plateFields">
+          <label data-i18n="upload.plateValue">Plate number</label>
+          <div class="field-row">
+            <input id="upCode" type="text" inputmode="numeric" maxlength="2" placeholder="23" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
+            <input id="upNumber" type="text" inputmode="numeric" placeholder="45678" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
+          </div>
+          <div class="hint" data-i18n="upload.codeHint">Code (1–99) and number, shown as code-number.</div>
+        </div>
+        <div class="field" id="numberFieldWrap" style="display:none;">
+          <label for="upValue" data-i18n="upload.numberValue">Mobile number</label>
+          <input id="upValue" type="text" inputmode="tel" placeholder="079 123 4567">
+        </div>
+        <div class="field">
+          <label for="upPrice" data-i18n="upload.price">Price (JOD)</label>
+          <input id="upPrice" type="text" inputmode="decimal" placeholder="1500">
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="upload.submit">Submit Listing</button>
+      </form>
+    </div>
+    <div id="uploadSuccess" class="modal-success">
+      <div class="check">✓</div>
+      <h3 data-i18n="upload.successTitle">Listing ready!</h3>
+      <p data-i18n="upload.successDesc">This is a local demo form, so nothing was actually published — but every field you typed passed validation.</p>
+      <a id="uploadViewLink" href="#" class="btn btn-gold" style="display:none; margin-top:14px;" data-i18n="upload.viewListing">View listings</a>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="infoOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeInfo()">✕</button>
+    <h3 id="infoTitle" data-i18n="nav.contact">Contact Us</h3>
+    <div class="modal-info-body" id="infoBody" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<script>const PAGE_TYPE = 'listing';</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

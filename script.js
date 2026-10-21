@@ -130,6 +130,23 @@
     "login.passwordPlaceholder":{en:"Your password",ar:"كلمة المرور"},
     "login.submit":{en:"Log in",ar:"دخول"},
     "login.err":{en:"Incorrect username or password.",ar:"اسم المستخدم أو كلمة المرور غير صحيحة."},
+    "detail.title.plate":{en:"License plate {x} for sale",ar:"لوحة سيارة {x} للبيع"},
+    "detail.title.number":{en:"Mobile number {x} for sale",ar:"رقم موبايل {x} للبيع"},
+    "nav.plates.crumb":{en:"License Plates",ar:"لوحات السيارات"},
+    "nav.numbers.crumb":{en:"Mobile Numbers",ar:"أرقام الموبايل"},
+    "detail.by":{en:"By",ar:"بواسطة"},
+    "detail.listed":{en:"Listed",ar:"أُضيف في"},
+    "detail.sample":{en:"Sample listing",ar:"إعلان تجريبي"},
+    "detail.showContact":{en:"Show contact number",ar:"عرض رقم التواصل"},
+    "detail.noContact":{en:"No contact number for this sample listing",ar:"لا يوجد رقم تواصل لهذا الإعلان التجريبي"},
+    "detail.waMessage":{en:"Hello, I'm interested in {x} listed on x plate.jo",ar:"مرحباً، أنا مهتم بـ {x} المعروض في x plate.jo"},
+    "detail.important":{en:"Important information",ar:"معلومات مهمة"},
+    "detail.tip1":{en:"Do not transfer money directly.",ar:"لا تقم بتحويل المال مباشرة."},
+    "detail.tip2":{en:"Meet the seller in person.",ar:"قابل البائع شخصياً."},
+    "detail.tip3":{en:"Verify ownership and transfer procedures before paying.",ar:"تحقق من الملكية وإجراءات نقل الملكية قبل الدفع."},
+    "detail.similar":{en:"Similar listings",ar:"إعلانات مشابهة"},
+    "detail.loading":{en:"Loading...",ar:"جارٍ التحميل..."},
+    "detail.notFound":{en:"This listing was not found.",ar:"لم يتم العثور على هذا الإعلان."},
     "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
     "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
@@ -222,6 +239,7 @@
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     applyTranslations(currentLang);
     if(typeof renderListings === 'function') renderListings();
+    renderListingPage();
     const filterInput = document.getElementById('filterInput');
     if(filterInput) filterInput.setAttribute('placeholder',
       translations['filter.placeholder.' + PAGE_TYPE][currentLang]);
@@ -256,6 +274,7 @@
     {type:'number', value:'078 456 7890', price:'380',  seed:true,
       desc:{en:'Straight sequence, budget friendly.', ar:'\u062a\u0633\u0644\u0633\u0644 \u0645\u0628\u0627\u0634\u0631\u060c \u0628\u0633\u0639\u0631 \u0645\u0646\u0627\u0633\u0628.'}}
   ];
+  seedListings.forEach((x,k)=>{ x.id='seed-'+k; });
 
   /* ============ Supabase (shared database + accounts) ============ */
   const SUPABASE_URL = 'https://xfkahevdccmogaxboffy.supabase.co';
@@ -285,6 +304,25 @@
     return String(str).replace(/[&<>"\']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
   }
 
+  function listingHref(item){
+    return 'listing.html?id=' + encodeURIComponent(item.id) + (currentLang === 'ar' ? '&lang=ar' : '');
+  }
+  function listingCardHtml(item){
+    const badgeKey = item.type === 'plate' ? 'listings.plateBadge' : 'listings.numberBadge';
+    const badgeLabel = translations[badgeKey][currentLang];
+    const metaLabel = item.seed ? translations['listings.verified'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : translations['listings.justNow'][currentLang]);
+    const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
+    const valueBlock = item.type === 'plate'
+      ? '<div class="plate"><span class="code">JO</span> ' + escapeHtml(item.code) + ' - ' + escapeHtml(item.number) + '</div>'
+      : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(item.value) + '</div></div>';
+    return '<a class="listing-card" href="' + listingHref(item) + '">' +
+      '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
+      valueBlock +
+      '<div class="price">' + escapeHtml(item.price) + ' ' + priceLabel + '</div>' +
+      '<div class="meta">' + metaLabel + '</div>' +
+      '</a>';
+  }
+
   function renderListings(){
     const grid = document.getElementById('listingsGrid');
     if(!grid) return; // homepage has no listing grid
@@ -310,21 +348,7 @@
     }
     empty.style.display = 'none';
 
-    grid.innerHTML = items.map(item=>{
-      const badgeKey = item.type === 'plate' ? 'listings.plateBadge' : 'listings.numberBadge';
-      const badgeLabel = translations[badgeKey][currentLang];
-      const metaLabel = item.seed ? translations['listings.verified'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : translations['listings.justNow'][currentLang]);
-      const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
-      const valueBlock = item.type === 'plate'
-        ? '<div class="plate"><span class="code">JO</span> ' + escapeHtml(item.code) + ' - ' + escapeHtml(item.number) + '</div>'
-        : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(item.value) + '</div></div>';
-      return '<div class="listing-card">' +
-        '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
-        valueBlock +
-        '<div class="price">' + escapeHtml(item.price) + ' ' + priceLabel + '</div>' +
-        '<div class="meta">' + metaLabel + '</div>' +
-        '</div>';
-    }).join('');
+    grid.innerHTML = items.map(listingCardHtml).join('');
   }
 
   function runFilter(){
@@ -552,6 +576,101 @@
     return false;
   }
 
+  /* ============ listing detail page ============ */
+  let detailItem = null, detailSeller = null, detailState = 'loading';
+
+  function toWhatsAppNumber(phone){
+    let d = String(phone||'').replace(/[^0-9]/g,'');
+    if(d.startsWith('00')) d = d.slice(2);
+    else if(d.startsWith('0')) d = '962' + d.slice(1);
+    return d;
+  }
+  function maskPhone(phone){
+    const p = String(phone||'').replace(/\s+/g,'');
+    return p.length > 3 ? p.slice(0, p.length-3) + 'xxx' : p;
+  }
+  function itemLabel(item){ return item.type === 'plate' ? item.code + ' - ' + item.number : item.value; }
+
+  async function initListingPage(){
+    const root = document.getElementById('listingDetail');
+    if(!root) return;
+    const id = new URLSearchParams(window.location.search).get('id') || '';
+    detailState = 'loading';
+    if(id.startsWith('seed-')){
+      detailItem = seedListings.find(x=>x.id===id) || null;
+      detailSeller = null;
+      detailState = detailItem ? 'ok' : 'missing';
+    } else if(sb && /^[0-9a-f-]{36}$/i.test(id)){
+      try{
+        const {data, error} = await sb.rpc('xp_listing_detail', {lid:id});
+        if(error) throw error;
+        const r = Array.isArray(data) ? data[0] : data;
+        if(r){
+          detailItem = rowToItem(r);
+          detailSeller = {first:r.first_name, last:r.last_name, username:r.username, phone:r.phone};
+          detailState = 'ok';
+        } else detailState = 'missing';
+      }catch(err){ console.warn(err); detailState = 'error'; }
+    } else detailState = 'missing';
+    await loadRemoteListings();
+    renderListingPage();
+  }
+
+  function renderListingPage(){
+    const root = document.getElementById('listingDetail');
+    if(!root) return;
+    const T = k => translations[k][currentLang];
+    const msg = document.getElementById('detailMsg');
+    const body = document.getElementById('detailBody');
+    if(detailState !== 'ok'){
+      body.style.display = 'none'; msg.style.display = 'block';
+      msg.textContent = T(detailState === 'loading' ? 'detail.loading' : (detailState === 'error' ? 'auth.genericErr' : 'detail.notFound'));
+      return;
+    }
+    msg.style.display = 'none'; body.style.display = 'block';
+    const it = detailItem;
+    const label = itemLabel(it);
+    const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
+
+    document.title = label + ' | x plate.jo';
+    document.getElementById('detailTitle').textContent = T(it.type === 'plate' ? 'detail.title.plate' : 'detail.title.number').replace('{x}', label);
+    const crumb = document.getElementById('detailCrumbType');
+    crumb.textContent = T(it.type === 'plate' ? 'nav.plates.crumb' : 'nav.numbers.crumb');
+    crumb.setAttribute('href', (it.type === 'plate' ? 'plates.html' : 'numbers.html') + (currentLang === 'ar' ? '?lang=ar' : ''));
+
+    document.getElementById('detailVisual').innerHTML = it.type === 'plate'
+      ? '<div class="plate plate-lg"><span class="code">JO</span> ' + escapeHtml(it.code) + ' - ' + escapeHtml(it.number) + '</div>'
+      : '<div class="number-lg">' + escapeHtml(it.value) + '</div>';
+
+    const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'x plate.jo';
+    document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
+    document.getElementById('sellerName').textContent = sellerName;
+    const dateStr = it.created ? new Date(it.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : '';
+    document.getElementById('sellerDate').textContent = it.seed || !dateStr ? T('detail.sample') : T('detail.listed') + ' ' + dateStr;
+    document.getElementById('detailPrice').textContent = it.price + ' ' + priceLabel;
+
+    const btn = document.getElementById('contactBtn');
+    if(detailSeller && detailSeller.phone){
+      btn.disabled = false;
+      btn.textContent = T('detail.showContact') + '  ' + maskPhone(detailSeller.phone);
+      btn.onclick = function(){
+        const text = T('detail.waMessage').replace('{x}', label);
+        window.open('https://wa.me/' + toWhatsAppNumber(detailSeller.phone) + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+      };
+    } else {
+      btn.disabled = true;
+      btn.textContent = T('detail.noContact');
+      btn.onclick = null;
+    }
+
+    const sim = userListings.filter(x => x.id !== it.id && x.type === it.type)
+      .sort((a,b)=> (it.type==='plate' ? (b.code===it.code) - (a.code===it.code) : 0))
+      .slice(0, 6);
+    const simWrap = document.getElementById('similarWrap');
+    simWrap.style.display = sim.length ? 'block' : 'none';
+    document.getElementById('similarGrid').innerHTML = sim.map(listingCardHtml).join('');
+  }
+
   /* ============ wire up overlay click-to-close (guarded per page) ============ */
   document.addEventListener('DOMContentLoaded', function(){
     ['registerOverlay','uploadOverlay','infoOverlay'].forEach(id=>{
@@ -579,5 +698,6 @@
     refreshAuthUI();
     renderListings();
     initAuth();
-    loadRemoteListings().then(renderListings);
+    if(document.getElementById('listingDetail')) initListingPage();
+    else loadRemoteListings().then(renderListings);
   });
