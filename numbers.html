@@ -124,6 +124,7 @@
       <h3 data-i18n="modal.title">Create your account</h3>
       <p class="sub" data-i18n="modal.subtitle">Register with a username to list, buy and negotiate plates and numbers.</p>
       <form onsubmit="return submitRegister(event)" novalidate autocomplete="off">
+        <div class="upload-error-banner" id="regGlobalErr"></div>
         <div class="field">
           <label for="regUsername" data-i18n="modal.username">Username</label>
           <input id="regUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.usernamePlaceholder" placeholder="e.g. ahmad_k">
@@ -160,6 +161,7 @@
     <div id="loginForm" style="display:none;">
       <h3 data-i18n="login.title">Log in</h3>
       <p class="sub" data-i18n="login.subtitle">Enter your username and password.</p>
+      <div class="hint" id="loginNote" style="display:none; color:var(--text); margin-bottom:10px;" data-i18n="login.needed">Please log in (or register) to list a plate or number.</div>
       <form onsubmit="return submitLogin(event)" novalidate>
         <div class="upload-error-banner" id="loginErr" data-i18n="login.err">Incorrect username or password.</div>
         <div class="field">
@@ -228,6 +230,7 @@
 </div>
 
 <script>const PAGE_TYPE = 'number';</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

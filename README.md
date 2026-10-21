@@ -39,3 +39,9 @@ updating the references in the HTML).
 
 ## Accounts (demo)
 Register: username, first name, last name, phone, password. Login: username + password. Usernames are unique (case-insensitive). Accounts are stored in the browser (localStorage) with salted SHA-256 password hashes. This is a front-end demo only; a real backend is needed for production.
+
+## Database (Supabase)
+Accounts and listings are stored in Supabase. One-time setup:
+1. Supabase -> SQL Editor -> paste and run `supabase-setup.sql`.
+2. Authentication -> Providers -> Email -> turn OFF "Confirm email".
+Usernames map to an internal email (`username@users.xplate.jo`), so visitors never type an email.

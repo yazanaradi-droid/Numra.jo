@@ -130,6 +130,11 @@
     "login.passwordPlaceholder":{en:"Your password",ar:"كلمة المرور"},
     "login.submit":{en:"Log in",ar:"دخول"},
     "login.err":{en:"Incorrect username or password.",ar:"اسم المستخدم أو كلمة المرور غير صحيحة."},
+    "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
+    "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
+    "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
+    "auth.confirmOn":{en:"Account created, but email confirmation is still enabled in Supabase. Turn off \u201cConfirm email\u201d in Authentication settings.",ar:"تم إنشاء الحساب لكن تأكيد البريد ما زال مفعّلاً في Supabase. عطّل \u201cConfirm email\u201d من إعدادات Authentication."},
+    "upload.serverErr":{en:"Could not save the listing. Please try again.",ar:"تعذّر حفظ الإعلان. حاول مرة أخرى."},
 
     "upload.title.plate":{en:"List a license plate",ar:"أضف لوحة سيارة"},
     "upload.title.number":{en:"List a mobile number",ar:"أضف رقم موبايل"},
@@ -252,10 +257,27 @@
       desc:{en:'Straight sequence, budget friendly.', ar:'\u062a\u0633\u0644\u0633\u0644 \u0645\u0628\u0627\u0634\u0631\u060c \u0628\u0633\u0639\u0631 \u0645\u0646\u0627\u0633\u0628.'}}
   ];
 
-  const LISTINGS_KEY = 'xpj_listings';
-  function loadSavedListings(){ try{ const v=JSON.parse(localStorage.getItem(LISTINGS_KEY)||'[]'); return Array.isArray(v)?v:[]; }catch(e){ return []; } }
-  function saveListings(){ try{ localStorage.setItem(LISTINGS_KEY, JSON.stringify(userListings.filter(i=>!i.seed))); }catch(e){} }
-  const userListings = [...loadSavedListings(), ...seedListings];
+  /* ============ Supabase (shared database + accounts) ============ */
+  const SUPABASE_URL = 'https://xfkahevdccmogaxboffy.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx';   // public (publishable) key, safe in the browser
+  const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+  const USER_EMAIL_DOMAIN = 'users.xplate.jo';   // usernames are mapped to an internal email for Supabase Auth
+  let currentUser = null;
+  let userListings = [...seedListings];
+
+  function rowToItem(r){
+    return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:String(r.price), created:r.created_at};
+  }
+  async function loadRemoteListings(){
+    if(!sb) return;
+    try{
+      const {data, error} = await sb.from('listings')
+        .select('id,user_id,type,code,number,value,price,created_at')
+        .order('created_at', {ascending:false}).limit(500);
+      if(error) throw error;
+      userListings = [...data.map(rowToItem), ...seedListings];
+    }catch(err){ console.warn('Could not load listings:', err); }
+  }
   let currentUploadType = (typeof PAGE_TYPE !== 'undefined') ? PAGE_TYPE : 'plate';
   let filterQuery = '';
 
@@ -291,7 +313,7 @@
     grid.innerHTML = items.map(item=>{
       const badgeKey = item.type === 'plate' ? 'listings.plateBadge' : 'listings.numberBadge';
       const badgeLabel = translations[badgeKey][currentLang];
-      const metaLabel = item.seed ? translations['listings.verified'][currentLang] : translations['listings.justNow'][currentLang];
+      const metaLabel = item.seed ? translations['listings.verified'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : translations['listings.justNow'][currentLang]);
       const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
       const valueBlock = item.type === 'plate'
         ? '<div class="plate"><span class="code">JO</span> ' + escapeHtml(item.code) + ' - ' + escapeHtml(item.number) + '</div>'
@@ -314,6 +336,7 @@
   /* ============ upload modal ============ */
   function openUpload(type, e){
     e.preventDefault();
+    if(!currentUser){ openAuth('login', null, true); return; }
     currentUploadType = type;
     document.getElementById('uploadOverlay').classList.add('open');
     document.getElementById('uploadForm').style.display='block';
@@ -341,7 +364,7 @@
     document.getElementById('uploadOverlay').classList.remove('open');
   }
 
-  function submitUpload(e){
+  async function submitUpload(e){
     e.preventDefault();
     const AR='٠١٢٣٤٥٦٧٨٩', FA='۰۱۲۳۴۵۶۷۸۹';
     const norm = v => String(v).replace(/[٠-٩۰-۹]/g, d=>{ const i=AR.indexOf(d); return i>-1 ? i : FA.indexOf(d); }).trim();
@@ -362,31 +385,24 @@
       else el.classList.remove('field-invalid');
     });
 
-    const banner = document.getElementById('uploadErrorBanner');
-    if(!valid){
-      banner.classList.add('show');
-      return false;
-    }
-    banner.classList.remove('show');
+    if(!valid){ showBanner('uploadErrorBanner','upload.errorBanner'); return false; }
+    showBanner('uploadErrorBanner', null);
+    if(!sb || !currentUser){ closeUpload(); openAuth('login', null, true); return false; }
 
-    const price = document.getElementById('upPrice').value;
-    let newItem;
-    if(currentUploadType === 'plate'){
-      newItem = {
-        type:'plate',
-        code:document.getElementById('upCode').value,
-        number:document.getElementById('upNumber').value,
-        price
-      };
-    } else {
-      newItem = {
-        type:'number',
-        value:document.getElementById('upValue').value,
-        price
-      };
-    }
-    userListings.unshift(newItem);
-    saveListings();
+    const price = Number(document.getElementById('upPrice').value);
+    const row = currentUploadType === 'plate'
+      ? { type:'plate', code:document.getElementById('upCode').value, number:document.getElementById('upNumber').value, price }
+      : { type:'number', value:document.getElementById('upValue').value, price };
+    const submitBtn = document.querySelector('#uploadForm .modal-submit'); submitBtn.disabled = true;
+    try{
+      const {data, error} = await sb.from('listings').insert(row).select().single();
+      if(error) throw error;
+      userListings.unshift(rowToItem(data));
+    }catch(err){
+      console.warn(err);
+      showBanner('uploadErrorBanner','upload.serverErr');
+      return false;
+    }finally{ submitBtn.disabled = false; }
     if(typeof PAGE_TYPE !== 'undefined' && PAGE_TYPE === currentUploadType) renderListings();
 
     document.getElementById('uploadForm').style.display='none';
@@ -413,69 +429,76 @@
     document.getElementById('infoOverlay').classList.remove('open');
   }
 
-  /* ============ accounts (demo: stored in this browser only) ============ */
-  const USERS_KEY='xpj_users', SESSION_KEY='xpj_session';
-  function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY)||'{}'); }catch(e){ return {}; } }
-  function saveUsers(u){ try{ localStorage.setItem(USERS_KEY, JSON.stringify(u)); return true; }catch(e){ return false; } }
-  function getSession(){ try{ return localStorage.getItem(SESSION_KEY); }catch(e){ return null; } }
-  function setSession(k){ try{ if(k) localStorage.setItem(SESSION_KEY,k); else localStorage.removeItem(SESSION_KEY); }catch(e){} }
+  /* ============ accounts (Supabase Auth; username -> internal email) ============ */
   const normUser = s => (s||'').trim().toLowerCase();
+  const toEmail = u => normUser(u) + '@' + USER_EMAIL_DOMAIN;
   const USER_RE = /^[A-Za-z0-9_.]{3,20}$/;
   const PHONE_RE = /^[0-9+\s-]{7,15}$/;
-
-  async function hashPw(pw, salt){
-    const data = new TextEncoder().encode(salt + ':' + pw);
-    if(window.crypto && crypto.subtle){
-      const buf = await crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    }
-    let h=5381; for(const b of data) h=((h<<5)+h+b)>>>0; return 'x'+h.toString(16);
-  }
-  function newSalt(){
-    const a=new Uint8Array(12);
-    if(window.crypto && crypto.getRandomValues) crypto.getRandomValues(a); else for(let i=0;i<a.length;i++) a[i]=Math.floor(Math.random()*256);
-    return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
 
   function setErr(id, key){
     const el=document.getElementById(id); if(!el) return;
     if(key){ el.setAttribute('data-i18n',key); el.textContent=translations[key][currentLang]; el.style.display='block'; }
     else { el.removeAttribute('data-i18n'); el.textContent=''; el.style.display='none'; }
   }
+  function showBanner(id, key){
+    const el=document.getElementById(id); if(!el) return;
+    if(key){ el.setAttribute('data-i18n',key); el.textContent=translations[key][currentLang]; el.classList.add('show'); }
+    else el.classList.remove('show');
+  }
   function markInvalid(inputId, bad){ const i=document.getElementById(inputId); if(i) i.classList.toggle('field-invalid', !!bad); }
 
   function refreshAuthUI(){
-    const key=getSession(), users=loadUsers(), u=key && users[key];
     const g=document.getElementById('authGuest'), a=document.getElementById('authUser'), chip=document.getElementById('userChip');
     if(!g||!a) return;
-    if(u){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent='@'+u.username; }
+    if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent='@'+((currentUser.user_metadata||{}).username||''); }
     else { g.style.display='inline-flex'; a.style.display='none'; chip.textContent=''; }
   }
+  async function initAuth(){
+    if(!sb) return;
+    try{
+      const {data} = await sb.auth.getSession();
+      currentUser = data.session ? data.session.user : null;
+      refreshAuthUI();
+      sb.auth.onAuthStateChange((_ev, session)=>{ currentUser = session ? session.user : null; refreshAuthUI(); });
+    }catch(e){ console.warn(e); }
+  }
 
-  function openAuth(mode, e){
-    if(e) e.preventDefault();
+  function openAuth(mode, e, note){
+    if(e && e.preventDefault) e.preventDefault();
     document.getElementById('registerOverlay').classList.add('open');
     document.getElementById('registerSuccess').classList.remove('show');
     document.getElementById('registerForm').style.display = mode==='register' ? 'block' : 'none';
     document.getElementById('loginForm').style.display = mode==='login' ? 'block' : 'none';
-    document.getElementById('loginErr').classList.remove('show');
+    showBanner('loginErr', null); showBanner('regGlobalErr', null);
+    const ln=document.getElementById('loginNote'); if(ln) ln.style.display = note ? 'block' : 'none';
     ['regUsernameErr','regFirstErr','regLastErr','regPhoneErr','regPasswordErr'].forEach(id=>setErr(id,null));
     document.querySelectorAll('#registerOverlay .field-invalid').forEach(i=>i.classList.remove('field-invalid'));
     setTimeout(()=>{ const f=document.getElementById(mode==='register'?'regUsername':'loginUsername'); if(f) f.focus(); }, 50);
   }
   function openRegister(e){ openAuth('register', e); }
   function closeRegister(){ document.getElementById('registerOverlay').classList.remove('open'); }
-  function logout(e){ if(e) e.preventDefault(); setSession(null); refreshAuthUI(); }
+  async function logout(e){ if(e) e.preventDefault(); if(sb){ try{ await sb.auth.signOut(); }catch(err){} } currentUser=null; refreshAuthUI(); }
 
-  function checkUsername(showFree){
-    const raw=document.getElementById('regUsername').value;
-    if(!USER_RE.test(raw.trim())){ setErr('regUsernameErr','modal.usernameErr'); markInvalid('regUsername',true); return false; }
-    if(loadUsers()[normUser(raw)]){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); return false; }
+  let usernameCheckSeq = 0;
+  async function checkUsername(){
+    const seq = ++usernameCheckSeq;
+    const raw = document.getElementById('regUsername').value.trim();
+    if(!USER_RE.test(raw)){ setErr('regUsernameErr','modal.usernameErr'); markInvalid('regUsername',true); return false; }
+    if(!sb){ setErr('regUsernameErr','auth.offline'); return false; }
+    let free = false;
+    try{
+      const {data, error} = await sb.rpc('username_available', {u: raw});
+      if(error) throw error;
+      free = !!data;
+    }catch(err){ if(seq===usernameCheckSeq){ setErr('regUsernameErr','auth.genericErr'); } return false; }
+    if(seq !== usernameCheckSeq) return false;      // a newer keystroke superseded this check
+    if(!free){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); return false; }
     setErr('regUsernameErr',null); markInvalid('regUsername',false); return true;
   }
 
   async function submitRegister(e){
     e.preventDefault();
+    showBanner('regGlobalErr', null);
     const username=document.getElementById('regUsername').value.trim();
     const first=document.getElementById('regFirst').value.trim();
     const last=document.getElementById('regLast').value.trim();
@@ -483,37 +506,49 @@
     const pw=document.getElementById('regPassword').value;
     let ok=true;
 
-    if(!checkUsername()) ok=false;
     if(first.length<2){ setErr('regFirstErr','modal.nameErr'); markInvalid('regFirst',true); ok=false; } else { setErr('regFirstErr',null); markInvalid('regFirst',false); }
     if(last.length<2){ setErr('regLastErr','modal.nameErr'); markInvalid('regLast',true); ok=false; } else { setErr('regLastErr',null); markInvalid('regLast',false); }
     if(!PHONE_RE.test(phone)){ setErr('regPhoneErr','modal.phoneErr'); markInvalid('regPhone',true); ok=false; } else { setErr('regPhoneErr',null); markInvalid('regPhone',false); }
     if(pw.length<6){ setErr('regPasswordErr','modal.passwordErr'); markInvalid('regPassword',true); ok=false; } else { setErr('regPasswordErr',null); markInvalid('regPassword',false); }
+    if(!(await checkUsername())) ok=false;
     if(!ok) return false;
 
-    /* re-read right before saving so a second tab can't create a duplicate */
-    const users=loadUsers(), key=normUser(username);
-    if(users[key]){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); return false; }
-    const salt=newSalt();
-    users[key]={username, first, last, phone, salt, hash: await hashPw(pw,salt), created: Date.now()};
-    saveUsers(users);
-    setSession(key);
-    refreshAuthUI();
-    document.getElementById('registerForm').style.display='none';
-    document.getElementById('registerSuccess').classList.add('show');
-    document.getElementById('regPassword').value='';
+    const btn=document.querySelector('#registerForm .modal-submit'); btn.disabled=true;
+    try{
+      const {data, error} = await sb.auth.signUp({
+        email: toEmail(username), password: pw,
+        options:{ data:{ username, first_name:first, last_name:last, phone } }
+      });
+      if(error){
+        if(/already|registered|exists|database error/i.test(error.message)){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); }
+        else showBanner('regGlobalErr','auth.genericErr');
+        return false;
+      }
+      if(!data.session){ showBanner('regGlobalErr','auth.confirmOn'); return false; }
+      currentUser = data.session.user; refreshAuthUI();
+      document.getElementById('registerForm').style.display='none';
+      document.getElementById('registerSuccess').classList.add('show');
+      document.getElementById('regPassword').value='';
+    }catch(err){ showBanner('regGlobalErr','auth.genericErr'); }
+    finally{ btn.disabled=false; }
     return false;
   }
 
   async function submitLogin(e){
     e.preventDefault();
+    showBanner('loginErr', null);
+    if(!sb){ showBanner('loginErr','auth.offline'); return false; }
     const uname=document.getElementById('loginUsername').value, pw=document.getElementById('loginPassword').value;
-    const user=loadUsers()[normUser(uname)];
-    const good = user && (await hashPw(pw,user.salt))===user.hash;
-    if(!good){ document.getElementById('loginErr').classList.add('show'); return false; }
-    setSession(normUser(uname));
-    refreshAuthUI();
-    document.getElementById('loginPassword').value='';
-    closeRegister();
+    if(!uname.trim() || !pw){ showBanner('loginErr','login.err'); return false; }
+    const btn=document.querySelector('#loginForm .modal-submit'); btn.disabled=true;
+    try{
+      const {data, error} = await sb.auth.signInWithPassword({ email: toEmail(uname), password: pw });
+      if(error || !data.session){ showBanner('loginErr','login.err'); return false; }
+      currentUser = data.session.user; refreshAuthUI();
+      document.getElementById('loginPassword').value='';
+      closeRegister();
+    }catch(err){ showBanner('loginErr','auth.genericErr'); }
+    finally{ btn.disabled=false; }
     return false;
   }
 
@@ -539,8 +574,10 @@
     }
 
     const ru=document.getElementById('regUsername');
-    if(ru) ru.addEventListener('input', function(){ if(ru.value.trim()) checkUsername(); else { setErr('regUsernameErr',null); markInvalid('regUsername',false); } });
+    if(ru) ru.addEventListener('input', function(){ if(ru.value.trim()){ clearTimeout(ru._t); ru._t=setTimeout(checkUsername,350); } else { setErr('regUsernameErr',null); markInvalid('regUsername',false); } });
     applyTranslations(currentLang);
     refreshAuthUI();
     renderListings();
+    initAuth();
+    loadRemoteListings().then(renderListings);
   });
