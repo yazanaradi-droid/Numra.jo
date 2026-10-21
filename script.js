@@ -271,7 +271,7 @@
   async function loadRemoteListings(){
     if(!sb) return;
     try{
-      const {data, error} = await sb.from('listings')
+      const {data, error} = await sb.from('xp_listings')
         .select('id,user_id,type,code,number,value,price,created_at')
         .order('created_at', {ascending:false}).limit(500);
       if(error) throw error;
@@ -395,7 +395,7 @@
       : { type:'number', value:document.getElementById('upValue').value, price };
     const submitBtn = document.querySelector('#uploadForm .modal-submit'); submitBtn.disabled = true;
     try{
-      const {data, error} = await sb.from('listings').insert(row).select().single();
+      const {data, error} = await sb.from('xp_listings').insert(row).select().single();
       if(error) throw error;
       userListings.unshift(rowToItem(data));
     }catch(err){
@@ -487,7 +487,7 @@
     if(!sb){ setErr('regUsernameErr','auth.offline'); return false; }
     let free = false;
     try{
-      const {data, error} = await sb.rpc('username_available', {u: raw});
+      const {data, error} = await sb.rpc('xp_username_available', {u: raw});
       if(error) throw error;
       free = !!data;
     }catch(err){ if(seq===usernameCheckSeq){ setErr('regUsernameErr','auth.genericErr'); } return false; }
