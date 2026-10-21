@@ -147,6 +147,16 @@
     "detail.similar":{en:"Similar listings",ar:"إعلانات مشابهة"},
     "detail.loading":{en:"Loading...",ar:"جارٍ التحميل..."},
     "detail.notFound":{en:"This listing was not found.",ar:"لم يتم العثور على هذا الإعلان."},
+    "contact.title":{en:"Important before contacting",ar:"هام قبل الاتصال"},
+    "contact.careful":{en:"Be careful",ar:"كن حذراً"},
+    "contact.safety":{en:"For your safety:",ar:"لأجل سلامتك:"},
+    "contact.b1":{en:"Do not transfer any money directly to the seller's bank account.",ar:"لا تقم بتحويل أي مبالغ مالية مباشرةً إلى الحساب البنكي للبائع."},
+    "contact.b2":{en:"Scammers may pose as trusted sellers.",ar:"قد ينتحل المحتالون صفة بائعين موثوقين."},
+    "contact.b3":{en:"Meet the seller in person.",ar:"قابل البائع شخصياً."},
+    "contact.disclaimerLabel":{en:"Disclaimer:",ar:"إخلاء المسؤولية:"},
+    "contact.disclaimer":{en:"our platform is not responsible for any financial loss or fraud resulting from direct dealings.",ar:"منصتنا غير مسؤولة عن أي خسائر مالية أو حالات احتيال ناتجة عن التعاملات المباشرة."},
+    "contact.whatsapp":{en:"WhatsApp",ar:"واتساب"},
+    "contact.close":{en:"Close",ar:"إغلاق"},
     "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
     "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
@@ -285,14 +295,17 @@
   let userListings = [...seedListings];
 
   function rowToItem(r){
-    return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:String(r.price), created:r.created_at};
+    return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:String(r.price), created:r.created_at, phoneMasked:r.phone_masked || null};
   }
   async function loadRemoteListings(){
     if(!sb) return;
     try{
-      const {data, error} = await sb.from('xp_listings')
-        .select('id,user_id,type,code,number,value,price,created_at')
-        .order('created_at', {ascending:false}).limit(500);
+      let {data, error} = await sb.rpc('xp_listings_feed');
+      if(error){   // feed function not installed yet: fall back to the plain table (no phone preview)
+        ({data, error} = await sb.from('xp_listings')
+          .select('id,type,code,number,value,price,created_at')
+          .order('created_at', {ascending:false}).limit(500));
+      }
       if(error) throw error;
       userListings = [...data.map(rowToItem), ...seedListings];
     }catch(err){ console.warn('Could not load listings:', err); }
@@ -319,6 +332,7 @@
       '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
       valueBlock +
       '<div class="price">' + escapeHtml(item.price) + ' ' + priceLabel + '</div>' +
+      (item.phoneMasked ? '<span class="card-phone" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>' : '') +
       '<div class="meta">' + metaLabel + '</div>' +
       '</a>';
   }
@@ -653,10 +667,7 @@
     if(detailSeller && detailSeller.phone){
       btn.disabled = false;
       btn.textContent = T('detail.showContact') + '  ' + maskPhone(detailSeller.phone);
-      btn.onclick = function(){
-        const text = T('detail.waMessage').replace('{x}', label);
-        window.open('https://wa.me/' + toWhatsAppNumber(detailSeller.phone) + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
-      };
+      btn.onclick = function(){ openContact(detailItem, detailSeller); };
     } else {
       btn.disabled = true;
       btn.textContent = T('detail.noContact');
@@ -671,9 +682,43 @@
     document.getElementById('similarGrid').innerHTML = sim.map(listingCardHtml).join('');
   }
 
+  /* ============ contact popup (safety notice + WhatsApp + call) ============ */
+  function openContact(item, seller){
+    const label = itemLabel(item);
+    const num = '+' + toWhatsAppNumber(seller.phone);
+    const text = translations['detail.waMessage'][currentLang].replace('{x}', label);
+    document.getElementById('contactWa').href = 'https://wa.me/' + toWhatsAppNumber(seller.phone) + '?text=' + encodeURIComponent(text);
+    const call = document.getElementById('contactCall');
+    call.href = 'tel:' + num;
+    document.getElementById('contactCallNum').textContent = num;
+    document.getElementById('contactOverlay').classList.add('open');
+  }
+  function closeContact(){ document.getElementById('contactOverlay').classList.remove('open'); }
+
+  async function showContactForItem(id){
+    if(detailItem && detailItem.id === id && detailSeller){ openContact(detailItem, detailSeller); return; }
+    if(!sb) return;
+    try{
+      const {data, error} = await sb.rpc('xp_listing_detail', {lid:id});
+      if(error) throw error;
+      const r = Array.isArray(data) ? data[0] : data;
+      if(r && r.phone) openContact(rowToItem(r), {phone:r.phone});
+    }catch(err){ console.warn(err); }
+  }
+  document.addEventListener('click', function(e){
+    const chip = e.target.closest && e.target.closest('.card-phone');
+    if(chip){ e.preventDefault(); e.stopPropagation(); showContactForItem(chip.getAttribute('data-contact')); }
+  }, true);
+  document.addEventListener('keydown', function(e){
+    if((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('card-phone')){
+      e.preventDefault(); showContactForItem(e.target.getAttribute('data-contact'));
+    }
+    if(e.key === 'Escape'){ const o=document.getElementById('contactOverlay'); if(o) o.classList.remove('open'); }
+  });
+
   /* ============ wire up overlay click-to-close (guarded per page) ============ */
   document.addEventListener('DOMContentLoaded', function(){
-    ['registerOverlay','uploadOverlay','infoOverlay'].forEach(id=>{
+    ['registerOverlay','uploadOverlay','infoOverlay','contactOverlay'].forEach(id=>{
       const el = document.getElementById(id);
       if(el){
         el.addEventListener('click', function(e){
@@ -681,6 +726,7 @@
             if(id === 'registerOverlay') closeRegister();
             if(id === 'uploadOverlay') closeUpload();
             if(id === 'infoOverlay') closeInfo();
+            if(id === 'contactOverlay') closeContact();
           }
         });
       }

@@ -448,3 +448,25 @@ a.listing-card:hover{border-color:var(--gold); transform:translateY(-2px);}
 #similarGrid{grid-template-columns:repeat(3,1fr);}
 @media (max-width:920px){ #similarGrid{grid-template-columns:1fr 1fr;} }
 @media (max-width:600px){ #similarGrid{grid-template-columns:1fr;} .plate.plate-lg{font-size:1.7rem; padding:12px 18px;} }
+
+/* ===== card phone chip + contact popup ===== */
+.card-phone{display:inline-flex; align-items:center; gap:8px; margin:2px 0 12px; padding:7px 12px; border:1px solid var(--line); border-radius:999px; background:var(--surface-2); font-family:var(--font-mono); font-size:.82rem; cursor:pointer;}
+.card-phone:hover{border-color:var(--gold);}
+.card-phone .ph-num{direction:ltr; unicode-bidi:isolate;}
+.contact-modal{max-width:560px; padding:0; overflow:hidden;}
+.contact-head{display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line);}
+.contact-head h3{margin:0; font-size:1.15rem;}
+.contact-head .modal-close{position:static;}
+.contact-banner{display:flex; align-items:center; justify-content:center; gap:22px; margin:18px 22px 4px; padding:20px; border-radius:12px; background:var(--surface-2); border:1px solid var(--line);}
+.contact-banner-text{display:flex; flex-direction:column; gap:2px;}
+.contact-banner-text span{font-family:var(--font-display); font-weight:800; letter-spacing:.06em; color:var(--danger);}
+.contact-banner-text b{font-size:1.5rem;}
+.contact-safety{margin:14px 22px 6px; color:var(--muted); font-size:.9rem;}
+.contact-list{margin:0 22px 18px; padding-inline-start:20px; line-height:1.9; font-size:.9rem; color:var(--muted);}
+.contact-list b{color:var(--text);}
+.contact-actions{display:flex; gap:10px; align-items:center; padding:16px 22px 20px; border-top:1px solid var(--line); flex-wrap:wrap;}
+.contact-close{background:none; border:0; color:var(--muted); cursor:pointer; font-family:inherit; font-size:.9rem; padding:8px 4px;}
+.contact-wa, .contact-call{flex:1 1 150px; text-align:center; padding:13px 16px; border-radius:999px; font-weight:700; color:#fff; text-decoration:none;}
+.contact-wa{background:#25D366;}
+.contact-call{background:var(--gold); direction:ltr;}
+.contact-wa:hover, .contact-call:hover{filter:brightness(1.1);}
