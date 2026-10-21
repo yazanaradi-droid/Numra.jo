@@ -317,6 +317,13 @@
     return String(str).replace(/[&<>"\']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
   }
 
+  function plateHtml(code, number, large){
+    return '<div class="plate' + (large ? ' plate-lg' : '') + '">' +
+      '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
+      '<div class="plate-digits"><span class="pc">' + escapeHtml(code) + '-</span><span class="pn">' + escapeHtml(number) + '</span></div>' +
+      '</div>';
+  }
+
   function listingHref(item){
     return 'listing.html?id=' + encodeURIComponent(item.id) + (currentLang === 'ar' ? '&lang=ar' : '');
   }
@@ -326,7 +333,7 @@
     const metaLabel = item.seed ? translations['listings.verified'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : translations['listings.justNow'][currentLang]);
     const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
     const valueBlock = item.type === 'plate'
-      ? '<div class="plate"><span class="code">JO</span> ' + escapeHtml(item.code) + ' - ' + escapeHtml(item.number) + '</div>'
+      ? plateHtml(item.code, item.number, false)
       : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(item.value) + '</div></div>';
     return '<a class="listing-card" href="' + listingHref(item) + '">' +
       '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
@@ -653,7 +660,7 @@
     crumb.setAttribute('href', (it.type === 'plate' ? 'plates.html' : 'numbers.html') + (currentLang === 'ar' ? '?lang=ar' : ''));
 
     document.getElementById('detailVisual').innerHTML = it.type === 'plate'
-      ? '<div class="plate plate-lg"><span class="code">JO</span> ' + escapeHtml(it.code) + ' - ' + escapeHtml(it.number) + '</div>'
+      ? plateHtml(it.code, it.number, true)
       : '<div class="number-lg">' + escapeHtml(it.value) + '</div>';
 
     const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'x plate.jo';
