@@ -64,13 +64,13 @@
 
     "links.tag":{en:"Resources",ar:"مصادر"},
     "links.title":{en:"Useful links",ar:"روابط مفيدة"},
-    "links.subtitle":{en:"Official government resources for licensing, fines and traffic services.",ar:"مصادر حكومية رسمية للترخيص والمخالفات وخدمات المرور."},
-    "links.rta.name":{en:"Roads and Transport Authority",ar:"هيئة الطرق والمواصلات"},
-    "links.rta.desc":{en:"Online gateway for Dubai traffic, fines, licensing, public transport and nol services.",ar:"البوابة الإلكترونية لمرور دبي والمخالفات والترخيص والمواصلات العامة."},
-    "links.dxb.name":{en:"Dubai Police",ar:"شرطة دبي"},
-    "links.dxb.desc":{en:"Traffic fines inquiry, accident reports and public safety services for Dubai.",ar:"استعلام عن المخالفات المرورية وبلاغات الحوادث وخدمات السلامة العامة."},
-    "links.auh.name":{en:"Abu Dhabi Police",ar:"شرطة أبوظبي"},
-    "links.auh.desc":{en:"Traffic profiles, tickets, and reserved and registered plate services.",ar:"الملفات المرورية والمخالفات وخدمات اللوحات المحجوزة والمسجلة."},
+    "links.subtitle":{en:"Official Jordanian resources for licensing, fines and telecom services.",ar:"مصادر أردنية رسمية للترخيص والمخالفات وخدمات الاتصالات."},
+    "links.psd.name":{en:"Public Security Directorate – Traffic & Licensing",ar:"مديرية الأمن العام – السير والترخيص"},
+    "links.psd.desc":{en:"Vehicle and driver licensing, traffic fines and plate services in Jordan.",ar:"ترخيص المركبات والسائقين والمخالفات المرورية وخدمات اللوحات في الأردن."},
+    "links.trc.name":{en:"Telecommunications Regulatory Commission",ar:"هيئة تنظيم قطاع الاتصالات"},
+    "links.trc.desc":{en:"Regulator of mobile operators and numbering in Jordan (Zain, Orange, Umniah).",ar:"الجهة المنظِّمة لمشغلي الهاتف المحمول والترقيم في الأردن (زين، أورنج، أمنية)."},
+    "links.snd.name":{en:"Sanad – Government Services",ar:"سند – الخدمات الحكومية"},
+    "links.snd.desc":{en:"The official portal for e-government services in Jordan.",ar:"البوابة الرسمية للخدمات الحكومية الإلكترونية في الأردن."},
     "links.visit":{en:"Visit the website →",ar:"زيارة الموقع ←"},
 
     "register.kicker":{en:"Join x plate.jo",ar:"انضم إلى x plate.jo"},
@@ -96,22 +96,40 @@
     "footer.legal":{en:"Legal",ar:"قانوني"},
     "footer.copyright":{en:"© 2026 X PLATE.JO Commercial Broker",ar:"© 2026 إكس بليت.جو للوساطة التجارية"},
 
+    "nav.login":{en:"Login",ar:"دخول"},
+    "nav.logout":{en:"Logout",ar:"خروج"},
     "modal.title":{en:"Create your account",ar:"أنشئ حسابك"},
-    "modal.subtitle":{en:"Register to list, buy and negotiate plates and numbers.",ar:"سجّل لعرض وشراء والتفاوض على اللوحات والأرقام."},
-    "modal.name":{en:"Full name",ar:"الاسم الكامل"},
-    "modal.namePlaceholder":{en:"e.g. Ahmad Khalil",ar:"مثال: أحمد خليل"},
-    "modal.email":{en:"Email",ar:"البريد الإلكتروني"},
-    "modal.emailErr":{en:"Enter a valid email address.",ar:"أدخل بريداً إلكترونياً صحيحاً."},
-    "modal.phone":{en:"Mobile number",ar:"رقم الموبايل"},
+    "modal.subtitle":{en:"Register with a username to list, buy and negotiate plates and numbers.",ar:"سجّل باسم مستخدم لعرض وشراء والتفاوض على اللوحات والأرقام."},
+    "modal.username":{en:"Username",ar:"اسم المستخدم"},
+    "modal.usernamePlaceholder":{en:"e.g. ahmad_k",ar:"مثال: ahmad_k"},
+    "modal.usernameHint":{en:"3–20 characters: letters, numbers, . or _",ar:"من 3 إلى 20 حرفاً: أحرف إنجليزية وأرقام و . أو _"},
+    "modal.usernameErr":{en:"Username must be 3–20 characters: letters, numbers, . or _",ar:"اسم المستخدم من 3 إلى 20 حرفاً: أحرف إنجليزية وأرقام و . أو _"},
+    "modal.usernameTaken":{en:"This username is already taken. Please choose another.",ar:"اسم المستخدم مستخدم مسبقاً. اختر اسماً آخر."},
+    "modal.usernameFree":{en:"Username is available.",ar:"اسم المستخدم متاح."},
+    "modal.first":{en:"First name",ar:"الاسم الأول"},
+    "modal.firstPlaceholder":{en:"Ahmad",ar:"أحمد"},
+    "modal.last":{en:"Last name",ar:"الاسم الأخير"},
+    "modal.lastPlaceholder":{en:"Khalil",ar:"خليل"},
+    "modal.nameErr":{en:"Required (at least 2 characters).",ar:"مطلوب (حرفان على الأقل)."},
+    "modal.phone":{en:"Phone number",ar:"رقم الهاتف"},
     "modal.phonePlaceholder":{en:"079 123 4567",ar:"079 123 4567"},
     "modal.phoneErr":{en:"Enter a valid phone number.",ar:"أدخل رقم هاتف صحيح."},
     "modal.password":{en:"Password",ar:"كلمة المرور"},
     "modal.passwordPlaceholder":{en:"At least 6 characters",ar:"6 أحرف على الأقل"},
-    "modal.passwordHint":{en:"Minimum 6 characters.",ar:"6 أحرف كحد أدنى."},
+    "modal.passwordErr":{en:"Password must be at least 6 characters.",ar:"كلمة المرور 6 أحرف على الأقل."},
     "modal.submit":{en:"Create Account",ar:"إنشاء الحساب"},
-    "modal.successTitle":{en:"You're in!",ar:"تم بنجاح!"},
-    "modal.successDesc":{en:"This is a local demo form, so no account was actually created — but every field you typed passed validation.",
-                          ar:"هذا نموذج تجريبي محلي، لذا لم يتم إنشاء أي حساب فعلياً — لكن كل حقل أدخلته اجتاز التحقق."},
+    "modal.haveAccount":{en:"Already have an account?",ar:"لديك حساب بالفعل؟"},
+    "modal.goLogin":{en:"Log in",ar:"تسجيل الدخول"},
+    "modal.noAccount":{en:"New here?",ar:"مستخدم جديد؟"},
+    "modal.goRegister":{en:"Create an account",ar:"أنشئ حساباً"},
+    "modal.successTitle":{en:"Account created!",ar:"تم إنشاء الحساب!"},
+    "modal.successDesc":{en:"Welcome — you are now signed in. This is a demo: your account is stored only in this browser.",
+                          ar:"أهلاً بك — تم تسجيل دخولك. هذا نموذج تجريبي: يُحفظ حسابك في هذا المتصفح فقط."},
+    "login.title":{en:"Log in",ar:"تسجيل الدخول"},
+    "login.subtitle":{en:"Enter your username and password.",ar:"أدخل اسم المستخدم وكلمة المرور."},
+    "login.passwordPlaceholder":{en:"Your password",ar:"كلمة المرور"},
+    "login.submit":{en:"Log in",ar:"دخول"},
+    "login.err":{en:"Incorrect username or password.",ar:"اسم المستخدم أو كلمة المرور غير صحيحة."},
 
     "upload.title.plate":{en:"List a license plate",ar:"أضف لوحة سيارة"},
     "upload.title.number":{en:"List a mobile number",ar:"أضف رقم موبايل"},
@@ -142,8 +160,8 @@
                            ar:"هذا نموذج تجريبي محلي، لذا لم يتم نشر أي شيء فعلياً — لكن كل حقل أدخلته اجتاز التحقق."},
     "upload.viewListing":{en:"View listings",ar:"عرض الإعلانات"},
 
-    "info.contact.body":{en:'<p>We\u2019d love to hear from you — this is placeholder demo contact info:</p><ul><li>Email: support@xplate.jo</li><li>Phone: +962 6 000 0000</li><li>Location: Amman, Jordan</li></ul>',
-                         ar:'<p>يسعدنا تواصلك معنا — هذه معلومات اتصال تجريبية:</p><ul><li>البريد الإلكتروني: support@xplate.jo</li><li>الهاتف: 0000 000 6 962+</li><li>الموقع: عمان، الأردن</li></ul>'},
+    "info.contact.body":{en:'<p>We\u2019d love to hear from you — this is placeholder demo contact info:</p><ul><li>Email: support@xplate.jo</li><li>Location: Amman, Jordan</li></ul>',
+                         ar:'<p>يسعدنا تواصلك معنا — هذه معلومات اتصال تجريبية:</p><ul><li>البريد الإلكتروني: support@xplate.jo</li><li>الموقع: عمان، الأردن</li></ul>'},
     "info.about.body":{en:'<p>x plate.jo is a demo marketplace for buying and selling license plates and mobile numbers.</p><p>This page is placeholder content built for a local prototype — it is not a real company.</p>',
                        ar:'<p>x plate.jo هي منصة تجريبية لبيع وشراء لوحات السيارات وأرقام الموبايل.</p><p>هذه الصفحة محتوى تجريبي لعرض توضيحي محلي — وليست شركة حقيقية.</p>'},
     "info.privacy.body":{en:'<p>Placeholder privacy policy for demo purposes:</p><ul><li>We would only collect the information needed to create listings and accounts.</li><li>We would never sell personal data to third parties.</li><li>You could request deletion of your data at any time.</li></ul>',
@@ -393,35 +411,107 @@
     document.getElementById('infoOverlay').classList.remove('open');
   }
 
-  /* ============ register modal ============ */
-  function openRegister(e){
-    e.preventDefault();
+  /* ============ accounts (demo: stored in this browser only) ============ */
+  const USERS_KEY='xpj_users', SESSION_KEY='xpj_session';
+  function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY)||'{}'); }catch(e){ return {}; } }
+  function saveUsers(u){ try{ localStorage.setItem(USERS_KEY, JSON.stringify(u)); return true; }catch(e){ return false; } }
+  function getSession(){ try{ return localStorage.getItem(SESSION_KEY); }catch(e){ return null; } }
+  function setSession(k){ try{ if(k) localStorage.setItem(SESSION_KEY,k); else localStorage.removeItem(SESSION_KEY); }catch(e){} }
+  const normUser = s => (s||'').trim().toLowerCase();
+  const USER_RE = /^[A-Za-z0-9_.]{3,20}$/;
+  const PHONE_RE = /^[0-9+\s-]{7,15}$/;
+
+  async function hashPw(pw, salt){
+    const data = new TextEncoder().encode(salt + ':' + pw);
+    if(window.crypto && crypto.subtle){
+      const buf = await crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    let h=5381; for(const b of data) h=((h<<5)+h+b)>>>0; return 'x'+h.toString(16);
+  }
+  function newSalt(){
+    const a=new Uint8Array(12);
+    if(window.crypto && crypto.getRandomValues) crypto.getRandomValues(a); else for(let i=0;i<a.length;i++) a[i]=Math.floor(Math.random()*256);
+    return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function setErr(id, key){
+    const el=document.getElementById(id); if(!el) return;
+    if(key){ el.setAttribute('data-i18n',key); el.textContent=translations[key][currentLang]; el.style.display='block'; }
+    else { el.removeAttribute('data-i18n'); el.textContent=''; el.style.display='none'; }
+  }
+  function markInvalid(inputId, bad){ const i=document.getElementById(inputId); if(i) i.classList.toggle('field-invalid', !!bad); }
+
+  function refreshAuthUI(){
+    const key=getSession(), users=loadUsers(), u=key && users[key];
+    const g=document.getElementById('authGuest'), a=document.getElementById('authUser'), chip=document.getElementById('userChip');
+    if(!g||!a) return;
+    if(u){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent='@'+u.username; }
+    else { g.style.display='inline-flex'; a.style.display='none'; chip.textContent=''; }
+  }
+
+  function openAuth(mode, e){
+    if(e) e.preventDefault();
     document.getElementById('registerOverlay').classList.add('open');
-    document.getElementById('registerForm').style.display='block';
     document.getElementById('registerSuccess').classList.remove('show');
+    document.getElementById('registerForm').style.display = mode==='register' ? 'block' : 'none';
+    document.getElementById('loginForm').style.display = mode==='login' ? 'block' : 'none';
+    document.getElementById('loginErr').classList.remove('show');
+    ['regUsernameErr','regFirstErr','regLastErr','regPhoneErr','regPasswordErr'].forEach(id=>setErr(id,null));
+    document.querySelectorAll('#registerOverlay .field-invalid').forEach(i=>i.classList.remove('field-invalid'));
+    setTimeout(()=>{ const f=document.getElementById(mode==='register'?'regUsername':'loginUsername'); if(f) f.focus(); }, 50);
   }
-  function closeRegister(){
-    document.getElementById('registerOverlay').classList.remove('open');
+  function openRegister(e){ openAuth('register', e); }
+  function closeRegister(){ document.getElementById('registerOverlay').classList.remove('open'); }
+  function logout(e){ if(e) e.preventDefault(); setSession(null); refreshAuthUI(); }
+
+  function checkUsername(showFree){
+    const raw=document.getElementById('regUsername').value;
+    if(!USER_RE.test(raw.trim())){ setErr('regUsernameErr','modal.usernameErr'); markInvalid('regUsername',true); return false; }
+    if(loadUsers()[normUser(raw)]){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); return false; }
+    setErr('regUsernameErr',null); markInvalid('regUsername',false); return true;
   }
-  function submitRegister(e){
+
+  async function submitRegister(e){
     e.preventDefault();
-    const email = document.getElementById('regEmail');
-    const phone = document.getElementById('regPhone');
-    let valid = true;
+    const username=document.getElementById('regUsername').value.trim();
+    const first=document.getElementById('regFirst').value.trim();
+    const last=document.getElementById('regLast').value.trim();
+    const phone=document.getElementById('regPhone').value.trim();
+    const pw=document.getElementById('regPassword').value;
+    let ok=true;
 
-    if(!email.checkValidity()){ document.getElementById('emailErr').style.display='block'; valid=false; }
-    else { document.getElementById('emailErr').style.display='none'; }
+    if(!checkUsername()) ok=false;
+    if(first.length<2){ setErr('regFirstErr','modal.nameErr'); markInvalid('regFirst',true); ok=false; } else { setErr('regFirstErr',null); markInvalid('regFirst',false); }
+    if(last.length<2){ setErr('regLastErr','modal.nameErr'); markInvalid('regLast',true); ok=false; } else { setErr('regLastErr',null); markInvalid('regLast',false); }
+    if(!PHONE_RE.test(phone)){ setErr('regPhoneErr','modal.phoneErr'); markInvalid('regPhone',true); ok=false; } else { setErr('regPhoneErr',null); markInvalid('regPhone',false); }
+    if(pw.length<6){ setErr('regPasswordErr','modal.passwordErr'); markInvalid('regPassword',true); ok=false; } else { setErr('regPasswordErr',null); markInvalid('regPassword',false); }
+    if(!ok) return false;
 
-    if(!phone.checkValidity()){ document.getElementById('phoneErr').style.display='block'; valid=false; }
-    else { document.getElementById('phoneErr').style.display='none'; }
-
-    if(!document.getElementById('regName').checkValidity()) valid=false;
-    if(!document.getElementById('regPassword').checkValidity()) valid=false;
-
-    if(!valid) return false;
-
+    /* re-read right before saving so a second tab can't create a duplicate */
+    const users=loadUsers(), key=normUser(username);
+    if(users[key]){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); return false; }
+    const salt=newSalt();
+    users[key]={username, first, last, phone, salt, hash: await hashPw(pw,salt), created: Date.now()};
+    saveUsers(users);
+    setSession(key);
+    refreshAuthUI();
     document.getElementById('registerForm').style.display='none';
     document.getElementById('registerSuccess').classList.add('show');
+    document.getElementById('regPassword').value='';
+    return false;
+  }
+
+  async function submitLogin(e){
+    e.preventDefault();
+    const uname=document.getElementById('loginUsername').value, pw=document.getElementById('loginPassword').value;
+    const user=loadUsers()[normUser(uname)];
+    const good = user && (await hashPw(pw,user.salt))===user.hash;
+    if(!good){ document.getElementById('loginErr').classList.add('show'); return false; }
+    setSession(normUser(uname));
+    refreshAuthUI();
+    document.getElementById('loginPassword').value='';
+    closeRegister();
     return false;
   }
 
@@ -446,6 +536,9 @@
       filterInput.addEventListener('input', runFilter);
     }
 
+    const ru=document.getElementById('regUsername');
+    if(ru) ru.addEventListener('input', function(){ if(ru.value.trim()) checkUsername(); else { setErr('regUsernameErr',null); markInvalid('regUsername',false); } });
     applyTranslations(currentLang);
+    refreshAuthUI();
     renderListings();
   });
