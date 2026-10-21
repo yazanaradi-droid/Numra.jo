@@ -318,7 +318,9 @@
   }
 
   function plateHtml(code, number, large){
-    return '<div class="plate' + (large ? ' plate-lg' : '') + '">' +
+    const L = String(code).length + 1 + String(number).length;          // characters on the plate (code + dash + number)
+    const fs = Math.min(0.2, 0.60 / ((L + 0.6) * 0.5)).toFixed(3);   // shrink digits so long numbers still fit
+    return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:' + fs + '">' +
       '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
       '<div class="plate-digits"><span class="pc">' + escapeHtml(code) + '-</span><span class="pn">' + escapeHtml(number) + '</span></div>' +
       '</div>';
