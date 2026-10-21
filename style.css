@@ -410,3 +410,17 @@
 
   /* ===== homepage category cards (no listing data shown) ===== */
   .category-card-link{display:block; text-decoration:none;}
+
+/* ===== auth (login / register) ===== */
+.auth-guest, .auth-user{display:inline-flex; align-items:center; gap:10px;}
+.user-chip{font-family:'JetBrains Mono',monospace; font-size:.82rem; color:var(--text); background:var(--surface-2); border:1px solid var(--line); border-radius:999px; padding:7px 12px; direction:ltr; unicode-bidi:isolate;}
+.auth-switch{margin-top:14px; text-align:center; font-size:.85rem; color:var(--muted);}
+.auth-switch a{color:var(--gold); font-weight:600;}
+#loginErr{margin-bottom:12px;}
+@media (max-width:520px){ #registerForm .field-row{grid-template-columns:1fr;} .user-chip{display:none;} }
+
+/* ===== homepage: all text white ===== */
+body.home{--text:#FFFFFF; --muted:#FFFFFF;}
+body.home :is(p,li,span,h1,h2,h3,h4,h5,label,a,div):not(.modal-overlay *){color:#FFFFFF;}
+body.home .modal-overlay{--muted:#8B93A3;}
+body.home .mark{color:#FFFFFF !important;}
