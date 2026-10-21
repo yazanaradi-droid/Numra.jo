@@ -252,7 +252,10 @@
       desc:{en:'Straight sequence, budget friendly.', ar:'\u062a\u0633\u0644\u0633\u0644 \u0645\u0628\u0627\u0634\u0631\u060c \u0628\u0633\u0639\u0631 \u0645\u0646\u0627\u0633\u0628.'}}
   ];
 
-  const userListings = [...seedListings];
+  const LISTINGS_KEY = 'xpj_listings';
+  function loadSavedListings(){ try{ const v=JSON.parse(localStorage.getItem(LISTINGS_KEY)||'[]'); return Array.isArray(v)?v:[]; }catch(e){ return []; } }
+  function saveListings(){ try{ localStorage.setItem(LISTINGS_KEY, JSON.stringify(userListings.filter(i=>!i.seed))); }catch(e){} }
+  const userListings = [...loadSavedListings(), ...seedListings];
   let currentUploadType = (typeof PAGE_TYPE !== 'undefined') ? PAGE_TYPE : 'plate';
   let filterQuery = '';
 
@@ -383,6 +386,7 @@
       };
     }
     userListings.unshift(newItem);
+    saveListings();
     if(typeof PAGE_TYPE !== 'undefined' && PAGE_TYPE === currentUploadType) renderListings();
 
     document.getElementById('uploadForm').style.display='none';
