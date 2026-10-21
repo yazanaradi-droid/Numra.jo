@@ -345,6 +345,7 @@
     const isPlate = currentUploadType === 'plate';
     const ids = isPlate ? ['upCode','upNumber','upPrice'] : ['upValue','upPrice'];
     ids.forEach(id=>{ const el=document.getElementById(id); el.value = norm(el.value); });
+    { const pr=document.getElementById('upPrice'); pr.value = pr.value.replace(/[,\u066c\u060c\s]/g,'').replace(/\u066b/g,'.').replace(/[^0-9.]/g,''); }
     const checks = {
       upCode:  v => /^\d{1,2}$/.test(v) && +v>=1 && +v<=99,
       upNumber:v => v.length>=1,
