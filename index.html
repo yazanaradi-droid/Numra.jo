@@ -8,7 +8,7 @@
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="home">
 
 <header>
   <div class="wrap nav-row">
@@ -23,8 +23,6 @@
             <a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="nav.plates.all">See Plates (All)</a>
             <a href="#" onclick="openUpload('plate', event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
             <a href="#" onclick="openUpload('plate', event)" data-i18n="nav.uploadOnCar">Upload Plate On Car</a>
-            <a href="#" onclick="openUpload('plate', event)" data-i18n="nav.uploadPackage">Upload Package</a>
-            <a href="#" onclick="openUpload('plate', event)" data-i18n="nav.uploadDiscount">Upload Discount</a>
           </div>
         </li>
         <li><a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers">Mobile Numbers ▾</a>
@@ -32,8 +30,6 @@
             <a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers.all">See Mobile Numbers (All)</a>
             <a href="#" onclick="openUpload('number', event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
             <a href="#" onclick="openUpload('number', event)" data-i18n="nav.uploadNumberBg">Upload Number On Background</a>
-            <a href="#" onclick="openUpload('number', event)" data-i18n="nav.uploadPackage">Upload Package</a>
-            <a href="#" onclick="openUpload('number', event)" data-i18n="nav.uploadDiscount">Upload Discount</a>
           </div>
         </li>
         <li><a href="#" data-i18n="nav.more">More ▾</a>
@@ -41,7 +37,6 @@
             <a href="#" onclick="openInfo('contact', event)" data-i18n="nav.contact">Contact Us</a>
             <a href="#" onclick="openInfo('about', event)" data-i18n="nav.about">About Us</a>
             <a href="#" onclick="openInfo('privacy', event)" data-i18n="nav.privacy">Privacy Policy</a>
-            <a href="#" onclick="openInfo('refund', event)" data-i18n="nav.refund">Refund Policy</a>
             <a href="#" onclick="openInfo('terms', event)" data-i18n="nav.terms">Terms</a>
           </div>
         </li>
@@ -51,7 +46,14 @@
       <button class="icon-btn" title="Wishlist">♡</button>
       <button class="icon-btn" id="langToggle" title="Language" onclick="toggleLang()">EN</button>
       <button class="icon-btn" title="Theme">◐</button>
-      <a class="btn btn-ghost" href="#" onclick="openRegister(event)" data-i18n="nav.register">Register</a>
+      <span class="auth-guest" id="authGuest">
+        <a class="btn btn-ghost" href="#" onclick="openAuth('login',event)" data-i18n="nav.login">Login</a>
+        <a class="btn btn-ghost" href="#" onclick="openAuth('register',event)" data-i18n="nav.register">Register</a>
+      </span>
+      <span class="auth-user" id="authUser" style="display:none;">
+        <span class="user-chip" id="userChip"></span>
+        <a class="btn btn-ghost" href="#" onclick="logout(event)" data-i18n="nav.logout">Logout</a>
+      </span>
       <button class="icon-btn menu-toggle" title="Menu">☰</button>
     </div>
   </div>
@@ -96,20 +98,6 @@
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <div class="urgent">
-      <div>
-        <h3 data-i18n="urgent.title">Need to sell your asset urgently?</h3>
-        <p data-i18n="urgent.desc">Get your plate or number in front of serious buyers fast, with priority placement.</p>
-      </div>
-      <div style="display:flex; align-items:center; gap:20px;">
-        <span class="flame">⚡</span>
-        <a class="btn btn-gold" href="#" data-i18n="urgent.cta">Yes, Urgent!</a>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section>
   <div class="wrap">
@@ -117,24 +105,24 @@
       <div>
         <span class="tag" data-i18n="links.tag">Resources</span>
         <h2 data-i18n="links.title">Useful links</h2>
-        <p data-i18n="links.subtitle">Official government resources for licensing, fines and traffic services.</p>
+        <p data-i18n="links.subtitle">Official Jordanian resources for licensing, fines and telecom services.</p>
       </div>
     </div>
     <div class="links-grid">
       <div class="link-card">
-        <div class="org"><div class="mark">RTA</div><h4 data-i18n="links.rta.name">Roads and Transport Authority</h4></div>
-        <p data-i18n="links.rta.desc">Online gateway for Dubai traffic, fines, licensing, public transport and nol services.</p>
-        <a class="visit" href="https://www.rta.ae/" target="_blank" rel="noopener" data-i18n="links.visit">Visit the website →</a>
+        <div class="org"><div class="mark">PSD</div><h4 data-i18n="links.psd.name">Public Security Directorate – Traffic & Licensing</h4></div>
+        <p data-i18n="links.psd.desc">Vehicle and driver licensing, traffic fines and plate services in Jordan.</p>
+        <a class="visit" href="https://www.psd.gov.jo/" target="_blank" rel="noopener" data-i18n="links.visit">Visit the website →</a>
       </div>
       <div class="link-card">
-        <div class="org"><div class="mark">DXB</div><h4 data-i18n="links.dxb.name">Dubai Police</h4></div>
-        <p data-i18n="links.dxb.desc">Traffic fines inquiry, accident reports and public safety services for Dubai.</p>
-        <a class="visit" href="https://www.dubaipolice.gov.ae/" target="_blank" rel="noopener" data-i18n="links.visit">Visit the website →</a>
+        <div class="org"><div class="mark">TRC</div><h4 data-i18n="links.trc.name">Telecommunications Regulatory Commission</h4></div>
+        <p data-i18n="links.trc.desc">Regulator of mobile operators and numbering in Jordan (Zain, Orange, Umniah).</p>
+        <a class="visit" href="https://www.trc.gov.jo/" target="_blank" rel="noopener" data-i18n="links.visit">Visit the website →</a>
       </div>
       <div class="link-card">
-        <div class="org"><div class="mark">AUH</div><h4 data-i18n="links.auh.name">Abu Dhabi Police</h4></div>
-        <p data-i18n="links.auh.desc">Traffic profiles, tickets, and reserved and registered plate services.</p>
-        <a class="visit" href="https://www.adpolice.gov.ae/" target="_blank" rel="noopener" data-i18n="links.visit">Visit the website →</a>
+        <div class="org"><div class="mark">SND</div><h4 data-i18n="links.snd.name">Sanad – Government Services</h4></div>
+        <p data-i18n="links.snd.desc">The official portal for e-government services in Jordan.</p>
+        <a class="visit" href="https://www.sanad.gov.jo/" target="_blank" rel="noopener" data-i18n="links.visit">Visit the website →</a>
       </div>
     </div>
   </div>
@@ -154,37 +142,9 @@
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <span class="tag" data-i18n="tags.tag">Browse by category</span>
-        <h2 data-i18n="tags.title">Tag clouds</h2>
-      </div>
-    </div>
-    <div class="tag-cloud">
-      <a class="tag-pill" href="plates.html" onclick="navTo('plates.html', event)">#Plates</a>
-      <a class="tag-pill" href="numbers.html" onclick="navTo('numbers.html', event)">#Numbers</a>
-      <a class="tag-pill" href="numbers.html" onclick="navTo('numbers.html', event)">#Zain</a>
-      <a class="tag-pill" href="numbers.html" onclick="navTo('numbers.html', event)">#Orange</a>
-      <a class="tag-pill" href="plates.html" onclick="navTo('plates.html', event)">#VIP-Plates</a>
-      <a class="tag-pill" href="numbers.html" onclick="navTo('numbers.html', event)">#VIP-Numbers</a>
-    </div>
-  </div>
-</section>
 
 <section>
-  <div class="wrap two-col">
-    <div>
-      <div class="section-head" style="margin-bottom:16px;">
-        <div><span class="tag" data-i18n="short.tag">Quick access</span><h2 style="font-size:1.4rem;" data-i18n="short.title">Short links</h2></div>
-      </div>
-      <ul class="stat-list">
-        <li><a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="stats.plates">License Plates</a><span class="count">+90K</span></li>
-        <li><a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="stats.numbers">Mobile Numbers</a><span class="count">+120K</span></li>
-      </ul>
-    </div>
-    <div>
+  <div class="wrap">
       <div class="section-head" style="margin-bottom:16px;">
         <div><span class="tag" data-i18n="community.tag">Community</span><h2 style="font-size:1.4rem;" data-i18n="community.title">Joined recently</h2></div>
       </div>
@@ -222,7 +182,6 @@
         <h5 data-i18n="footer.legal">Legal</h5>
         <ul>
           <li><a href="#" onclick="openInfo('privacy', event)" data-i18n="nav.privacy">Privacy Policy</a></li>
-          <li><a href="#" onclick="openInfo('refund', event)" data-i18n="nav.refund">Refund Policy</a></li>
           <li><a href="#" onclick="openInfo('terms', event)" data-i18n="nav.terms">Terms</a></li>
         </ul>
       </div>
@@ -239,36 +198,66 @@
 <div class="modal-overlay" id="registerOverlay">
   <div class="modal">
     <button class="modal-close" onclick="closeRegister()">✕</button>
+
     <div id="registerForm">
       <h3 data-i18n="modal.title">Create your account</h3>
-      <p class="sub" data-i18n="modal.subtitle">Register to list, buy and negotiate plates and numbers.</p>
-      <form onsubmit="return submitRegister(event)" novalidate>
+      <p class="sub" data-i18n="modal.subtitle">Register with a username to list, buy and negotiate plates and numbers.</p>
+      <form onsubmit="return submitRegister(event)" novalidate autocomplete="off">
         <div class="field">
-          <label for="regName" data-i18n="modal.name">Full name</label>
-          <input id="regName" type="text" required minlength="2" data-i18n-placeholder="modal.namePlaceholder" placeholder="e.g. Ahmad Khalil">
+          <label for="regUsername" data-i18n="modal.username">Username</label>
+          <input id="regUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.usernamePlaceholder" placeholder="e.g. ahmad_k">
+          <div class="hint" id="regUsernameHint" data-i18n="modal.usernameHint">3–20 characters: letters, numbers, . or _</div>
+          <div class="hint error" id="regUsernameErr"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="regFirst" data-i18n="modal.first">First name</label>
+            <input id="regFirst" type="text" autocomplete="given-name" data-i18n-placeholder="modal.firstPlaceholder" placeholder="Ahmad">
+            <div class="hint error" id="regFirstErr"></div>
+          </div>
+          <div class="field">
+            <label for="regLast" data-i18n="modal.last">Last name</label>
+            <input id="regLast" type="text" autocomplete="family-name" data-i18n-placeholder="modal.lastPlaceholder" placeholder="Khalil">
+            <div class="hint error" id="regLastErr"></div>
+          </div>
         </div>
         <div class="field">
-          <label for="regEmail" data-i18n="modal.email">Email</label>
-          <input id="regEmail" type="email" required placeholder="you@example.com">
-          <div class="hint error" id="emailErr" data-i18n="modal.emailErr">Enter a valid email address.</div>
-        </div>
-        <div class="field">
-          <label for="regPhone" data-i18n="modal.phone">Mobile number</label>
-          <input id="regPhone" type="tel" required pattern="^[0-9+\s-]{7,15}$" data-i18n-placeholder="modal.phonePlaceholder" placeholder="079 123 4567">
-          <div class="hint error" id="phoneErr" data-i18n="modal.phoneErr">Enter a valid phone number.</div>
+          <label for="regPhone" data-i18n="modal.phone">Phone number</label>
+          <input id="regPhone" type="tel" autocomplete="tel" data-i18n-placeholder="modal.phonePlaceholder" placeholder="079 123 4567">
+          <div class="hint error" id="regPhoneErr"></div>
         </div>
         <div class="field">
           <label for="regPassword" data-i18n="modal.password">Password</label>
-          <input id="regPassword" type="password" required minlength="6" data-i18n-placeholder="modal.passwordPlaceholder" placeholder="At least 6 characters">
-          <div class="hint" id="pwHint" data-i18n="modal.passwordHint">Minimum 6 characters.</div>
+          <input id="regPassword" type="password" autocomplete="new-password" data-i18n-placeholder="modal.passwordPlaceholder" placeholder="At least 6 characters">
+          <div class="hint error" id="regPasswordErr"></div>
         </div>
         <button class="modal-submit" type="submit" data-i18n="modal.submit">Create Account</button>
+        <p class="auth-switch"><span data-i18n="modal.haveAccount">Already have an account?</span> <a href="#" onclick="openAuth('login',event)" data-i18n="modal.goLogin">Log in</a></p>
       </form>
     </div>
+
+    <div id="loginForm" style="display:none;">
+      <h3 data-i18n="login.title">Log in</h3>
+      <p class="sub" data-i18n="login.subtitle">Enter your username and password.</p>
+      <form onsubmit="return submitLogin(event)" novalidate>
+        <div class="upload-error-banner" id="loginErr" data-i18n="login.err">Incorrect username or password.</div>
+        <div class="field">
+          <label for="loginUsername" data-i18n="modal.username">Username</label>
+          <input id="loginUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.usernamePlaceholder" placeholder="e.g. ahmad_k">
+        </div>
+        <div class="field">
+          <label for="loginPassword" data-i18n="modal.password">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" data-i18n-placeholder="login.passwordPlaceholder" placeholder="Your password">
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="login.submit">Log in</button>
+        <p class="auth-switch"><span data-i18n="modal.noAccount">New here?</span> <a href="#" onclick="openAuth('register',event)" data-i18n="modal.goRegister">Create an account</a></p>
+      </form>
+    </div>
+
     <div id="registerSuccess" class="modal-success">
       <div class="check">✓</div>
-      <h3 data-i18n="modal.successTitle">You're in!</h3>
-      <p data-i18n="modal.successDesc">This is a local demo form, so no account was actually created — but every field you typed passed validation.</p>
+      <h3 data-i18n="modal.successTitle">Account created!</h3>
+      <p data-i18n="modal.successDesc">Welcome — you are now signed in. This is a demo: your account is stored only in this browser.</p>
     </div>
   </div>
 </div>
