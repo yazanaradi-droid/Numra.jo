@@ -13,8 +13,8 @@
     "page.numbers.lead":{en:"VIP and standard mobile numbers from every Jordanian carrier, listed by sellers.",ar:"أرقام موبايل مميزة وعادية من جميع شركات الاتصالات الأردنية، من إعلانات البائعين."},
     "page.uploadCta.plate":{en:"+ List a plate",ar:"+ أضف لوحة"},
     "page.uploadCta.number":{en:"+ List a number",ar:"+ أضف رقم"},
-    "filter.placeholder.plate":{en:"Filter by code, number or description...",ar:"تصفية بالرمز أو الرقم أو الوصف..."},
-    "filter.placeholder.number":{en:"Filter by number or description...",ar:"تصفية بالرقم أو الوصف..."},
+    "filter.placeholder.plate":{en:"Filter by code or number...",ar:"تصفية بالرمز أو الرقم..."},
+    "filter.placeholder.number":{en:"Filter by number...",ar:"تصفية بالرقم..."},
     "listings.emptyFiltered":{en:"No listings match your search.",ar:"لا توجد إعلانات مطابقة لبحثك."},
     "nav.home":{en:"Home",ar:"الرئيسية"},
     "nav.plates":{en:"License Plates ▾",ar:"لوحات السيارات ▾"},
@@ -216,8 +216,6 @@
   function toggleLang(){
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     applyTranslations(currentLang);
-    const countryField = document.getElementById('upCountry');
-    if(countryField) countryField.value = currentLang === 'ar' ? 'الأردن' : 'Jordan';
     if(typeof renderListings === 'function') renderListings();
     const filterInput = document.getElementById('filterInput');
     if(filterInput) filterInput.setAttribute('placeholder',
@@ -274,8 +272,7 @@
         const hay = i.type === 'plate'
           ? (i.code + ' ' + i.number)
           : i.value;
-        const descText = typeof i.desc === 'object' ? (i.desc.en + ' ' + i.desc.ar) : i.desc;
-        return (hay + ' ' + descText).toLowerCase().includes(q);
+        return String(hay).toLowerCase().includes(q);
       });
     }
 
@@ -291,18 +288,15 @@
     grid.innerHTML = items.map(item=>{
       const badgeKey = item.type === 'plate' ? 'listings.plateBadge' : 'listings.numberBadge';
       const badgeLabel = translations[badgeKey][currentLang];
-      const countryLabel = currentLang === 'ar' ? '\u0627\u0644\u0623\u0631\u062f\u0646' : 'Jordan';
       const metaLabel = item.seed ? translations['listings.verified'][currentLang] : translations['listings.justNow'][currentLang];
       const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
-      const descText = typeof item.desc === 'object' ? item.desc[currentLang] : item.desc;
       const valueBlock = item.type === 'plate'
         ? '<div class="plate"><span class="code">JO</span> ' + escapeHtml(item.code) + ' - ' + escapeHtml(item.number) + '</div>'
         : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(item.value) + '</div></div>';
       return '<div class="listing-card">' +
-        '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + ' \u00b7 ' + countryLabel + '</span>' +
+        '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
         valueBlock +
         '<div class="price">' + escapeHtml(item.price) + ' ' + priceLabel + '</div>' +
-        '<div class="desc">' + escapeHtml(descText) + '</div>' +
         '<div class="meta">' + metaLabel + '</div>' +
         '</div>';
     }).join('');
@@ -334,10 +328,8 @@
     document.getElementById('upNumber').value = '';
     document.getElementById('upValue').value = '';
     document.getElementById('upPrice').value = '';
-    document.getElementById('upDesc').value = '';
-    document.getElementById('upCountry').value = currentLang === 'ar' ? '\u0627\u0644\u0623\u0631\u062f\u0646' : 'Jordan';
     document.getElementById('uploadErrorBanner').classList.remove('show');
-    ['upCode','upNumber','upValue','upPrice','upDesc'].forEach(id=>{
+    ['upCode','upNumber','upValue','upPrice'].forEach(id=>{
       document.getElementById(id).classList.remove('field-invalid');
     });
     applyTranslations(currentLang);
@@ -348,7 +340,7 @@
 
   function submitUpload(e){
     e.preventDefault();
-    const ids = currentUploadType === 'plate' ? ['upCode','upNumber','upPrice','upDesc'] : ['upValue','upPrice','upDesc'];
+    const ids = currentUploadType === 'plate' ? ['upCode','upNumber','upPrice'] : ['upValue','upPrice'];
     let valid = true;
     ids.forEach(id=>{
       const el = document.getElementById(id);
@@ -368,20 +360,19 @@
     banner.classList.remove('show');
 
     const price = document.getElementById('upPrice').value;
-    const desc = document.getElementById('upDesc').value;
     let newItem;
     if(currentUploadType === 'plate'){
       newItem = {
         type:'plate',
         code:document.getElementById('upCode').value,
         number:document.getElementById('upNumber').value,
-        price, desc
+        price
       };
     } else {
       newItem = {
         type:'number',
         value:document.getElementById('upValue').value,
-        price, desc
+        price
       };
     }
     userListings.unshift(newItem);

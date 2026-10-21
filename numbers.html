@@ -65,7 +65,7 @@
     <h1 data-i18n="page.numbers.title">Browse mobile numbers</h1>
     <p data-i18n="page.numbers.lead">VIP and standard mobile numbers from every Jordanian carrier, listed by sellers.</p>
     <div class="page-toolbar">
-      <input id="filterInput" class="filter-input" type="text" placeholder="Filter by number or description...">
+      <input id="filterInput" class="filter-input" type="text" placeholder="Filter by number...">
       <button class="btn btn-gold" onclick="openUpload('number', event)" data-i18n="page.uploadCta.number">+ List a number</button>
     </div>
   </div>
@@ -204,16 +204,8 @@
           <input id="upValue" type="text" minlength="2" placeholder="079 123 4567">
         </div>
         <div class="field">
-          <label data-i18n="upload.country">Country</label>
-          <input type="text" value="Jordan" id="upCountry" readonly style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--muted); font-size:.9rem; cursor:not-allowed;">
-        </div>
-        <div class="field">
           <label for="upPrice" data-i18n="upload.price">Price (JOD)</label>
           <input id="upPrice" type="number" required min="1" placeholder="1500">
-        </div>
-        <div class="field">
-          <label for="upDesc" data-i18n="upload.desc">Description</label>
-          <textarea id="upDesc" required minlength="1" data-i18n-placeholder="upload.descPlaceholder" placeholder="Describe the listing..."></textarea>
         </div>
         <button class="modal-submit" type="submit" data-i18n="upload.submit">Submit Listing</button>
       </form>
