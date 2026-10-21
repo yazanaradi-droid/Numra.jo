@@ -194,18 +194,18 @@
         <div class="field" id="plateFields">
           <label data-i18n="upload.plateValue">Plate number</label>
           <div class="field-row">
-            <input id="upCode" type="number" min="1" max="99" required placeholder="23" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
-            <input id="upNumber" type="text" required minlength="1" placeholder="45678" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
+            <input id="upCode" type="text" inputmode="numeric" maxlength="2" placeholder="23" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
+            <input id="upNumber" type="text" inputmode="numeric" placeholder="45678" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
           </div>
           <div class="hint" data-i18n="upload.codeHint">Code (1–99) and number, shown as code-number.</div>
         </div>
         <div class="field" id="numberFieldWrap" style="display:none;">
           <label for="upValue" data-i18n="upload.numberValue">Mobile number</label>
-          <input id="upValue" type="text" minlength="2" placeholder="079 123 4567">
+          <input id="upValue" type="text" inputmode="tel" placeholder="079 123 4567">
         </div>
         <div class="field">
           <label for="upPrice" data-i18n="upload.price">Price (JOD)</label>
-          <input id="upPrice" type="number" required min="1" placeholder="1500">
+          <input id="upPrice" type="text" inputmode="decimal" placeholder="1500">
         </div>
         <button class="modal-submit" type="submit" data-i18n="upload.submit">Submit Listing</button>
       </form>

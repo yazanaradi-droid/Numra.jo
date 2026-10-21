@@ -340,16 +340,22 @@
 
   function submitUpload(e){
     e.preventDefault();
-    const ids = currentUploadType === 'plate' ? ['upCode','upNumber','upPrice'] : ['upValue','upPrice'];
+    const AR='٠١٢٣٤٥٦٧٨٩', FA='۰۱۲۳۴۵۶۷۸۹';
+    const norm = v => String(v).replace(/[٠-٩۰-۹]/g, d=>{ const i=AR.indexOf(d); return i>-1 ? i : FA.indexOf(d); }).trim();
+    const isPlate = currentUploadType === 'plate';
+    const ids = isPlate ? ['upCode','upNumber','upPrice'] : ['upValue','upPrice'];
+    ids.forEach(id=>{ const el=document.getElementById(id); el.value = norm(el.value); });
+    const checks = {
+      upCode:  v => /^\d{1,2}$/.test(v) && +v>=1 && +v<=99,
+      upNumber:v => v.length>=1,
+      upValue: v => /^[0-9+\s-]{7,15}$/.test(v),
+      upPrice: v => /^\d+(\.\d+)?$/.test(v) && +v>0
+    };
     let valid = true;
     ids.forEach(id=>{
       const el = document.getElementById(id);
-      if(!el.checkValidity()){
-        valid = false;
-        el.classList.add('field-invalid');
-      } else {
-        el.classList.remove('field-invalid');
-      }
+      if(!checks[id](el.value)){ valid = false; el.classList.add('field-invalid'); }
+      else el.classList.remove('field-invalid');
     });
 
     const banner = document.getElementById('uploadErrorBanner');
