@@ -68,9 +68,9 @@
   .plate-country .ar{font-family:'Cairo','IBM Plex Sans Arabic',Arial,sans-serif; font-weight:800; font-size:6.4cqw; line-height:1;}
   .plate-country .en{font-family:Arial,Helvetica,sans-serif; font-weight:800; font-size:3.9cqw; letter-spacing:.01em; line-height:1;}
   .plate-digits{
-    flex:1; display:flex; align-items:center; justify-content:center; gap:.4em; padding-right:5cqw;
+    flex:1; display:flex; align-items:center; justify-content:center; gap:.12em; padding-right:5cqw;
     font-family:'Barlow Condensed','Arial Narrow','Roboto Condensed',Arial,sans-serif; font-weight:700;
-    font-size:calc(var(--fs, .2) * 100cqw); letter-spacing:.03em; white-space:nowrap;
+    font-size:calc(var(--fs, .2) * 100cqw); letter-spacing:.07em; white-space:nowrap;
   }
   /* raised, glossy, stamped look shared by the digits and the country text */
   .plate-digits > span, .plate-country .ar, .plate-country .en{
@@ -79,9 +79,10 @@
     filter:drop-shadow(0 0 .6px rgba(255,255,255,.95)) drop-shadow(0 1.2px 0 rgba(255,255,255,.7)) drop-shadow(.8px 1.6px 1.4px rgba(0,0,0,.55));
   }
   /* if the condensed font could not be loaded, squeeze the fallback font so the digits stay tall and narrow */
-  html.no-cond .plate-digits{letter-spacing:-.03em;}
+  .plate-digits > .pn{margin-inline-start:.3em;}
+  html.no-cond .plate-digits{letter-spacing:.05em;}
   html.no-cond .plate-digits > span{display:inline-block; transform:scaleX(.74);}
-  html.no-cond .plate-digits > .pc{transform-origin:right center;}
+  html.no-cond .plate-digits > .pc, html.no-cond .plate-digits > .pd{transform-origin:right center;}
   html.no-cond .plate-digits > .pn{transform-origin:left center;}
 
   /* ===== header ===== */
