@@ -6,7 +6,7 @@
 <title>License Plates | x plate.jo</title>
 <meta name="description" content="Browse all available Jordanian license plates for sale.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202610221659">
+<link rel="stylesheet" href="style.css?v=202610221710">
 </head>
 <body>
 
@@ -51,8 +51,17 @@
         <a class="btn btn-ghost" href="#" onclick="openAuth('register',event)" data-i18n="nav.register">Register</a>
       </span>
       <span class="auth-user" id="authUser" style="display:none;">
-        <span class="user-chip" id="userChip"></span>
-        <a class="btn btn-ghost" href="#" onclick="logout(event)" data-i18n="nav.logout">Logout</a>
+        <div class="user-menu" id="userMenu">
+          <button type="button" class="user-chip" id="userChip" onclick="toggleUserMenu(event)" aria-haspopup="true"></button>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="#" onclick="goDash('profile',event)" data-i18n="dash.profile">My profile</a>
+            <a href="#" onclick="goDash('membership',event)" data-i18n="dash.membership">Membership management</a>
+            <a href="#" onclick="goDash('plates',event)" data-i18n="dash.plates">My plates</a>
+            <a href="#" onclick="goDash('numbers',event)" data-i18n="dash.numbers">My numbers</a>
+            <a href="#" onclick="goDash('package',event)" data-i18n="dash.package">My package</a>
+            <a href="#" class="logout-link" onclick="logout(event)" data-i18n="nav.logout">Logout</a>
+          </div>
+        </div>
       </span>
       <button class="icon-btn menu-toggle" title="Menu">☰</button>
     </div>
@@ -256,6 +265,6 @@
 
 <script>const PAGE_TYPE = 'plate';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202610221659"></script>
+<script src="script.js?v=202610221710"></script>
 </body>
 </html>

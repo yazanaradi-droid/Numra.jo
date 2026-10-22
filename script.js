@@ -157,6 +157,40 @@
     "contact.disclaimer":{en:"our platform is not responsible for any financial loss or fraud resulting from direct dealings.",ar:"منصتنا غير مسؤولة عن أي خسائر مالية أو حالات احتيال ناتجة عن التعاملات المباشرة."},
     "contact.whatsapp":{en:"WhatsApp",ar:"واتساب"},
     "contact.close":{en:"Close",ar:"إغلاق"},
+    "dash.title":{en:"My account",ar:"حسابي"},
+    "dash.profile":{en:"My profile",ar:"ملفي"},
+    "dash.membership":{en:"Membership management",ar:"إدارة العضوية"},
+    "dash.plates":{en:"My plates",ar:"لوحاتي المعروضة"},
+    "dash.numbers":{en:"My numbers",ar:"أرقامي المعروضة"},
+    "dash.package":{en:"My package",ar:"باقتي"},
+    "dash.loginNeeded":{en:"Please log in to see your account.",ar:"سجّل الدخول لعرض حسابك."},
+    "dash.phoneLocked":{en:"The phone number cannot be changed.",ar:"لا يمكن تغيير رقم الهاتف."},
+    "dash.save":{en:"Save changes",ar:"حفظ التعديلات"},
+    "dash.saved":{en:"Your changes were saved.",ar:"تم حفظ التعديلات."},
+    "dash.changePassword":{en:"Change password",ar:"تغيير كلمة المرور"},
+    "dash.currentPassword":{en:"Current password",ar:"كلمة المرور الحالية"},
+    "dash.newPassword":{en:"New password",ar:"كلمة المرور الجديدة"},
+    "dash.confirmPassword":{en:"Confirm new password",ar:"تأكيد كلمة المرور الجديدة"},
+    "dash.updatePassword":{en:"Update password",ar:"تحديث كلمة المرور"},
+    "dash.currentRequired":{en:"Enter your current password.",ar:"أدخل كلمة المرور الحالية."},
+    "dash.currentWrong":{en:"The current password is incorrect.",ar:"كلمة المرور الحالية غير صحيحة."},
+    "dash.passwordMismatch":{en:"The new passwords do not match.",ar:"كلمتا المرور الجديدتان غير متطابقتين."},
+    "dash.passwordUpdated":{en:"Your password was updated.",ar:"تم تحديث كلمة المرور."},
+    "dash.memberSince":{en:"Member since",ar:"عضو منذ"},
+    "dash.membershipType":{en:"Membership",ar:"نوع العضوية"},
+    "dash.status":{en:"Status",ar:"الحالة"},
+    "dash.free":{en:"Free",ar:"مجانية"},
+    "dash.active":{en:"Active",ar:"فعّالة"},
+    "dash.platesCount":{en:"Plates listed",ar:"لوحات معروضة"},
+    "dash.numbersCount":{en:"Numbers listed",ar:"أرقام معروضة"},
+    "dash.currentPackage":{en:"Current package",ar:"الباقة الحالية"},
+    "dash.activeListings":{en:"Active listings",ar:"الإعلانات الفعّالة"},
+    "dash.packageSoon":{en:"More packages will be available soon.",ar:"ستتوفر باقات إضافية قريباً."},
+    "dash.noPlates":{en:"You have not listed any plates yet.",ar:"لم تعرض أي لوحة بعد."},
+    "dash.noNumbers":{en:"You have not listed any numbers yet.",ar:"لم تعرض أي رقم بعد."},
+    "dash.view":{en:"View",ar:"عرض"},
+    "dash.delete":{en:"Delete",ar:"حذف"},
+    "dash.confirmDelete":{en:"Click again to confirm",ar:"اضغط مرة أخرى للتأكيد"},
     "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
     "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
@@ -250,6 +284,7 @@
     applyTranslations(currentLang);
     if(typeof renderListings === 'function') renderListings();
     renderListingPage();
+    renderDashboard();
     const filterInput = document.getElementById('filterInput');
     if(filterInput) filterInput.setAttribute('placeholder',
       translations['filter.placeholder.' + PAGE_TYPE][currentLang]);
@@ -451,6 +486,7 @@
       return false;
     }finally{ submitBtn.disabled = false; }
     if(typeof PAGE_TYPE !== 'undefined' && PAGE_TYPE === currentUploadType) renderListings();
+    if(document.getElementById('dashRoot')) renderDashboard();
 
     document.getElementById('uploadForm').style.display='none';
     document.getElementById('uploadSuccess').classList.add('show');
@@ -497,9 +533,10 @@
   function refreshAuthUI(){
     const g=document.getElementById('authGuest'), a=document.getElementById('authUser'), chip=document.getElementById('userChip');
     if(!g||!a) return;
-    if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent='@'+((currentUser.user_metadata||{}).username||''); }
+    if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent='@'+((currentUser.user_metadata||{}).username||'')+' \u25be'; }
     else { g.style.display='inline-flex'; a.style.display='none'; chip.textContent=''; }
   }
+  let authReady = Promise.resolve();
   async function initAuth(){
     if(!sb) return;
     try{
@@ -524,7 +561,7 @@
   }
   function openRegister(e){ openAuth('register', e); }
   function closeRegister(){ document.getElementById('registerOverlay').classList.remove('open'); }
-  async function logout(e){ if(e) e.preventDefault(); if(sb){ try{ await sb.auth.signOut(); }catch(err){} } currentUser=null; refreshAuthUI(); }
+  async function logout(e){ if(e) e.preventDefault(); closeUserMenu(); if(sb){ try{ await sb.auth.signOut(); }catch(err){} } currentUser=null; refreshAuthUI(); if(document.getElementById('dashRoot')) renderDashboard(); }
 
   let usernameCheckSeq = 0;
   async function checkUsername(){
@@ -594,6 +631,7 @@
       currentUser = data.session.user; refreshAuthUI();
       document.getElementById('loginPassword').value='';
       closeRegister();
+      if(document.getElementById('dashRoot')) initDashboard();
     }catch(err){ showBanner('loginErr','auth.genericErr'); }
     finally{ btn.disabled=false; }
     return false;
@@ -725,6 +763,206 @@
     if(e.key === 'Escape'){ const o=document.getElementById('contactOverlay'); if(o) o.classList.remove('open'); }
   });
 
+  /* ============ user menu + dashboard ============ */
+  function toggleUserMenu(e){ if(e){ e.preventDefault(); e.stopPropagation(); } const d=document.getElementById('userDropdown'); if(d) d.classList.toggle('open'); }
+  function closeUserMenu(){ const d=document.getElementById('userDropdown'); if(d) d.classList.remove('open'); }
+  document.addEventListener('click', function(e){ if(!e.target.closest || !e.target.closest('#userMenu')) closeUserMenu(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeUserMenu(); });
+
+  const DASH_TABS = ['profile','membership','plates','numbers','package'];
+  let dashTab = 'profile', dashProfile = null;
+
+  function goDash(tab, e){
+    if(e) e.preventDefault();
+    closeUserMenu();
+    if(document.getElementById('dashRoot')){ showDashTab(tab); return; }
+    window.location.href = 'dashboard.html?tab=' + tab + (currentLang === 'ar' ? '&lang=ar' : '');
+  }
+  async function initDashboard(){
+    const t = new URLSearchParams(window.location.search).get('tab');
+    dashTab = DASH_TABS.includes(t) ? t : 'profile';
+    dashProfile = null;
+    renderDashboard();
+  }
+  function showDashTab(tab){
+    dashTab = tab;
+    try{ history.replaceState(null, '', 'dashboard.html?tab=' + tab + (currentLang === 'ar' ? '&lang=ar' : '')); }catch(e){}
+    renderDashboard();
+  }
+
+  async function fetchMyProfile(){
+    if(dashProfile || !sb || !currentUser) return dashProfile;
+    try{
+      const {data, error} = await sb.from('xp_profiles').select('username,first_name,last_name,phone,created_at').eq('id', currentUser.id).single();
+      if(error) throw error;
+      dashProfile = data;
+    }catch(err){ console.warn(err); }
+    return dashProfile;
+  }
+  async function fetchMyListings(type){
+    if(!sb || !currentUser) return [];
+    const q = sb.from('xp_listings').select('id,type,code,number,value,price,created_at').eq('user_id', currentUser.id).order('created_at', {ascending:false});
+    const {data, error} = await (type ? q.eq('type', type) : q);
+    if(error){ console.warn(error); return []; }
+    return data.map(rowToItem);
+  }
+
+  function dashMsg(id, key, ok){
+    const el = document.getElementById(id); if(!el) return;
+    if(!key){ el.style.display = 'none'; return; }
+    el.setAttribute('data-i18n', key);
+    el.textContent = translations[key][currentLang];
+    el.className = 'dash-msg ' + (ok ? 'ok' : 'err');
+    el.style.display = 'block';
+  }
+
+  let dashRenderSeq = 0;
+  async function renderDashboard(){
+    const nav = document.getElementById('dashNav'), panel = document.getElementById('dashPanel');
+    if(!nav || !panel) return;
+    const T = k => translations[k][currentLang];
+    const seq = ++dashRenderSeq;
+
+    if(!currentUser){
+      nav.style.display = 'none';
+      panel.innerHTML = '<div class="dash-card dash-center"><p>' + T('dash.loginNeeded') + '</p>' +
+        '<button class="btn btn-gold" type="button" onclick="openAuth(\'login\', event, true)">' + T('nav.login') + '</button></div>';
+      return;
+    }
+    nav.style.display = '';
+    const names = {profile:'dash.profile', membership:'dash.membership', plates:'dash.plates', numbers:'dash.numbers', package:'dash.package'};
+    nav.innerHTML = DASH_TABS.map(k => '<button type="button" class="dash-tab' + (k === dashTab ? ' active' : '') + '" onclick="showDashTab(\'' + k + '\')">' + T(names[k]) + '</button>').join('') +
+      '<button type="button" class="dash-tab dash-logout" onclick="logout(event)">' + T('nav.logout') + '</button>';
+
+    let html = '';
+    if(dashTab === 'profile') html = await dashProfileHtml();
+    else if(dashTab === 'membership') html = await dashMembershipHtml();
+    else if(dashTab === 'plates' || dashTab === 'numbers') html = await dashListingsHtml(dashTab === 'plates' ? 'plate' : 'number');
+    else html = await dashPackageHtml();
+    if(seq !== dashRenderSeq) return;      // a newer render superseded this one
+    panel.innerHTML = html;
+  }
+
+  async function dashProfileHtml(){
+    const T = k => translations[k][currentLang];
+    const p = await fetchMyProfile();
+    if(!p) return '<div class="dash-card">' + T('auth.genericErr') + '</div>';
+    const e = escapeHtml;
+    return '<div class="dash-card"><h2>' + T('dash.profile') + '</h2>' +
+      '<form onsubmit="return submitProfile(event)" novalidate>' +
+        '<div class="field"><label>' + T('modal.username') + '</label><input type="text" value="' + e(p.username) + '" readonly class="ro"></div>' +
+        '<div class="field"><label>' + T('modal.phone') + '</label><input type="text" value="' + e(p.phone) + '" readonly class="ro" dir="ltr"><div class="hint">' + T('dash.phoneLocked') + '</div></div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label for="pfFirst">' + T('modal.first') + '</label><input id="pfFirst" type="text" value="' + e(p.first_name) + '"></div>' +
+          '<div class="field"><label for="pfLast">' + T('modal.last') + '</label><input id="pfLast" type="text" value="' + e(p.last_name) + '"></div>' +
+        '</div>' +
+        '<div class="dash-msg" id="profileMsg" style="display:none;"></div>' +
+        '<button class="btn btn-gold" type="submit">' + T('dash.save') + '</button>' +
+      '</form></div>' +
+      '<div class="dash-card"><h2>' + T('dash.changePassword') + '</h2>' +
+      '<form onsubmit="return submitPassword(event)" novalidate autocomplete="off">' +
+        '<div class="field"><label for="pwCurrent">' + T('dash.currentPassword') + '</label><input id="pwCurrent" type="password" autocomplete="current-password"></div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label for="pwNew">' + T('dash.newPassword') + '</label><input id="pwNew" type="password" autocomplete="new-password"></div>' +
+          '<div class="field"><label for="pwConfirm">' + T('dash.confirmPassword') + '</label><input id="pwConfirm" type="password" autocomplete="new-password"></div>' +
+        '</div>' +
+        '<div class="dash-msg" id="passwordMsg" style="display:none;"></div>' +
+        '<button class="btn btn-gold" type="submit">' + T('dash.updatePassword') + '</button>' +
+      '</form></div>';
+  }
+
+  async function submitProfile(e){
+    e.preventDefault();
+    const first = document.getElementById('pfFirst').value.trim(), last = document.getElementById('pfLast').value.trim();
+    if(first.length < 2 || last.length < 2){ dashMsg('profileMsg','modal.nameErr',false); return false; }
+    if(!sb) { dashMsg('profileMsg','auth.offline',false); return false; }
+    try{
+      const {error} = await sb.rpc('xp_update_profile', {f:first, l:last});
+      if(error) throw error;
+      await sb.auth.updateUser({data:{first_name:first, last_name:last}});
+      if(dashProfile){ dashProfile.first_name = first; dashProfile.last_name = last; }
+      dashMsg('profileMsg','dash.saved',true);
+    }catch(err){ console.warn(err); dashMsg('profileMsg','auth.genericErr',false); }
+    return false;
+  }
+
+  async function submitPassword(e){
+    e.preventDefault();
+    const cur = document.getElementById('pwCurrent').value, nw = document.getElementById('pwNew').value, cf = document.getElementById('pwConfirm').value;
+    if(!cur){ dashMsg('passwordMsg','dash.currentRequired',false); return false; }
+    if(nw.length < 6){ dashMsg('passwordMsg','modal.passwordErr',false); return false; }
+    if(nw !== cf){ dashMsg('passwordMsg','dash.passwordMismatch',false); return false; }
+    if(!sb) { dashMsg('passwordMsg','auth.offline',false); return false; }
+    try{
+      const uname = (currentUser.user_metadata || {}).username || '';
+      const re = await sb.auth.signInWithPassword({email: toEmail(uname), password: cur});
+      if(re.error){ dashMsg('passwordMsg','dash.currentWrong',false); return false; }
+      const {error} = await sb.auth.updateUser({password: nw});
+      if(error) throw error;
+      ['pwCurrent','pwNew','pwConfirm'].forEach(id=>{ document.getElementById(id).value=''; });
+      dashMsg('passwordMsg','dash.passwordUpdated',true);
+    }catch(err){ console.warn(err); dashMsg('passwordMsg','auth.genericErr',false); }
+    return false;
+  }
+
+  async function dashMembershipHtml(){
+    const T = k => translations[k][currentLang];
+    const p = await fetchMyProfile();
+    const all = await fetchMyListings(null);
+    const nPlates = all.filter(i=>i.type==='plate').length, nNums = all.filter(i=>i.type==='number').length;
+    const since = p && p.created_at ? new Date(p.created_at).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : '-';
+    const row = (k, v) => '<div class="dash-row"><span>' + T(k) + '</span><b>' + v + '</b></div>';
+    return '<div class="dash-card"><h2>' + T('dash.membership') + '</h2>' +
+      row('modal.username', '@' + escapeHtml(p ? p.username : '')) +
+      row('dash.memberSince', since) +
+      row('dash.membershipType', T('dash.free')) +
+      row('dash.status', '<span class="pill ok">' + T('dash.active') + '</span>') +
+      row('dash.platesCount', nPlates) +
+      row('dash.numbersCount', nNums) +
+      '</div>';
+  }
+
+  async function dashPackageHtml(){
+    const T = k => translations[k][currentLang];
+    const all = await fetchMyListings(null);
+    return '<div class="dash-card"><h2>' + T('dash.package') + '</h2>' +
+      '<div class="dash-row"><span>' + T('dash.currentPackage') + '</span><b>' + T('dash.free') + '</b></div>' +
+      '<div class="dash-row"><span>' + T('dash.activeListings') + '</span><b>' + all.length + '</b></div>' +
+      '<p class="dash-note">' + T('dash.packageSoon') + '</p></div>';
+  }
+
+  async function dashListingsHtml(type){
+    const T = k => translations[k][currentLang];
+    const items = await fetchMyListings(type);
+    const priceLabel = currentLang === 'ar' ? 'دينار' : 'JOD';
+    const head = '<div class="dash-head"><h2>' + T(type === 'plate' ? 'dash.plates' : 'dash.numbers') + '</h2>' +
+      '<button class="btn btn-gold" type="button" onclick="openUpload(\'' + type + '\', event)">' + T(type === 'plate' ? 'page.uploadCta.plate' : 'page.uploadCta.number') + '</button></div>';
+    if(!items.length) return '<div class="dash-card">' + head + '<p class="dash-note">' + T(type === 'plate' ? 'dash.noPlates' : 'dash.noNumbers') + '</p></div>';
+    return '<div class="dash-card">' + head + '<div class="my-grid">' + items.map(it => {
+      const vis = it.type === 'plate' ? plateHtml(it.code, it.number, false) : '<div class="row"><div class="num-icon">📱</div><div class="value">' + escapeHtml(it.value) + '</div></div>';
+      const date = it.created ? new Date(it.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : '';
+      return '<div class="my-item">' + vis +
+        '<div class="price">' + escapeHtml(it.price) + ' ' + priceLabel + '</div><div class="meta">' + date + '</div>' +
+        '<div class="my-actions"><a class="btn btn-ghost" href="' + listingHref(it) + '">' + T('dash.view') + '</a>' +
+        '<button type="button" class="btn btn-ghost danger" data-del="' + escapeHtml(it.id) + '" onclick="deleteMyListing(this)">' + T('dash.delete') + '</button></div></div>';
+    }).join('') + '</div></div>';
+  }
+
+  async function deleteMyListing(btn){
+    const T = k => translations[k][currentLang];
+    if(!btn.dataset.armed){          // first click arms the button, second click deletes
+      btn.dataset.armed = '1'; btn.textContent = T('dash.confirmDelete');
+      setTimeout(()=>{ if(btn.isConnected){ delete btn.dataset.armed; btn.textContent = T('dash.delete'); } }, 4000);
+      return;
+    }
+    try{
+      const {error} = await sb.from('xp_listings').delete().eq('id', btn.dataset.del);
+      if(error) throw error;
+      userListings = userListings.filter(i => i.id !== btn.dataset.del);
+      renderDashboard();
+    }catch(err){ console.warn(err); btn.textContent = T('auth.genericErr'); }
+  }
+
   /* ============ wire up overlay click-to-close (guarded per page) ============ */
   document.addEventListener('DOMContentLoaded', function(){
     ['registerOverlay','uploadOverlay','infoOverlay','contactOverlay'].forEach(id=>{
@@ -759,7 +997,8 @@
     applyTranslations(currentLang);
     refreshAuthUI();
     renderListings();
-    initAuth();
+    authReady = initAuth();
+    if(document.getElementById('dashRoot')) authReady.then(initDashboard);
     if(document.getElementById('listingDetail')) initListingPage();
     else loadRemoteListings().then(renderListings);
   });
