@@ -659,7 +659,7 @@
     const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
 
     document.title = label + ' | x plate.jo';
-    document.getElementById('detailTitle').textContent = T(it.type === 'plate' ? 'detail.title.plate' : 'detail.title.number').replace('{x}', label);
+    document.getElementById('detailTitle').innerHTML = T(it.type === 'plate' ? 'detail.title.plate' : 'detail.title.number').replace('{x}', '<bdi dir="ltr">' + escapeHtml(label) + '</bdi>');
     const crumb = document.getElementById('detailCrumbType');
     crumb.textContent = T(it.type === 'plate' ? 'nav.plates.crumb' : 'nav.numbers.crumb');
     crumb.setAttribute('href', (it.type === 'plate' ? 'plates.html' : 'numbers.html') + (currentLang === 'ar' ? '?lang=ar' : ''));
@@ -698,7 +698,7 @@
   function openContact(item, seller){
     const label = itemLabel(item);
     const num = '+' + toWhatsAppNumber(seller.phone);
-    const text = translations['detail.waMessage'][currentLang].replace('{x}', label);
+    const text = translations['detail.waMessage'][currentLang].replace('{x}', '\u2066' + label + '\u2069');
     document.getElementById('contactWa').href = 'https://wa.me/' + toWhatsAppNumber(seller.phone) + '?text=' + encodeURIComponent(text);
     const call = document.getElementById('contactCall');
     call.href = 'tel:' + num;
