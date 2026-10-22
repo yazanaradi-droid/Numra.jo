@@ -62,10 +62,10 @@
   .plate::before{content:''; position:absolute; inset:3.2cqw; border:max(1.5px,.85cqw) solid #0B0B0B; border-radius:max(4px,2.2cqw); pointer-events:none;}
   .plate-country{
     flex:0 0 24%; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start;
-    padding:8.5cqw 0 7.5cqw 6.5cqw; color:#0B0B0B;
+    padding:6.2cqw 0 5.6cqw 6.5cqw; color:#0B0B0B;
   }
-  .plate-country .ar{font-family:'Cairo','IBM Plex Sans Arabic',Arial,sans-serif; font-weight:800; font-size:7.4cqw; line-height:1;}
-  .plate-country .en{font-family:Arial,Helvetica,sans-serif; font-weight:700; font-size:4.6cqw; letter-spacing:.005em; line-height:1;}
+  .plate-country .ar{font-family:'Cairo','IBM Plex Sans Arabic',Arial,sans-serif; font-weight:800; font-size:6.4cqw; line-height:1;}
+  .plate-country .en{font-family:Arial,Helvetica,sans-serif; font-weight:700; font-size:3.9cqw; letter-spacing:.005em; line-height:1;}
   .plate-digits{
     flex:1; display:flex; align-items:center; justify-content:center; gap:.45em; padding-right:5cqw;
     font-family:'Barlow Condensed','Arial Narrow','Roboto Condensed',Arial,sans-serif; font-weight:700;
