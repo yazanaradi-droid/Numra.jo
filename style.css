@@ -55,14 +55,13 @@
     direction:ltr; unicode-bidi:isolate;
     background:linear-gradient(180deg,#FBFBFA 0%,#ECECE9 55%,#DDDDD9 100%);
     color:#0B0B0B; border-radius:8px;
-    border:1px solid #BDBDB8;
     box-shadow:0 1px 0 #fff inset, 0 2px 10px rgba(0,0,0,.5);
     font-size:16px; line-height:1;
   }
-  .plate::before{content:''; position:absolute; inset:3.2cqw; border:max(1.5px,.85cqw) solid #0B0B0B; border-radius:max(4px,2.2cqw); pointer-events:none;}
+  .plate::before{content:''; position:absolute; inset:0; border:max(2px,1.1cqw) solid #0B0B0B; border-radius:inherit; pointer-events:none;}
   .plate-country{
     flex:0 0 24%; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start;
-    padding:6.2cqw 0 5.6cqw 6.5cqw; color:#0B0B0B;
+    padding:5.6cqw 0 5cqw 5.5cqw; color:#0B0B0B;
   }
   .plate-country .ar{font-family:'Cairo','IBM Plex Sans Arabic',Arial,sans-serif; font-weight:800; font-size:6.4cqw; line-height:1;}
   .plate-country .en{font-family:Arial,Helvetica,sans-serif; font-weight:700; font-size:3.9cqw; letter-spacing:.005em; line-height:1;}
