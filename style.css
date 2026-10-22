@@ -46,11 +46,11 @@
   ul{list-style:none;}
   .wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
 
-  /* ===== Jordanian plate: embossed look. Layout: country names + plate code on the left, the number big in the middle ===== */
+  /* ===== Jordanian plate: embossed look. Layout: "الاردن" top-left, "JORDAN" bottom-left, code-number big in the middle ===== */
   .plate{
     position:relative; container-type:inline-size;
     display:flex; align-items:stretch;
-    width:100%; max-width:300px; aspect-ratio:3.8 / 1;
+    width:100%; max-width:300px; aspect-ratio:4.2 / 1;
     direction:ltr; unicode-bidi:isolate;
     background:linear-gradient(180deg,#E9ECF1 0%,#DDE1E8 50%,#D1D6DF 100%);
     color:#0B0B0B; border-radius:9px;
@@ -62,28 +62,28 @@
   /* thin pressed line just inside the frame */
   .plate::after{content:''; position:absolute; inset:max(3px,1.7cqw); border:1px solid rgba(255,255,255,.75); border-radius:max(4px,1.4cqw); box-shadow:0 0 0 1px rgba(0,0,0,.08) inset; pointer-events:none;}
   .plate-country{
-    flex:0 0 27%; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start;
-    padding:4.6cqw 0 3.6cqw 5.4cqw; color:#0B0B0B;
+    flex:0 0 23%; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start;
+    padding:5.6cqw 0 5cqw 5.4cqw; color:#0B0B0B;
   }
-  .plate-names{display:flex; flex-direction:column; align-items:flex-start; gap:1cqw;}
-  .plate-country .ar{font-family:'Cairo','IBM Plex Sans Arabic',Arial,sans-serif; font-weight:800; font-size:5.2cqw; line-height:1;}
-  .plate-country .en{font-family:Arial,Helvetica,sans-serif; font-weight:800; font-size:3.2cqw; letter-spacing:.02em; line-height:1;}
-  .plate-code{font-family:'Barlow Condensed','Arial Narrow','Roboto Condensed',Arial,sans-serif; font-weight:700; font-size:9.6cqw; letter-spacing:.04em; line-height:1;}
+  .plate-country .ar{font-family:'Cairo','IBM Plex Sans Arabic',Arial,sans-serif; font-weight:800; font-size:5.6cqw; line-height:1;}
+  .plate-country .en{font-family:Arial,Helvetica,sans-serif; font-weight:800; font-size:3.6cqw; letter-spacing:.02em; line-height:1;}
   .plate-digits{
-    flex:1; display:flex; align-items:center; justify-content:center; padding-right:5cqw;
+    flex:1; display:flex; align-items:center; justify-content:center; gap:.04em; padding-right:3cqw;
     font-family:'Barlow Condensed','Arial Narrow','Roboto Condensed',Arial,sans-serif; font-weight:700;
-    font-size:calc(var(--fs, .24) * 100cqw); letter-spacing:.08em; white-space:nowrap;
+    font-size:calc(var(--fs, .2) * 100cqw); letter-spacing:.05em; white-space:nowrap;
   }
   /* strongly raised, glossy, stamped look shared by every character on the plate */
-  .plate-digits > span, .plate-country .ar, .plate-country .en, .plate-code{
+  .plate-digits > span, .plate-country .ar, .plate-country .en{
     background:linear-gradient(172deg,#6E7177 0%,#15161A 26%,#000 55%,#2A2C31 100%);
     -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
     filter:drop-shadow(0 0 .7px #fff) drop-shadow(0 0 1.6px rgba(255,255,255,.9)) drop-shadow(0 1.3px 0 rgba(255,255,255,.75)) drop-shadow(1px 2px 1.6px rgba(0,0,0,.65));
   }
   /* if the condensed font could not be loaded, squeeze the fallback font so the digits stay tall and narrow */
-  html.no-cond .plate-digits{letter-spacing:.05em;}
+  html.no-cond .plate-digits{letter-spacing:.03em;}
   html.no-cond .plate-digits > span{display:inline-block; transform:scaleX(.74);}
-  html.no-cond .plate-code{display:inline-block; transform:scaleX(.74); transform-origin:left center;}
+  html.no-cond .plate-digits > .pc{transform-origin:right center;}
+  html.no-cond .plate-digits > .pd{transform-origin:center;}
+  html.no-cond .plate-digits > .pn{transform-origin:left center;}
 
   /* ===== header ===== */
   header{

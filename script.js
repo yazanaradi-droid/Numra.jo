@@ -318,14 +318,11 @@
   }
 
   function plateHtml(code, number, large){
-    const L = String(number).length;
-    const fs = Math.min(0.27, 0.62 / (L * 0.5 + 0.4)).toFixed(3);   // shrink long numbers so they stay inside the plate
+    const L = String(code).length + 1 + String(number).length;           // code + dash + number
+    const fs = Math.min(0.25, 0.68 / ((L + 0.6) * 0.46)).toFixed(3);   // shrink long numbers so they stay inside the plate
     return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:' + fs + '">' +
-      '<div class="plate-country">' +
-        '<div class="plate-names"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
-        '<span class="plate-code">' + escapeHtml(code) + '</span>' +
-      '</div>' +
-      '<div class="plate-digits"><span class="pn">' + escapeHtml(number) + '</span></div>' +
+      '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
+      '<div class="plate-digits"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></div>' +
       '</div>';
   }
 
