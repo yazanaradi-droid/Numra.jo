@@ -46,32 +46,40 @@
   ul{list-style:none;}
   .wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
 
-  /* ===== Jordanian plate (modelled on the real plate): long white plate, thin black inner frame,
-           Arabic + English country name on the left, tall condensed black digits ===== */
+  /* ===== Jordanian plate: embossed look (pale grey plate, black frame on the edge, raised glossy digits) ===== */
   .plate{
     position:relative; container-type:inline-size;
     display:flex; align-items:stretch;
-    width:100%; max-width:300px; aspect-ratio:3.8 / 1;
+    width:100%; max-width:300px; aspect-ratio:4.4 / 1;
     direction:ltr; unicode-bidi:isolate;
-    background:linear-gradient(180deg,#FBFBFA 0%,#ECECE9 55%,#DDDDD9 100%);
-    color:#0B0B0B; border-radius:8px;
-    box-shadow:0 1px 0 #fff inset, 0 2px 10px rgba(0,0,0,.5);
+    background:linear-gradient(180deg,#E9ECF1 0%,#DDE1E8 50%,#D1D6DF 100%);
+    color:#0B0B0B; border-radius:9px;
+    box-shadow:0 2px 12px rgba(0,0,0,.55);
     font-size:16px; line-height:1;
   }
-  .plate::before{content:''; position:absolute; inset:0; border:max(2px,1.1cqw) solid #0B0B0B; border-radius:inherit; pointer-events:none;}
+  /* black frame on the very edge of the plate */
+  .plate::before{content:''; position:absolute; inset:0; border:max(2px,1.2cqw) solid #0B0B0B; border-radius:inherit; pointer-events:none; z-index:2;}
+  /* thin pressed line just inside the frame */
+  .plate::after{content:''; position:absolute; inset:max(3px,1.7cqw); border:1px solid rgba(255,255,255,.75); border-radius:max(4px,1.4cqw); box-shadow:0 0 0 1px rgba(0,0,0,.08) inset; pointer-events:none;}
   .plate-country{
     flex:0 0 24%; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start;
-    padding:5.6cqw 0 5cqw 5.5cqw; color:#0B0B0B;
+    padding:5.4cqw 0 5cqw 5.6cqw; color:#0B0B0B;
   }
   .plate-country .ar{font-family:'Cairo','IBM Plex Sans Arabic',Arial,sans-serif; font-weight:800; font-size:6.4cqw; line-height:1;}
-  .plate-country .en{font-family:Arial,Helvetica,sans-serif; font-weight:700; font-size:3.9cqw; letter-spacing:.005em; line-height:1;}
+  .plate-country .en{font-family:Arial,Helvetica,sans-serif; font-weight:800; font-size:3.9cqw; letter-spacing:.01em; line-height:1;}
   .plate-digits{
-    flex:1; display:flex; align-items:center; justify-content:center; gap:.45em; padding-right:5cqw;
+    flex:1; display:flex; align-items:center; justify-content:center; gap:.4em; padding-right:5cqw;
     font-family:'Barlow Condensed','Arial Narrow','Roboto Condensed',Arial,sans-serif; font-weight:700;
-    font-size:calc(var(--fs, .2) * 100cqw); letter-spacing:.02em; white-space:nowrap; color:#0B0B0B;
+    font-size:calc(var(--fs, .2) * 100cqw); letter-spacing:.03em; white-space:nowrap;
+  }
+  /* raised, glossy, stamped look shared by the digits and the country text */
+  .plate-digits > span, .plate-country .ar, .plate-country .en{
+    background:linear-gradient(180deg,#4A4D52 0%,#0A0A0A 38%,#000 62%,#2B2D31 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 .6px rgba(255,255,255,.95)) drop-shadow(0 1.2px 0 rgba(255,255,255,.7)) drop-shadow(.8px 1.6px 1.4px rgba(0,0,0,.55));
   }
   /* if the condensed font could not be loaded, squeeze the fallback font so the digits stay tall and narrow */
-  html.no-cond .plate-digits{letter-spacing:-.04em;}
+  html.no-cond .plate-digits{letter-spacing:-.03em;}
   html.no-cond .plate-digits > span{display:inline-block; transform:scaleX(.74);}
   html.no-cond .plate-digits > .pc{transform-origin:right center;}
   html.no-cond .plate-digits > .pn{transform-origin:left center;}
@@ -442,7 +450,7 @@ a.listing-card:hover{border-color:var(--gold); transform:translateY(-2px);}
 .detail-title{font-family:var(--font-display); font-size:clamp(1.4rem,3vw,2rem); margin-bottom:20px;}
 .detail-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
 .detail-visual{display:flex; justify-content:center; align-items:center; padding:36px 16px; background:var(--surface-2); border-bottom:1px solid var(--line);}
-.plate.plate-lg{max-width:560px; border-radius:14px;}
+.plate.plate-lg{max-width:600px; border-radius:14px;}
 .number-lg{font-family:var(--font-mono); font-weight:700; font-size:2.2rem; letter-spacing:.04em; direction:ltr; unicode-bidi:isolate;}
 .seller-row{display:flex; align-items:center; gap:14px; padding:20px 22px 6px;}
 .seller-row .by, .seller-row .time{color:var(--muted); font-size:.82rem;}
