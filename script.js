@@ -319,7 +319,7 @@
 
   function plateHtml(code, number, large){
     const L = String(code).length + 1 + String(number).length;          // characters on the plate (code + dash + number)
-    const fs = Math.min(0.2, 0.60 / ((L + 0.6) * 0.5)).toFixed(3);   // shrink digits so long numbers still fit
+    const fs = Math.min(0.225, 0.66 / ((L + 0.9) * 0.42)).toFixed(3);   // shrink digits so long numbers still fit
     return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:' + fs + '">' +
       '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
       '<div class="plate-digits"><span class="pc">' + escapeHtml(code) + '-</span><span class="pn">' + escapeHtml(number) + '</span></div>' +
@@ -749,6 +749,13 @@
 
     const ru=document.getElementById('regUsername');
     if(ru) ru.addEventListener('input', function(){ if(ru.value.trim()){ clearTimeout(ru._t); ru._t=setTimeout(checkUsername,350); } else { setErr('regUsernameErr',null); markInvalid('regUsername',false); } });
+    /* plate digits use a condensed font; if it cannot load, CSS squeezes the fallback font instead */
+    (function(){
+      const mark = ()=>document.documentElement.classList.add('no-cond');
+      if(document.fonts && document.fonts.load){
+        document.fonts.load('700 1em "Barlow Condensed"').then(f=>{ if(!f || !f.length) mark(); }).catch(mark);
+      } else mark();
+    })();
     applyTranslations(currentLang);
     refreshAuthUI();
     renderListings();
