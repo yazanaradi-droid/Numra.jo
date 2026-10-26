@@ -21,6 +21,7 @@
     "nav.plates.all":{en:"See Plates (All)",ar:"عرض كل اللوحات"},
     "nav.numbers":{en:"Mobile Numbers ▾",ar:"أرقام الموبايل ▾"},
     "nav.numbers.all":{en:"See Mobile Numbers (All)",ar:"عرض كل أرقام الموبايل"},
+    "nav.uploadOnCar":{en:"Upload Plate On Car",ar:"إضافة لوحة على سيارة"},
     "nav.uploadMulti":{en:"Upload New (Multiple)",ar:"إضافة أرقام جديدة (متعددة)"},
     "nav.uploadNumberBg":{en:"Upload Number On Background",ar:"إضافة رقم على خلفية"},
     "nav.uploadPackage":{en:"Upload Package",ar:"إضافة باقة"},
