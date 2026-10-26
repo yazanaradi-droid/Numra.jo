@@ -537,7 +537,7 @@
       ? '<span class="card-phone card-phone-btn" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><b>' + T('feat.callLabel') + '</b> <span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>'
       : '<span class="card-phone" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>');
     return '<a class="listing-card' + (item.featured ? ' is-featured' : '') + '" href="' + listingHref(item) + '">' +
-      (item.featured ? '<span class="feat-ribbon">' + T('feat.ribbon') + '</span>' : '') +
+      (item.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') +
       favBtnHtml(item.id) +
       '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
       valueBlock +
@@ -1259,9 +1259,9 @@
     return '<div class="dash-card">' + head + '<div class="my-grid">' + items.map(it => {
       const vis = it.type === 'plate' ? plateHtml(it.code, it.number, false) : '<div class="row"><div class="num-icon">📱</div><div class="value">' + escapeHtml(it.value) + '</div></div>';
       const date = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
-      return '<div class="my-item">' + vis +
+      return '<div class="my-item' + (it.featured ? ' is-featured' : '') + '">' + (it.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') + favBtnHtml(it.id) + vis +
         '<div class="price">' + priceText(it) + '</div><div class="meta">' + date + '</div>' +
-        (it.featured ? '<div class="feat-badge">★ ' + T('feat.badge') + '</div>' : '') + dashFeatHtml(it) +
+        dashFeatHtml(it) +
         '<div class="my-actions"><a class="btn btn-ghost" href="' + listingHref(it) + '">' + T('dash.view') + '</a>' +
         '<button type="button" class="btn btn-ghost danger" data-del="' + escapeHtml(it.id) + '" onclick="deleteMyListing(this)">' + T('dash.delete') + '</button></div></div>';
     }).join('') + '</div></div>';
