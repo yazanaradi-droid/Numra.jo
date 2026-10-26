@@ -6,7 +6,7 @@
 <title>Mobile Numbers | x plate.jo</title>
 <meta name="description" content="Browse all available Jordanian mobile numbers for sale.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202610261503">
+<link rel="stylesheet" href="style.css?v=202610261529">
 </head>
 <body>
 
@@ -250,6 +250,17 @@
           <label for="upPrice" data-i18n="upload.price">Price (JOD)</label>
           <input id="upPrice" type="text" inputmode="decimal" placeholder="1500">
         </div>
+        <div class="feat-box">
+          <label class="feat-toggle"><input type="checkbox" id="upFeatured" onchange="toggleFeatured()"><span class="feat-tick">✓</span><span><b data-i18n="feat.title">Featured ad</b> <small data-i18n="feat.optional">(optional)</small><br><em data-i18n="feat.desc">Shown first and highlighted so more buyers see it.</em></span></label>
+          <div id="featOptions" class="feat-options" style="display:none;">
+            <h4 data-i18n="feat.pricesTitle">Ad prices</h4>
+            <label class="feat-opt"><input type="radio" name="featPlan" value="2w" onchange="updateFeatTotal()" checked><span class="feat-name" data-i18n="feat.2w">Two weeks</span><span class="feat-price">7 <span data-i18n="pkg.jod">JOD</span></span></label>
+            <label class="feat-opt"><input type="radio" name="featPlan" value="1m" onchange="updateFeatTotal()"><span class="feat-name" data-i18n="feat.1m">One month</span><span class="feat-price">10 <span data-i18n="pkg.jod">JOD</span></span></label>
+            <label class="feat-opt"><input type="radio" name="featPlan" value="forever" onchange="updateFeatTotal()"><span class="feat-name" data-i18n="feat.forever">Unlimited</span><span class="feat-price">15 <span data-i18n="pkg.jod">JOD</span></span></label>
+            <p class="feat-total"><span data-i18n="feat.total">Fee to pay:</span> <b id="featTotal">7</b> <span data-i18n="pkg.jod">JOD</span></p>
+            <p class="feat-note" data-i18n="feat.note">Your ad is published now. It becomes featured after payment is confirmed.</p>
+          </div>
+        </div>
         <button class="modal-submit" type="submit" data-i18n="upload.submit">Submit Listing</button>
       </form>
     </div>
@@ -257,6 +268,7 @@
       <div class="check">✓</div>
       <h3 data-i18n="upload.successTitle">Listing ready!</h3>
       <p data-i18n="upload.successDesc">This is a local demo form, so nothing was actually published — but every field you typed passed validation.</p>
+      <div id="featPayBox" class="feat-pay" style="display:none;"></div>
       <a id="uploadViewLink" href="#" class="btn btn-gold" style="display:none; margin-top:14px;" data-i18n="upload.viewListing">View listings</a>
     </div>
   </div>
@@ -272,6 +284,6 @@
 
 <script>const PAGE_TYPE = 'number';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202610261503"></script>
+<script src="script.js?v=202610261529"></script>
 </body>
 </html>

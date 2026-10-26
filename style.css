@@ -590,3 +590,24 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .ok-i{color:#1E9E5A; font-weight:700;} .no-i{color:#E03A5A; font-weight:700;}
 .plan-btn{width:100%; justify-content:center;}
 @media(max-width:700px){.plans{grid-template-columns:1fr;}}
+
+/* featured ads */
+.feat-box{margin:6px 0 16px; border:1px solid var(--line); border-radius:12px; padding:12px 14px; background:var(--surface);}
+.feat-box.on{border-color:var(--gold); background:#F5F7FF;}
+.feat-toggle{display:flex; gap:12px; align-items:flex-start; cursor:pointer;}
+.feat-toggle input{position:absolute; opacity:0; pointer-events:none;}
+.feat-tick{flex:none; width:24px; height:24px; border:2px solid var(--line); border-radius:7px; display:grid; place-items:center; color:transparent; font-weight:700; background:#fff; margin-top:2px;}
+.feat-toggle input:checked + .feat-tick{background:#1E9E5A; border-color:#1E9E5A; color:#fff;}
+.feat-toggle input:focus-visible + .feat-tick{outline:2px solid var(--gold); outline-offset:2px;}
+.feat-toggle small{color:var(--muted);} .feat-toggle em{font-style:normal; color:var(--muted); font-size:.85rem;}
+.feat-options{margin-top:12px; border-top:1px solid var(--line); padding-top:12px;}
+.feat-options h4{font-size:.95rem; margin-bottom:8px;}
+.feat-opt{display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line); border-radius:10px; margin-bottom:8px; cursor:pointer; background:#fff;}
+.feat-opt.sel{border-color:var(--gold); background:#EEF2FF;}
+.feat-name{flex:1; font-weight:600;} .feat-price{font-weight:700; direction:ltr;}
+.feat-total{margin:10px 0 4px; font-size:.95rem;} .feat-total b{font-size:1.2rem;}
+.feat-note{margin:0; color:var(--muted); font-size:.82rem;}
+.feat-badge{display:inline-block; background:#F59F00; color:#fff; font-size:.72rem; font-weight:700; padding:3px 9px; border-radius:99px; margin-bottom:8px;}
+.listing-card.is-featured{border-color:#F59F00; box-shadow:0 4px 16px rgba(245,159,0,.22);}
+.feat-pay{margin:16px 0 4px; padding:14px 16px; border:1px solid #F59F00; background:#FFF8E6; border-radius:12px; text-align:start;}
+.feat-pay h4{margin-bottom:6px;} .feat-pay p{margin:0 0 10px; font-size:.92rem;} .pay-id{direction:ltr; font-weight:700;}

@@ -172,6 +172,20 @@
     "pkg.bannerTitle":{en:"Want to sell 10x faster?",ar:"تريد تبيع 10x مرات أسرع؟"},
     "pkg.bannerText":{en:"Upgrade your membership to list unlimited plates and numbers.",ar:"بترقية عضويتك، يمكنك تحميل عدد لا محدود من الإعلانات."},
     "dash.upgradeLink":{en:"View membership plans",ar:"عرض باقات العضوية"},
+    "feat.title":{en:"Featured ad",ar:"إعلان مميز"},
+    "feat.optional":{en:"(optional)",ar:"(اختياري)"},
+    "feat.desc":{en:"Shown first and highlighted so more buyers see it.",ar:"يظهر في المقدمة وبشكل مميز ليراه مشترون أكثر."},
+    "feat.pricesTitle":{en:"Ad prices",ar:"أسعار الإعلانات"},
+    "feat.2w":{en:"Two weeks",ar:"أسبوعان"},
+    "feat.1m":{en:"One month",ar:"شهر"},
+    "feat.forever":{en:"Unlimited",ar:"ما لا نهاية"},
+    "feat.total":{en:"Fee to pay:",ar:"الرسوم المطلوبة:"},
+    "feat.note":{en:"Your ad is published now. It becomes featured after payment is confirmed.",ar:"يُنشر إعلانك الآن، ويصبح مميزاً بعد تأكيد الدفع."},
+    "feat.badge":{en:"Featured",ar:"مميز"},
+    "feat.pending":{en:"Featured - awaiting payment",ar:"مميز - بانتظار الدفع"},
+    "feat.payTitle":{en:"To activate the featured ad",ar:"لتفعيل الإعلان المميز"},
+    "feat.payBody":{en:"Transfer {amt} JOD via CliQ{alias}, then send us the transfer receipt with your ad number.",ar:"حوّل {amt} دينار عبر CliQ{alias}، ثم أرسل لنا إثبات التحويل مع رقم إعلانك."},
+    "feat.payBtn":{en:"Contact us",ar:"تواصل معنا"},
     "dash.title":{en:"My account",ar:"حسابي"},
     "dash.profile":{en:"My profile",ar:"ملفي"},
     "dash.membership":{en:"Membership management",ar:"إدارة العضوية"},
@@ -252,10 +266,9 @@
     "upload.price":{en:"Price (JOD)",ar:"السعر (دينار)"},
     "upload.desc":{en:"Description",ar:"الوصف"},
     "upload.descPlaceholder":{en:"Describe the listing...",ar:"صف الإعلان..."},
-    "upload.submit":{en:"Submit Listing",ar:"إرسال الإعلان"},
-    "upload.successTitle":{en:"Listing ready!",ar:"الإعلان جاهز!"},
-    "upload.successDesc":{en:"This is a local demo form, so nothing was actually published — but every field you typed passed validation.",
-                           ar:"هذا نموذج تجريبي محلي، لذا لم يتم نشر أي شيء فعلياً — لكن كل حقل أدخلته اجتاز التحقق."},
+    "upload.submit":{en:"Advertise now",ar:"أعلن الآن"},
+    "upload.successTitle":{en:"Your ad is live!",ar:"تم نشر إعلانك!"},
+    "upload.successDesc":{en:"Buyers can now see your listing.",ar:"يمكن للمشترين الآن رؤية إعلانك."},
     "upload.viewListing":{en:"View listings",ar:"عرض الإعلانات"},
 
     "info.contact.body":{en:'<p>We\u2019d love to hear from you — this is placeholder demo contact info:</p><ul><li>Email: support@xplate.jo</li><li>Location: Amman, Jordan</li></ul>',
@@ -363,7 +376,7 @@
   let userListings = [...seedListings];
 
   function rowToItem(r){
-    return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:String(r.price), created:r.created_at, phoneMasked:r.phone_masked || null};
+    return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:String(r.price), created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
   }
   async function loadRemoteListings(){
     if(!sb) return;
@@ -376,6 +389,7 @@
       }
       if(error) throw error;
       userListings = [...data.map(rowToItem), ...seedListings];
+      userListings.sort((a,b)=> (b.featured?1:0) - (a.featured?1:0));
     }catch(err){ console.warn('Could not load listings:', err); }
   }
   let currentUploadType = (typeof PAGE_TYPE !== 'undefined') ? PAGE_TYPE : 'plate';
@@ -476,7 +490,8 @@
     const valueBlock = item.type === 'plate'
       ? plateHtml(item.code, item.number, false)
       : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(item.value) + '</div></div>';
-    return '<a class="listing-card" href="' + listingHref(item) + '">' +
+    return '<a class="listing-card' + (item.featured ? ' is-featured' : '') + '" href="' + listingHref(item) + '">' +
+      (item.featured ? '<span class="feat-badge">★ ' + translations['feat.badge'][currentLang] + '</span>' : '') +
       '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
       valueBlock +
       '<div class="price">' + escapeHtml(item.price) + ' ' + priceLabel + '</div>' +
@@ -538,6 +553,7 @@
     document.getElementById('upNumber').value = '';
     document.getElementById('upValue').value = '';
     document.getElementById('upPrice').value = '';
+    const fch=document.getElementById('upFeatured'); if(fch){ fch.checked=false; toggleFeatured(); }
     document.getElementById('uploadErrorBanner').classList.remove('show');
     ['upCode','upNumber','upValue','upPrice'].forEach(id=>{
       document.getElementById(id).classList.remove('field-invalid');
@@ -548,6 +564,19 @@
     document.getElementById('uploadOverlay').classList.remove('open');
   }
 
+  const FEATURED_PRICES = {'2w':7, '1m':10, 'forever':15};
+  const CLIQ_ALIAS = '';   // put your CliQ alias here, e.g. 'XPLATEJO'
+  function toggleFeatured(){
+    const on = document.getElementById('upFeatured').checked;
+    document.getElementById('featOptions').style.display = on ? 'block' : 'none';
+    document.querySelector('.feat-box').classList.toggle('on', on);
+    if(on) updateFeatTotal();
+  }
+  function updateFeatTotal(){
+    const r = document.querySelector('input[name=featPlan]:checked');
+    document.getElementById('featTotal').textContent = r ? FEATURED_PRICES[r.value] : '';
+    document.querySelectorAll('.feat-opt').forEach(l=>l.classList.toggle('sel', l.querySelector('input').checked));
+  }
   async function submitUpload(e){
     e.preventDefault();
     const AR='٠١٢٣٤٥٦٧٨٩', FA='۰۱۲۳۴۵۶۷۸۹';
@@ -577,11 +606,20 @@
     const row = currentUploadType === 'plate'
       ? { type:'plate', code:document.getElementById('upCode').value, number:document.getElementById('upNumber').value, price }
       : { type:'number', value:document.getElementById('upValue').value, price };
+    const featOn = document.getElementById('upFeatured').checked;
+    const featPlan = featOn ? document.querySelector('input[name=featPlan]:checked').value : null;
+    if(featPlan) row.featured_plan = featPlan;
+    let newItem = null, featuredSkipped = false;
     const submitBtn = document.querySelector('#uploadForm .modal-submit'); submitBtn.disabled = true;
     try{
-      const {data, error} = await sb.from('xp_listings').insert(row).select().single();
+      let {data, error} = await sb.from('xp_listings').insert(row).select().single();
+      if(error && featPlan && /featured/i.test(error.message||'')){   // featured columns not installed yet: publish as a normal ad
+        delete row.featured_plan; featuredSkipped = true;
+        ({data, error} = await sb.from('xp_listings').insert(row).select().single());
+      }
       if(error) throw error;
-      userListings.unshift(rowToItem(data));
+      newItem = rowToItem(data);
+      userListings.unshift(newItem);
     }catch(err){
       console.warn(err);
       showBanner('uploadErrorBanner','upload.serverErr');
@@ -592,6 +630,18 @@
 
     document.getElementById('uploadForm').style.display='none';
     document.getElementById('uploadSuccess').classList.add('show');
+    const payBox = document.getElementById('featPayBox');
+    if(payBox){
+      if(featPlan && !featuredSkipped){
+        const amt = FEATURED_PRICES[featPlan];
+        const alias = CLIQ_ALIAS ? (currentLang==='ar' ? ' إلى: ' : ' to: ') + CLIQ_ALIAS : '';
+        payBox.innerHTML = '<h4>' + translations['feat.payTitle'][currentLang] + '</h4><p>' +
+          translations['feat.payBody'][currentLang].replace('{amt}', amt).replace('{alias}', alias) + '</p>' +
+          (newItem ? '<p class="pay-id">#' + escapeHtml(String(newItem.id).slice(0,8)) + '</p>' : '') +
+          '<a href="#" class="btn btn-ghost" onclick="closeUpload(); openInfo(\'contact\', event)">' + translations['feat.payBtn'][currentLang] + '</a>';
+        payBox.style.display = 'block';
+      } else { payBox.style.display = 'none'; payBox.innerHTML=''; }
+    }
 
     const viewLink = document.getElementById('uploadViewLink');
     if(viewLink){
@@ -903,10 +953,11 @@
   }
   async function fetchMyListings(type){
     if(!sb || !currentUser) return [];
-    const q = sb.from('xp_listings').select('id,type,code,number,value,price,created_at').eq('user_id', currentUser.id).order('created_at', {ascending:false});
-    const {data, error} = await (type ? q.eq('type', type) : q);
+    const build = cols => { const q = sb.from('xp_listings').select(cols).eq('user_id', currentUser.id).order('created_at', {ascending:false}); return type ? q.eq('type', type) : q; };
+    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until');
+    if(error) ({data, error} = await build('id,type,code,number,value,price,created_at'));   // featured columns not installed yet
     if(error){ console.warn(error); return []; }
-    return data.map(rowToItem);
+    return data.map(r => { const it = rowToItem(r); it.featured = r.featured_status === 'active' && (!r.featured_until || new Date(r.featured_until) > new Date()); return it; });
   }
 
   function dashMsg(id, key, ok){
@@ -1046,6 +1097,7 @@
       const date = it.created ? new Date(it.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : '';
       return '<div class="my-item">' + vis +
         '<div class="price">' + escapeHtml(it.price) + ' ' + priceLabel + '</div><div class="meta">' + date + '</div>' +
+        (it.featured ? '<div class="feat-badge">★ ' + T('feat.badge') + '</div>' : (it.featuredStatus === 'pending' ? '<div class="meta">⏳ ' + T('feat.pending') + '</div>' : '')) +
         '<div class="my-actions"><a class="btn btn-ghost" href="' + listingHref(it) + '">' + T('dash.view') + '</a>' +
         '<button type="button" class="btn btn-ghost danger" data-del="' + escapeHtml(it.id) + '" onclick="deleteMyListing(this)">' + T('dash.delete') + '</button></div></div>';
     }).join('') + '</div></div>';
