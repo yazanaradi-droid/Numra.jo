@@ -553,3 +553,8 @@ header{background:rgba(255,255,255,.92);}
 .tag, .kicker, .price, .cta, .visit{color:var(--gold);}
 .dash-logout, .logout-link, .btn.danger{color:var(--danger);}
 .important-box h3{color:var(--danger);}
+
+/* numbers and codes always read left-to-right (code on the left, number on the right), in Arabic too */
+#plateFields .field-row{direction:ltr;}
+#upCode, #upNumber, #upValue, #upPrice, #regPhone, #regUsername, #loginUsername{direction:ltr; text-align:left;}
+#upCode::placeholder, #upNumber::placeholder, #upValue::placeholder, #upPrice::placeholder, #regPhone::placeholder, #regUsername::placeholder, #loginUsername::placeholder{text-align:left;}
