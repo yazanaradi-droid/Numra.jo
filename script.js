@@ -412,7 +412,7 @@
   }
   function renderHomeListings(){
     const grid = document.getElementById('homeListingsGrid'); if(!grid) return;
-    const items = userListings.slice(0, 12);
+    const items = sortFeatured(userListings).slice(0, 12);
     grid.innerHTML = items.map(listingCardHtml).join('');
     document.getElementById('homeListings').style.display = items.length ? 'block' : 'none';
   }
@@ -586,7 +586,7 @@
   async function dashFavoritesHtml(){
     const T = k => translations[k][currentLang];
     await loadRemoteListings();
-    const items = userListings.filter(i => favs.has(String(i.id)));
+    const items = sortFeatured(userListings.filter(i => favs.has(String(i.id))));
     if(!items.length) return '<div class="dash-card"><h2>' + T('dash.favorites') + '</h2><p class="dash-note">' + T('dash.noFavs') + '</p></div>';
     return '<div class="dash-card"><h2>' + T('dash.favorites') + '</h2><div class="listings-grid fav-grid">' + items.map(listingCardHtml).join('') + '</div></div>';
   }
@@ -619,7 +619,7 @@
     }
     empty.style.display = 'none';
 
-    grid.innerHTML = items.map(listingCardHtml).join('');
+    grid.innerHTML = sortFeatured(items).map(listingCardHtml).join('');   // featured ads always come before normal ones
   }
 
 
@@ -718,7 +718,7 @@
       newItem = rowToItem(data);
       userListings = userListings.filter(x => x.id !== newItem.id && !(x.type === newItem.type && itemKey(x) === itemKey(newItem)));   // never show the same number twice
       userListings.unshift(newItem);
-      if(wasUpdated) userListings = sortFeatured(userListings);
+      userListings = sortFeatured(userListings);
     }catch(err){
       console.warn(err);
       showBanner('uploadErrorBanner','upload.serverErr');
