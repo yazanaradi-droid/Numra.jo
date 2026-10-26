@@ -655,3 +655,18 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .my-item .count, .my-item .plate, .my-item .row{margin-top:30px;}
 .listing-card .count{margin-inline-start:40px;}
 .listing-card .card-visual{margin-top:30px;}
+
+/* plate on car image */
+.ci-section{padding-top:20px;}
+.dash-note-box{background:#EEF0F4; border-radius:12px; padding:16px 20px; margin-bottom:20px; color:var(--text); font-size:.95rem;}
+.ci-layout{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:start;}
+.ci-row{direction:ltr;} .ci-row input, .ci-form .field input[type=text]{width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; font-size:.95rem; font-family:inherit; color:var(--text);}
+.ci-form input::placeholder{text-align:left;}
+.ci-h{font-size:1rem; margin:18px 0 10px;}
+.ci-thumbs{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+.ci-thumb{display:block; border:2px solid var(--line); border-radius:10px; overflow:hidden; cursor:pointer; line-height:0;}
+.ci-thumb input{position:absolute; opacity:0; pointer-events:none;} .ci-thumb canvas{width:100%; height:auto; display:block;}
+.ci-thumb.sel{border-color:var(--gold); box-shadow:0 0 0 2px rgba(59,91,219,.25);}
+.ci-preview{position:sticky; top:90px;} #ciCanvas{width:100%; height:auto; border-radius:14px; border:1px solid var(--line); touch-action:none; display:block;}
+.ci-dl{width:100%; justify-content:center; margin-top:14px;}
+@media(max-width:860px){.ci-layout{grid-template-columns:1fr;} .ci-preview{position:static;} .ci-thumbs{grid-template-columns:repeat(4,1fr);}}

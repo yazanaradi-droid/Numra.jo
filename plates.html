@@ -6,7 +6,7 @@
 <title>License Plates | x plate.jo</title>
 <meta name="description" content="Browse all available Jordanian license plates for sale.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202610261816">
+<link rel="stylesheet" href="style.css?v=202610261826">
 </head>
 <body>
 
@@ -22,7 +22,7 @@
           <div class="dropdown">
             <a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="nav.plates.all">See Plates (All)</a>
             <a href="#" onclick="openUpload('plate', event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
-            <a href="#" onclick="openUpload('plate', event)" data-i18n="nav.uploadOnCar">Upload Plate On Car</a>
+            <a href="car-image.html" onclick="navTo('car-image.html', event)" data-i18n="nav.uploadOnCar">Upload Plate On Car</a>
           </div>
         </li>
         <li><a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers">Mobile Numbers ▾</a>
@@ -84,6 +84,7 @@
     <div id="searchNote" class="dash-note" style="display:none;"></div>
     <div class="page-toolbar">
       <button class="btn btn-gold" onclick="openUpload('plate', event)" data-i18n="page.uploadCta.plate">+ List a plate</button>
+      <a class="btn btn-ghost" href="car-image.html" onclick="navTo('car-image.html', event)" data-i18n="nav.uploadOnCar">Upload Plate On Car</a>
     </div>
   </div>
 </section>
@@ -286,6 +287,6 @@
 
 <script>const PAGE_TYPE = 'plate';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202610261816"></script>
+<script src="script.js?v=202610261826"></script>
 </body>
 </html>
