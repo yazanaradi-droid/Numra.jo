@@ -279,6 +279,8 @@
     "listings.justNow":{en:"Just added",ar:"أُضيف الآن"},
     "upload.errorBanner":{en:"Please check the highlighted fields.",ar:"يرجى مراجعة الحقول المظللة."},
     "upload.price":{en:"Price (JOD)",ar:"السعر (دينار)"},
+    "price.contact":{en:"Contact for price",ar:"تواصل للسعر"},
+    "upload.priceOptional":{en:"(optional)",ar:"(اختياري)"},
     "upload.desc":{en:"Description",ar:"الوصف"},
     "upload.descPlaceholder":{en:"Describe the listing...",ar:"صف الإعلان..."},
     "upload.submit":{en:"Advertise now",ar:"أعلن الآن"},
@@ -392,7 +394,7 @@
   let userListings = [...seedListings];
 
   function rowToItem(r){
-    return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:String(r.price), created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
+    return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:(r.price==null ? '' : String(r.price)), created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
   }
   function itemKey(i){ return i.type === 'plate' ? (i.code + '-' + i.number) : String(i.value||'').replace(/\D/g,''); }
   function dedupeListings(list){ const seen = new Set(); return list.filter(i => { const k = i.type + ':' + itemKey(i); if(seen.has(k)) return false; seen.add(k); return true; }); }
@@ -459,10 +461,14 @@
     return best;
   }
   /* each credit is between 0 (no match) and 1 (exact match) */
+  function priceText(it){
+    if(it.price === '' || it.price == null || isNaN(parseFloat(it.price))) return translations['price.contact'][currentLang];
+    return escapeHtml(it.price) + ' ' + (currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD');
+  }
   function creditsFor(item, c){
     const num = String(item.type === 'plate' ? item.number : item.value).replace(/\D/g,'');
     const full = item.type === 'plate' ? String(item.code) + num : num;
-    const price = parseFloat(item.price);
+    const price = parseFloat(item.price), hasP = !isNaN(price);
     const out = [];
     if(c.code !== undefined) out.push(String(item.code) === c.code ? 1 : Math.max(0, 1 - Math.abs(+item.code - +c.code) / 10));
     if(c.prefix !== undefined) out.push(num.startsWith(c.prefix) ? 1 : commonPrefixLen(num, c.prefix) / c.prefix.length);
@@ -470,8 +476,8 @@
     if(c.contains !== undefined) out.push((num.includes(c.contains) || full.includes(c.contains)) ? 1 : longestCommonSubstring(num, c.contains) / c.contains.length);
     if(c.starts !== undefined) out.push(num.startsWith(c.starts) ? 1 : commonPrefixLen(num, c.starts) / c.starts.length);
     if(c.ends !== undefined) out.push(num.endsWith(c.ends) ? 1 : commonSuffixLen(num, c.ends) / c.ends.length);
-    if(c.max !== undefined) out.push(price <= c.max ? 1 : (price > 0 ? c.max / price : 0));
-    if(c.min !== undefined) out.push(price >= c.min ? 1 : (c.min > 0 ? price / c.min : 0));
+    if(c.max !== undefined) out.push(!hasP ? 0 : price <= c.max ? 1 : (price > 0 ? c.max / price : 0));
+    if(c.min !== undefined) out.push(!hasP ? 0 : price >= c.min ? 1 : (c.min > 0 ? price / c.min : 0));
     return out;
   }
   function closestMatches(items, c){
@@ -522,7 +528,7 @@
       (item.featured ? '<span class="feat-badge">★ ' + translations['feat.badge'][currentLang] + '</span>' : '') +
       '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
       valueBlock +
-      '<div class="price">' + escapeHtml(item.price) + ' ' + priceLabel + '</div>' +
+      '<div class="price">' + priceText(item) + '</div>' +
       (item.phoneMasked ? '<span class="card-phone" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>' : '') +
       '<div class="meta">' + metaLabel + '</div>' +
       '</a>';
@@ -617,7 +623,7 @@
       upCode:  v => /^\d{1,2}$/.test(v) && +v>=1 && +v<=99,
       upNumber:v => v.length>=1,
       upValue: v => /^[0-9+\s-]{7,15}$/.test(v),
-      upPrice: v => /^\d+(\.\d+)?$/.test(v) && +v>0
+      upPrice: v => v === '' || (/^\d+(\.\d+)?$/.test(v) && +v>0)
     };
     let valid = true;
     ids.forEach(id=>{
@@ -630,7 +636,7 @@
     showBanner('uploadErrorBanner', null);
     if(!sb || !currentUser){ closeUpload(); openAuth('login', null, true); return false; }
 
-    const price = Number(document.getElementById('upPrice').value);
+    const price = document.getElementById('upPrice').value === '' ? null : Number(document.getElementById('upPrice').value);
     const row = currentUploadType === 'plate'
       ? { type:'plate', code:document.getElementById('upCode').value, number:document.getElementById('upNumber').value, price }
       : { type:'number', value:document.getElementById('upValue').value, price };
@@ -908,7 +914,7 @@
     document.getElementById('sellerName').textContent = sellerName;
     const dateStr = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
     document.getElementById('sellerDate').textContent = it.seed || !dateStr ? T('detail.sample') : T('detail.listed') + ' ' + dateStr;
-    document.getElementById('detailPrice').textContent = it.price + ' ' + priceLabel;
+    document.getElementById('detailPrice').innerHTML = priceText(it);
 
     const btn = document.getElementById('contactBtn');
     if(detailSeller && detailSeller.phone){
@@ -1187,7 +1193,7 @@
       const vis = it.type === 'plate' ? plateHtml(it.code, it.number, false) : '<div class="row"><div class="num-icon">📱</div><div class="value">' + escapeHtml(it.value) + '</div></div>';
       const date = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
       return '<div class="my-item">' + vis +
-        '<div class="price">' + escapeHtml(it.price) + ' ' + priceLabel + '</div><div class="meta">' + date + '</div>' +
+        '<div class="price">' + priceText(it) + '</div><div class="meta">' + date + '</div>' +
         (it.featured ? '<div class="feat-badge">★ ' + T('feat.badge') + '</div>' : '') + dashFeatHtml(it) +
         '<div class="my-actions"><a class="btn btn-ghost" href="' + listingHref(it) + '">' + T('dash.view') + '</a>' +
         '<button type="button" class="btn btn-ghost danger" data-del="' + escapeHtml(it.id) + '" onclick="deleteMyListing(this)">' + T('dash.delete') + '</button></div></div>';

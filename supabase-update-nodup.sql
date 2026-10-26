@@ -23,7 +23,7 @@ begin
   end if;
   if found then
     if r.user_id <> auth.uid() then raise exception 'already_listed'; end if;
-    update public.xp_listings set price = p_price where id = r.id returning * into r;
+    update public.xp_listings set price = coalesce(p_price, price) where id = r.id returning * into r;
     updated := true;
     if p_plan in ('2w','1m','forever') and not (r.featured_status = 'active' and (r.featured_until is null or r.featured_until > now())) then
       update public.xp_listings set featured_plan = p_plan, featured_status = 'pending' where id = r.id returning * into r;
