@@ -963,6 +963,21 @@
     }catch(err){ console.warn(err); btn.textContent = T('auth.genericErr'); }
   }
 
+  /* ============ light / dark theme toggle ============ */
+  const THEME_KEY = 'xpj_theme';
+  function applyTheme(t){
+    if(t === 'light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+    const b = document.getElementById('themeToggle');
+    if(b){ b.classList.toggle('theme-on', t === 'light'); b.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false'); }
+  }
+  function toggleTheme(){
+    const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+    applyTheme(next);
+  }
+  (function(){ let t = 'dark'; try{ t = localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'; }catch(e){} applyTheme(t); })();
+
   /* ============ wire up overlay click-to-close (guarded per page) ============ */
   document.addEventListener('DOMContentLoaded', function(){
     ['registerOverlay','uploadOverlay','infoOverlay','contactOverlay'].forEach(id=>{

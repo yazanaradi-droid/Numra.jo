@@ -6,7 +6,8 @@
 <title>License Plates | x plate.jo</title>
 <meta name="description" content="Browse all available Jordanian license plates for sale.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202610221710">
+<link rel="stylesheet" href="style.css?v=202610261421">
+<script>try{if(localStorage.getItem('xpj_theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
 </head>
 <body>
 
@@ -45,7 +46,7 @@
     <div class="nav-actions">
       <button class="icon-btn" title="Wishlist">♡</button>
       <button class="icon-btn" id="langToggle" title="Language" onclick="toggleLang()">EN</button>
-      <button class="icon-btn" title="Theme">◐</button>
+      <button class="icon-btn" id="themeToggle" title="Light / Dark" aria-label="Light / Dark" onclick="toggleTheme()">◐</button>
       <span class="auth-guest" id="authGuest">
         <a class="btn btn-ghost" href="#" onclick="openAuth('login',event)" data-i18n="nav.login">Login</a>
         <a class="btn btn-ghost" href="#" onclick="openAuth('register',event)" data-i18n="nav.register">Register</a>
@@ -265,6 +266,6 @@
 
 <script>const PAGE_TYPE = 'plate';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202610221710"></script>
+<script src="script.js?v=202610261421"></script>
 </body>
 </html>
