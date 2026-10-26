@@ -615,3 +615,8 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .feat-detail{margin:18px 0; padding:18px 22px; border:1px solid #F59F00; background:#FFF8E6; border-radius:var(--radius);}
 .feat-detail h3{font-size:1.1rem; margin-bottom:4px;} .feat-detail h4{font-size:.95rem; margin:12px 0 8px;} .feat-detail p{margin:0 0 8px; color:var(--muted); font-size:.92rem;}
 .feat-detail .feat-opt.sel{background:#FFF1CC; border-color:#F59F00;}
+
+.dash-feat{margin-top:10px;} .dash-feat .feat-open{width:100%; justify-content:center; border-color:#F59F00; color:#8a5a00; background:#FFF8E6;}
+.dash-feat-form{margin-top:10px; padding:10px; border:1px solid #F59F00; border-radius:10px; background:#FFF8E6;}
+.dash-feat-form .btn-gold{width:100%; justify-content:center;}
+.dash-feat-form .feat-opt.sel{background:#FFF1CC; border-color:#F59F00;}

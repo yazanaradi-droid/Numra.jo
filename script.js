@@ -1044,10 +1044,11 @@
   async function fetchMyListings(type){
     if(!sb || !currentUser) return [];
     const build = cols => { const q = sb.from('xp_listings').select(cols).eq('user_id', currentUser.id).order('created_at', {ascending:false}); return type ? q.eq('type', type) : q; };
-    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until');
+    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request');
+    if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at'));   // featured columns not installed yet
     if(error){ console.warn(error); return []; }
-    return data.map(r => { const it = rowToItem(r); it.featured = r.featured_status === 'active' && (!r.featured_until || new Date(r.featured_until) > new Date()); return it; });
+    return data.map(r => { const it = rowToItem(r); it.featured = r.featured_status === 'active' && (!r.featured_until || new Date(r.featured_until) > new Date()); it.featuredPlan = r.featured_plan||null; it.featuredUntil = r.featured_until||null; it.featuredRequest = r.featured_request||null; return it; });
   }
 
   function dashMsg(id, key, ok){
@@ -1187,10 +1188,43 @@
       const date = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
       return '<div class="my-item">' + vis +
         '<div class="price">' + escapeHtml(it.price) + ' ' + priceLabel + '</div><div class="meta">' + date + '</div>' +
-        (it.featured ? '<div class="feat-badge">★ ' + T('feat.badge') + '</div>' : (it.featuredStatus === 'pending' ? '<div class="meta">⏳ ' + T('feat.pending') + '</div>' : '')) +
+        (it.featured ? '<div class="feat-badge">★ ' + T('feat.badge') + '</div>' : '') + dashFeatHtml(it) +
         '<div class="my-actions"><a class="btn btn-ghost" href="' + listingHref(it) + '">' + T('dash.view') + '</a>' +
         '<button type="button" class="btn btn-ghost danger" data-del="' + escapeHtml(it.id) + '" onclick="deleteMyListing(this)">' + T('dash.delete') + '</button></div></div>';
     }).join('') + '</div></div>';
+  }
+
+  function dashFeatHtml(it){
+    const T = k => translations[k][currentLang];
+    const id = escapeHtml(it.id);
+    const pend = it.featured ? it.featuredRequest : (it.featuredStatus === 'pending' ? it.featuredPlan : null);
+    let h = '<div class="dash-feat" id="df-' + id + '">';
+    if(pend){
+      h += '<div class="meta">⏳ ' + T('feat.pending') + ': ' + T('feat.' + pend) + ' - ' + FEATURED_PRICES[pend] + ' ' + T('pkg.jod') + '</div>';
+    } else {
+      const rank = it.featured ? (PLAN_RANK[it.featuredPlan] || 0) : 0;
+      if(rank < 3){
+        h += '<button type="button" class="btn btn-ghost feat-open" onclick="dashFeatToggle(\'' + id + '\', ' + rank + ')">' + T(it.featured ? 'feat.upTitle' : 'feat.reqBtn') + (it.featured ? ' ↑' : ' ★') + '</button>' +
+             '<div class="dash-feat-form" style="display:none;"></div>';
+      }
+    }
+    return h + '</div>';
+  }
+  function dashFeatToggle(id, rank){
+    const f = document.querySelector('#df-' + id + ' .dash-feat-form');
+    if(!f) return;
+    if(f.style.display === 'block'){ f.style.display = 'none'; return; }
+    const T = k => translations[k][currentLang];
+    f.innerHTML = featOpts(rank, 'featDash-' + id) +
+      '<button type="button" class="btn btn-gold" onclick="dashFeatSend(\'' + id + '\')">' + T(rank ? 'feat.upBtn' : 'feat.reqBtn') + '</button><p class="feat-note"></p>';
+    f.style.display = 'block';
+  }
+  async function dashFeatSend(id){
+    const f = document.querySelector('#df-' + id + ' .dash-feat-form');
+    const r = f.querySelector('input:checked'); if(!r) return;
+    const {error} = await sb.rpc('xp_request_featured', {lid:id, plan:r.value});
+    if(error){ console.warn(error); f.querySelector('.feat-note').textContent = translations['feat.reqErr'][currentLang]; return; }
+    renderDashboard();
   }
 
   async function deleteMyListing(btn){
