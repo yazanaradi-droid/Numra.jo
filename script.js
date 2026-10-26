@@ -1178,8 +1178,8 @@
     return '<div class="dash-card"><h2>' + T('dash.package') + '</h2>' +
       '<div class="dash-row"><span>' + T('dash.currentPackage') + '</span><b>' + T('dash.free') + '</b></div>' +
       '<div class="dash-row"><span>' + T('dash.activeListings') + '</span><b>' + all.length + '</b></div>' +
-      '<p class="dash-note">' + T('dash.packageSoon') + '</p>' +
-      '<a class="btn btn-gold" href="packages.html" onclick="navTo(\'packages.html\', event)">' + T('dash.upgradeLink') + '</a></div>';
+      '<div class="dash-actions">' +
+      '<a class="btn btn-gold" href="packages.html" onclick="navTo(\'packages.html\', event)">' + T('dash.upgradeLink') + '</a></div></div>';
   }
 
   async function dashListingsHtml(type){

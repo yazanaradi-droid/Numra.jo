@@ -624,3 +624,4 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .dash-feat .feat-open:hover{background:#26396B; border-color:#26396B;}
 #uploadForm .modal-submit{background:#1B2A4E; color:#fff;}
 #uploadForm .modal-submit:hover{background:#26396B;}
+.dash-actions{margin-top:20px; display:flex;}
