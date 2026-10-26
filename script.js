@@ -209,15 +209,6 @@
     "feat.ribbon":{en:"Featured",ar:"مميز"},
     "feat.callLabel":{en:"Call:",ar:"اتصال:"},
     "fav.title":{en:"Save to favorites",ar:"إضافة إلى المفضلة"},
-    "car.title":{en:"Put a plate on a car image",ar:"تحميل رقم على صورة سيارة"},
-    "car.lead":{en:"Type your plate, choose a background, then download the image to share it.",ar:"اكتب رقم اللوحة، اختر الخلفية، ثم حمّل الصورة وشاركها."},
-    "car.note":{en:"Note: you can use the letters X, Y and Z to hide some digits.",ar:"ملاحظة: يمكن استخدام الأحرف التالية: X و Y و Z لإخفاء بعض الأرقام."},
-    "car.phone":{en:"Contact number",ar:"رقم التواصل"},
-    "car.choose":{en:"Choose a background",ar:"اختيار خلفية"},
-    "car.own":{en:"Or use your own car photo",ar:"أو استخدم صورة سيارتك"},
-    "car.size":{en:"Plate size",ar:"حجم اللوحة"},
-    "car.drag":{en:"Click or drag on the image to place the plate.",ar:"اضغط أو اسحب على الصورة لتحديد مكان اللوحة."},
-    "car.download":{en:"Download image",ar:"تحميل الصورة"},
     "dash.title":{en:"My account",ar:"حسابي"},
     "dash.profile":{en:"My profile",ar:"ملفي"},
     "dash.membership":{en:"Membership management",ar:"إدارة العضوية"},
@@ -363,7 +354,6 @@
     applyTranslations(currentLang);
     if(typeof renderListings === 'function') renderListings();
     renderHomeListings();
-    if(typeof renderCarImage === 'function') renderCarImage();
     renderSearchPanel();
     renderListingPage();
     renderDashboard();
