@@ -513,7 +513,7 @@
   function listingCardHtml(item){
     const badgeKey = item.type === 'plate' ? 'listings.plateBadge' : 'listings.numberBadge';
     const badgeLabel = translations[badgeKey][currentLang];
-    const metaLabel = item.seed ? translations['listings.verified'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : translations['listings.justNow'][currentLang]);
+    const metaLabel = item.seed ? translations['listings.verified'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString('en-GB') : translations['listings.justNow'][currentLang]);
     const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
     const valueBlock = item.type === 'plate'
       ? plateHtml(item.code, item.number, false)
@@ -906,7 +906,7 @@
     const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'x plate.jo';
     document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
     document.getElementById('sellerName').textContent = sellerName;
-    const dateStr = it.created ? new Date(it.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : '';
+    const dateStr = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
     document.getElementById('sellerDate').textContent = it.seed || !dateStr ? T('detail.sample') : T('detail.listed') + ' ' + dateStr;
     document.getElementById('detailPrice').textContent = it.price + ' ' + priceLabel;
 
@@ -946,7 +946,7 @@
     const pendingPlan = (!active && f.featured_status === 'pending') ? f.featured_plan : (active ? f.featured_request : null);
     let h = '';
     if(active){
-      h += '<h3>★ ' + T('feat.activeNow') + '</h3><p>' + (f.featured_until ? T('feat.until') + ' ' + new Date(f.featured_until).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : T('feat.forever')) + '</p>';
+      h += '<h3>★ ' + T('feat.activeNow') + '</h3><p>' + (f.featured_until ? T('feat.until') + ' ' + new Date(f.featured_until).toLocaleDateString('en-GB') : T('feat.forever')) + '</p>';
     } else h += '<h3>' + T('feat.boxTitle') + '</h3><p>' + T('feat.boxDesc') + '</p>';
     if(pendingPlan){
       h += '<p class="feat-note"><b>' + T('feat.' + pendingPlan) + ' - ' + FEATURED_PRICES[pendingPlan] + ' ' + T('pkg.jod') + '</b><br>' + T('feat.reqSent') + '</p>' +
@@ -1153,7 +1153,7 @@
     const p = await fetchMyProfile();
     const all = await fetchMyListings(null);
     const nPlates = all.filter(i=>i.type==='plate').length, nNums = all.filter(i=>i.type==='number').length;
-    const since = p && p.created_at ? new Date(p.created_at).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : '-';
+    const since = p && p.created_at ? new Date(p.created_at).toLocaleDateString('en-GB') : '-';
     const row = (k, v) => '<div class="dash-row"><span>' + T(k) + '</span><b>' + v + '</b></div>';
     return '<div class="dash-card"><h2>' + T('dash.membership') + '</h2>' +
       row('modal.username', '@' + escapeHtml(p ? p.username : '')) +
@@ -1184,7 +1184,7 @@
     if(!items.length) return '<div class="dash-card">' + head + '<p class="dash-note">' + T(type === 'plate' ? 'dash.noPlates' : 'dash.noNumbers') + '</p></div>';
     return '<div class="dash-card">' + head + '<div class="my-grid">' + items.map(it => {
       const vis = it.type === 'plate' ? plateHtml(it.code, it.number, false) : '<div class="row"><div class="num-icon">📱</div><div class="value">' + escapeHtml(it.value) + '</div></div>';
-      const date = it.created ? new Date(it.created).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : '';
+      const date = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
       return '<div class="my-item">' + vis +
         '<div class="price">' + escapeHtml(it.price) + ' ' + priceLabel + '</div><div class="meta">' + date + '</div>' +
         (it.featured ? '<div class="feat-badge">★ ' + T('feat.badge') + '</div>' : (it.featuredStatus === 'pending' ? '<div class="meta">⏳ ' + T('feat.pending') + '</div>' : '')) +
