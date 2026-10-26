@@ -625,3 +625,6 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 #uploadForm .modal-submit{background:#1B2A4E; color:#fff;}
 #uploadForm .modal-submit:hover{background:#26396B;}
 .dash-actions{margin-top:20px; display:flex;}
+/* featured / advertise buttons use the site blue */
+.dash-feat .feat-open, #uploadForm .modal-submit{background:#3B5BDB; border-color:#3B5BDB; color:#fff;}
+.dash-feat .feat-open:hover, #uploadForm .modal-submit:hover{background:#4E6EF2; border-color:#4E6EF2;}
