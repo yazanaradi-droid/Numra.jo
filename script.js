@@ -157,6 +157,21 @@
     "contact.disclaimer":{en:"our platform is not responsible for any financial loss or fraud resulting from direct dealings.",ar:"منصتنا غير مسؤولة عن أي خسائر مالية أو حالات احتيال ناتجة عن التعاملات المباشرة."},
     "contact.whatsapp":{en:"WhatsApp",ar:"واتساب"},
     "contact.close":{en:"Close",ar:"إغلاق"},
+    "pkg.title":{en:"Membership plans",ar:"باقات العضوية"},
+    "pkg.lead":{en:"Choose the plan that fits the way you sell.",ar:"اختر الباقة التي تناسب طريقة بيعك."},
+    "pkg.free":{en:"Free",ar:"المجانية"},
+    "pkg.silver":{en:"Silver",ar:"الفضية"},
+    "pkg.jod":{en:"JOD",ar:"دينار"},
+    "pkg.month":{en:"month",ar:"شهرياً"},
+    "pkg.f1":{en:"List unlimited cars",ar:"تحميل عدد لا محدود من السيارات"},
+    "pkg.f2":{en:"Use the numbers services",ar:"استخدام خدمات الأرقام"},
+    "pkg.f3":{en:"List unlimited car plates",ar:"تحميل عدد لا محدود من أرقام السيارات"},
+    "pkg.f4":{en:"List unlimited phone numbers",ar:"تحميل عدد لا محدود من أرقام الهواتف"},
+    "pkg.current":{en:"Current plan",ar:"العضوية الحالية"},
+    "pkg.upgrade":{en:"Upgrade membership",ar:"ترقية العضوية"},
+    "pkg.bannerTitle":{en:"Want to sell 10x faster?",ar:"تريد تبيع 10x مرات أسرع؟"},
+    "pkg.bannerText":{en:"Upgrade your membership to list unlimited plates and numbers.",ar:"بترقية عضويتك، يمكنك تحميل عدد لا محدود من الإعلانات."},
+    "dash.upgradeLink":{en:"View membership plans",ar:"عرض باقات العضوية"},
     "dash.title":{en:"My account",ar:"حسابي"},
     "dash.profile":{en:"My profile",ar:"ملفي"},
     "dash.membership":{en:"Membership management",ar:"إدارة العضوية"},
@@ -1015,7 +1030,8 @@
     return '<div class="dash-card"><h2>' + T('dash.package') + '</h2>' +
       '<div class="dash-row"><span>' + T('dash.currentPackage') + '</span><b>' + T('dash.free') + '</b></div>' +
       '<div class="dash-row"><span>' + T('dash.activeListings') + '</span><b>' + all.length + '</b></div>' +
-      '<p class="dash-note">' + T('dash.packageSoon') + '</p></div>';
+      '<p class="dash-note">' + T('dash.packageSoon') + '</p>' +
+      '<a class="btn btn-gold" href="packages.html" onclick="navTo(\'packages.html\', event)">' + T('dash.upgradeLink') + '</a></div>';
   }
 
   async function dashListingsHtml(type){
