@@ -186,6 +186,18 @@
     "feat.payTitle":{en:"To activate the featured ad",ar:"لتفعيل الإعلان المميز"},
     "feat.payBody":{en:"Transfer {amt} JOD via CliQ{alias}, then send us the transfer receipt with your ad number.",ar:"حوّل {amt} دينار عبر CliQ{alias}، ثم أرسل لنا إثبات التحويل مع رقم إعلانك."},
     "feat.payBtn":{en:"Contact us",ar:"تواصل معنا"},
+    "feat.boxTitle":{en:"Make your ad featured",ar:"اجعل إعلانك مميزاً"},
+    "feat.boxDesc":{en:"Featured ads are pinned first, in gold, on the home page and in the lists.",ar:"الإعلانات المميزة تظهر أولاً وباللون الذهبي في الصفحة الرئيسية والقوائم."},
+    "feat.reqBtn":{en:"Make it featured",ar:"اجعله مميزاً"},
+    "feat.upTitle":{en:"Upgrade to",ar:"ترقية إلى"},
+    "feat.upBtn":{en:"Upgrade",ar:"ترقية"},
+    "feat.activeNow":{en:"Your ad is featured",ar:"إعلانك مميز"},
+    "feat.until":{en:"until",ar:"حتى"},
+    "feat.reqSent":{en:"Request received. It is activated once the payment is confirmed.",ar:"تم استلام طلبك، ويتم التفعيل بعد تأكيد الدفع."},
+    "feat.reqErr":{en:"Could not send the request. Run the featured SQL update first.",ar:"تعذّر إرسال الطلب. شغّل ملف SQL الخاص بالإعلانات المميزة أولاً."},
+    "feat.homeTitle":{en:"Latest listings",ar:"أحدث الإعلانات"},
+    "feat.homeSub":{en:"Featured ads first, then the newest listings.",ar:"الإعلانات المميزة أولاً ثم أحدث الإعلانات."},
+    "feat.homeMore":{en:"Browse all →",ar:"تصفح الكل ←"},
     "dash.title":{en:"My account",ar:"حسابي"},
     "dash.profile":{en:"My profile",ar:"ملفي"},
     "dash.membership":{en:"Membership management",ar:"إدارة العضوية"},
@@ -328,6 +340,7 @@
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     applyTranslations(currentLang);
     if(typeof renderListings === 'function') renderListings();
+    renderHomeListings();
     renderSearchPanel();
     renderListingPage();
     renderDashboard();
@@ -378,6 +391,16 @@
   function rowToItem(r){
     return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:String(r.price), created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
   }
+  function sortFeatured(list){   // featured first (earliest listed first), then the rest in their existing order
+    const f = list.filter(i=>i.featured).sort((a,b)=> new Date(a.created||0) - new Date(b.created||0));
+    return [...f, ...list.filter(i=>!i.featured)];
+  }
+  function renderHomeListings(){
+    const grid = document.getElementById('homeListingsGrid'); if(!grid) return;
+    const items = userListings.slice(0, 12);
+    grid.innerHTML = items.map(listingCardHtml).join('');
+    document.getElementById('homeListings').style.display = items.length ? 'block' : 'none';
+  }
   async function loadRemoteListings(){
     if(!sb) return;
     try{
@@ -389,7 +412,7 @@
       }
       if(error) throw error;
       userListings = [...data.map(rowToItem), ...seedListings];
-      userListings.sort((a,b)=> (b.featured?1:0) - (a.featured?1:0));
+      userListings = sortFeatured(userListings);
     }catch(err){ console.warn('Could not load listings:', err); }
   }
   let currentUploadType = (typeof PAGE_TYPE !== 'undefined') ? PAGE_TYPE : 'plate';
@@ -804,6 +827,8 @@
   }
   function itemLabel(item){ return item.type === 'plate' ? item.code + ' - ' + item.number : item.value; }
 
+  let detailFeat = null;
+  const PLAN_RANK = {'2w':1, '1m':2, 'forever':3};
   async function initListingPage(){
     const root = document.getElementById('listingDetail');
     if(!root) return;
@@ -825,6 +850,14 @@
         } else detailState = 'missing';
       }catch(err){ console.warn(err); detailState = 'error'; }
     } else detailState = 'missing';
+    detailFeat = null;
+    if(sb && detailState === 'ok' && !id.startsWith('seed-')){
+      try{
+        await authReady;
+        const {data} = await sb.from('xp_listings').select('user_id,featured_plan,featured_status,featured_until,featured_request').eq('id', id).maybeSingle();
+        if(data && currentUser && data.user_id === currentUser.id) detailFeat = data;   // owner only
+      }catch(err){ console.warn(err); }
+    }
     await loadRemoteListings();
     renderListingPage();
   }
@@ -873,12 +906,53 @@
       btn.onclick = null;
     }
 
+    renderFeatureBox();
+
     const sim = userListings.filter(x => x.id !== it.id && x.type === it.type)
       .sort((a,b)=> (it.type==='plate' ? (b.code===it.code) - (a.code===it.code) : 0))
       .slice(0, 6);
     const simWrap = document.getElementById('similarWrap');
     simWrap.style.display = sim.length ? 'block' : 'none';
     document.getElementById('similarGrid').innerHTML = sim.map(listingCardHtml).join('');
+  }
+
+  function featOpts(minRank, name){
+    const T = k => translations[k][currentLang];
+    const plans = ['2w','1m','forever'].filter(p => PLAN_RANK[p] > minRank);
+    return plans.map((p,i)=> '<label class="feat-opt' + (i===0?' sel':'') + '"><input type="radio" name="' + name + '" value="' + p + '"' + (i===0?' checked':'') + ' onchange="document.querySelectorAll(\'.feat-opt\').forEach(l=>l.classList.toggle(\'sel\', l.querySelector(\'input\').checked))"><span class="feat-name">' + T('feat.' + p) + '</span><span class="feat-price">' + FEATURED_PRICES[p] + ' ' + T('pkg.jod') + '</span></label>').join('');
+  }
+  function renderFeatureBox(){
+    const box = document.getElementById('featureBox'); if(!box) return;
+    if(!detailFeat){ box.style.display = 'none'; return; }
+    const T = k => translations[k][currentLang];
+    const f = detailFeat;
+    const active = f.featured_status === 'active' && (!f.featured_until || new Date(f.featured_until) > new Date());
+    const pendingPlan = (!active && f.featured_status === 'pending') ? f.featured_plan : (active ? f.featured_request : null);
+    let h = '';
+    if(active){
+      h += '<h3>★ ' + T('feat.activeNow') + '</h3><p>' + (f.featured_until ? T('feat.until') + ' ' + new Date(f.featured_until).toLocaleDateString(currentLang==='ar'?'ar-JO':'en-GB') : T('feat.forever')) + '</p>';
+    } else h += '<h3>' + T('feat.boxTitle') + '</h3><p>' + T('feat.boxDesc') + '</p>';
+    if(pendingPlan){
+      h += '<p class="feat-note"><b>' + T('feat.' + pendingPlan) + ' - ' + FEATURED_PRICES[pendingPlan] + ' ' + T('pkg.jod') + '</b><br>' + T('feat.reqSent') + '</p>' +
+           '<a href="#" class="btn btn-ghost" onclick="openInfo(\'contact\', event)">' + T('feat.payBtn') + '</a>';
+    } else {
+      const rank = active ? (PLAN_RANK[f.featured_plan] || 0) : 0;
+      const opts = featOpts(rank, 'featReq');
+      if(opts){
+        h += (active ? '<h4>' + T('feat.upTitle') + '</h4>' : '<h4>' + T('feat.pricesTitle') + '</h4>') + opts +
+             '<button type="button" class="btn btn-gold" onclick="requestFeatured()">' + T(active ? 'feat.upBtn' : 'feat.reqBtn') + '</button><p id="featReqMsg" class="feat-note"></p>';
+      }
+    }
+    box.innerHTML = h; box.style.display = 'block';
+  }
+  async function requestFeatured(){
+    const r = document.querySelector('input[name=featReq]:checked'); if(!r || !detailItem) return;
+    const msg = document.getElementById('featReqMsg');
+    const {error} = await sb.rpc('xp_request_featured', {lid: detailItem.id, plan: r.value});
+    if(error){ console.warn(error); if(msg) msg.textContent = translations['feat.reqErr'][currentLang]; return; }
+    const active = detailFeat.featured_status === 'active' && (!detailFeat.featured_until || new Date(detailFeat.featured_until) > new Date());
+    if(active) detailFeat.featured_request = r.value; else { detailFeat.featured_plan = r.value; detailFeat.featured_status = 'pending'; }
+    renderFeatureBox();
   }
 
   /* ============ contact popup (safety notice + WhatsApp + call) ============ */
@@ -1151,5 +1225,5 @@
     authReady = initAuth();
     if(document.getElementById('dashRoot')) authReady.then(initDashboard);
     if(document.getElementById('listingDetail')) initListingPage();
-    else loadRemoteListings().then(renderListings);
+    else loadRemoteListings().then(()=>{ renderListings(); renderHomeListings(); });
   });

@@ -611,3 +611,7 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .listing-card.is-featured{border-color:#F59F00; box-shadow:0 4px 16px rgba(245,159,0,.22);}
 .feat-pay{margin:16px 0 4px; padding:14px 16px; border:1px solid #F59F00; background:#FFF8E6; border-radius:12px; text-align:start;}
 .feat-pay h4{margin-bottom:6px;} .feat-pay p{margin:0 0 10px; font-size:.92rem;} .pay-id{direction:ltr; font-weight:700;}
+
+.feat-detail{margin:18px 0; padding:18px 22px; border:1px solid #F59F00; background:#FFF8E6; border-radius:var(--radius);}
+.feat-detail h3{font-size:1.1rem; margin-bottom:4px;} .feat-detail h4{font-size:.95rem; margin:12px 0 8px;} .feat-detail p{margin:0 0 8px; color:var(--muted); font-size:.92rem;}
+.feat-detail .feat-opt.sel{background:#FFF1CC; border-color:#F59F00;}
