@@ -198,6 +198,9 @@
     "feat.homeTitle":{en:"Latest listings",ar:"أحدث الإعلانات"},
     "feat.homeSub":{en:"Featured ads first, then the newest listings.",ar:"الإعلانات المميزة أولاً ثم أحدث الإعلانات."},
     "feat.homeMore":{en:"Browse all →",ar:"تصفح الكل ←"},
+    "upload.dupErr":{en:"This plate/number is already listed by another account.",ar:"هذا الرقم معروض مسبقاً من حساب آخر."},
+    "upload.updatedTitle":{en:"Your ad was updated",ar:"تم تحديث إعلانك"},
+    "upload.updatedDesc":{en:"This number was already listed, so we updated the old ad instead of adding a new one.",ar:"هذا الرقم معروض لديك مسبقاً، فحدّثنا الإعلان القديم بدل إضافة إعلان جديد."},
     "dash.title":{en:"My account",ar:"حسابي"},
     "dash.profile":{en:"My profile",ar:"ملفي"},
     "dash.membership":{en:"Membership management",ar:"إدارة العضوية"},
@@ -391,6 +394,8 @@
   function rowToItem(r){
     return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:String(r.price), created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
   }
+  function itemKey(i){ return i.type === 'plate' ? (i.code + '-' + i.number) : String(i.value||'').replace(/\D/g,''); }
+  function dedupeListings(list){ const seen = new Set(); return list.filter(i => { const k = i.type + ':' + itemKey(i); if(seen.has(k)) return false; seen.add(k); return true; }); }
   function sortFeatured(list){   // featured first (earliest listed first), then the rest in their existing order
     const f = list.filter(i=>i.featured).sort((a,b)=> new Date(a.created||0) - new Date(b.created||0));
     return [...f, ...list.filter(i=>!i.featured)];
@@ -412,7 +417,7 @@
       }
       if(error) throw error;
       userListings = [...data.map(rowToItem), ...seedListings];
-      userListings = sortFeatured(userListings);
+      userListings = dedupeListings(sortFeatured(userListings));
     }catch(err){ console.warn('Could not load listings:', err); }
   }
   let currentUploadType = (typeof PAGE_TYPE !== 'undefined') ? PAGE_TYPE : 'plate';
@@ -632,17 +637,25 @@
     const featOn = document.getElementById('upFeatured').checked;
     const featPlan = featOn ? document.querySelector('input[name=featPlan]:checked').value : null;
     if(featPlan) row.featured_plan = featPlan;
-    let newItem = null, featuredSkipped = false;
+    let newItem = null, featuredSkipped = false, wasUpdated = false;
     const submitBtn = document.querySelector('#uploadForm .modal-submit'); submitBtn.disabled = true;
     try{
-      let {data, error} = await sb.from('xp_listings').insert(row).select().single();
+      let data, error;
+      ({data, error} = await sb.rpc('xp_publish_listing', {p_type:row.type, p_code:row.code||null, p_number:row.number||null, p_value:row.value||null, p_price:row.price, p_plan:featPlan}));
+      if(error && /already_listed/.test(error.message||'')){ showBanner('uploadErrorBanner','upload.dupErr'); return false; }
+      if(error && /featured|xp_publish_listing|function/i.test(error.message||'') && !/duplicate|unique/i.test(error.message||'')){   // SQL not installed yet: old behaviour
+        ({data, error} = await sb.from('xp_listings').insert(row).select().single());
+      } else if(!error){ wasUpdated = !!data._updated; }
+      if(error && /duplicate|unique/i.test(error.message||'')){ showBanner('uploadErrorBanner','upload.dupErr'); return false; }
       if(error && featPlan && /featured/i.test(error.message||'')){   // featured columns not installed yet: publish as a normal ad
         delete row.featured_plan; featuredSkipped = true;
         ({data, error} = await sb.from('xp_listings').insert(row).select().single());
       }
       if(error) throw error;
       newItem = rowToItem(data);
+      userListings = userListings.filter(x => x.id !== newItem.id && !(x.type === newItem.type && itemKey(x) === itemKey(newItem)));   // never show the same number twice
       userListings.unshift(newItem);
+      if(wasUpdated) userListings = sortFeatured(userListings);
     }catch(err){
       console.warn(err);
       showBanner('uploadErrorBanner','upload.serverErr');
@@ -653,6 +666,8 @@
 
     document.getElementById('uploadForm').style.display='none';
     document.getElementById('uploadSuccess').classList.add('show');
+    const sh = document.querySelector('#uploadSuccess h3'), sp = document.querySelector('#uploadSuccess > p');
+    if(sh && sp){ sh.setAttribute('data-i18n', wasUpdated ? 'upload.updatedTitle' : 'upload.successTitle'); sp.setAttribute('data-i18n', wasUpdated ? 'upload.updatedDesc' : 'upload.successDesc'); sh.textContent = translations[sh.getAttribute('data-i18n')][currentLang]; sp.textContent = translations[sp.getAttribute('data-i18n')][currentLang]; }
     const payBox = document.getElementById('featPayBox');
     if(payBox){
       if(featPlan && !featuredSkipped){
