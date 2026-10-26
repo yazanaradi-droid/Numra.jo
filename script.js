@@ -921,7 +921,7 @@
       btn.onclick = null;
     }
 
-    renderFeatureBox();
+    /* featured box intentionally not shown on the listing page */
 
     const sim = userListings.filter(x => x.id !== it.id && x.type === it.type)
       .sort((a,b)=> (it.type==='plate' ? (b.code===it.code) - (a.code===it.code) : 0))
