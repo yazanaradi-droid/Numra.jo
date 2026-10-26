@@ -204,6 +204,11 @@
     "upload.dupErr":{en:"This plate/number is already listed by another account.",ar:"هذا الرقم معروض مسبقاً من حساب آخر."},
     "upload.updatedTitle":{en:"Your ad was updated",ar:"تم تحديث إعلانك"},
     "upload.updatedDesc":{en:"This number was already listed, so we updated the old ad instead of adding a new one.",ar:"هذا الرقم معروض لديك مسبقاً، فحدّثنا الإعلان القديم بدل إضافة إعلان جديد."},
+    "dash.favorites":{en:"Favorites",ar:"المفضلة"},
+    "dash.noFavs":{en:"You have no favorites yet. Tap the heart on any ad to save it here.",ar:"لا توجد إعلانات في مفضلتك بعد. اضغط على القلب في أي إعلان لحفظه هنا."},
+    "feat.ribbon":{en:"Featured",ar:"مميز"},
+    "feat.callLabel":{en:"Call:",ar:"اتصال:"},
+    "fav.title":{en:"Save to favorites",ar:"إضافة إلى المفضلة"},
     "dash.title":{en:"My account",ar:"حسابي"},
     "dash.profile":{en:"My profile",ar:"ملفي"},
     "dash.membership":{en:"Membership management",ar:"إدارة العضوية"},
@@ -527,14 +532,64 @@
     const valueBlock = item.type === 'plate'
       ? plateHtml(item.code, item.number, false)
       : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(item.value) + '</div></div>';
+    const T = k => translations[k][currentLang];
+    const phoneHtml = !item.phoneMasked ? '' : (item.featured
+      ? '<span class="card-phone card-phone-btn" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><b>' + T('feat.callLabel') + '</b> <span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>'
+      : '<span class="card-phone" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>');
     return '<a class="listing-card' + (item.featured ? ' is-featured' : '') + '" href="' + listingHref(item) + '">' +
-      (item.featured ? '<span class="feat-badge">★ ' + translations['feat.badge'][currentLang] + '</span>' : '') +
+      (item.featured ? '<span class="feat-ribbon">' + T('feat.ribbon') + '</span>' : '') +
+      favBtnHtml(item.id) +
       '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
       valueBlock +
       '<div class="price">' + priceText(item) + '</div>' +
-      (item.phoneMasked ? '<span class="card-phone" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>' : '') +
+      phoneHtml +
       '<div class="meta">' + metaLabel + '</div>' +
       '</a>';
+  }
+
+  /* ============ favorites (per account, stored in Supabase) ============ */
+  let favs = new Set(), favUser = null;
+  function favBtnHtml(id){
+    const on = favs.has(String(id));
+    return '<span class="fav-btn' + (on ? ' on' : '') + '" role="button" tabindex="0" data-fav="' + escapeHtml(id) + '" title="' + translations['fav.title'][currentLang] + '">' + (on ? '\u2665' : '\u2661') + '</span>';
+  }
+  function paintFavs(){
+    document.querySelectorAll('.fav-btn').forEach(b => { const on = favs.has(b.getAttribute('data-fav')); b.classList.toggle('on', on); b.textContent = on ? '\u2665' : '\u2661'; });
+  }
+  async function syncFavorites(){
+    if(!currentUser || !sb){ if(favs.size){ favs = new Set(); favUser = null; paintFavs(); } return; }
+    if(favUser === currentUser.id) return;
+    favUser = currentUser.id;
+    try{
+      const {data, error} = await sb.from('xp_favorites').select('listing_id');
+      if(error) throw error;
+      favs = new Set(data.map(r => String(r.listing_id)));
+      paintFavs();
+      if(document.getElementById('dashRoot') && dashTab === 'favorites') renderDashboard();
+    }catch(err){ console.warn('favorites:', err); }
+  }
+  async function toggleFav(id){
+    if(!currentUser){ openAuth('login', null, true); return; }
+    id = String(id);
+    const had = favs.has(id);
+    if(had) favs.delete(id); else favs.add(id);
+    paintFavs();
+    try{
+      const res = had ? await sb.from('xp_favorites').delete().eq('listing_id', id) : await sb.from('xp_favorites').insert({listing_id:id});
+      if(res.error) throw res.error;
+      if(had && document.getElementById('dashRoot') && dashTab === 'favorites') renderDashboard();
+    }catch(err){
+      console.warn(err);
+      if(had) favs.add(id); else favs.delete(id);
+      paintFavs();
+    }
+  }
+  async function dashFavoritesHtml(){
+    const T = k => translations[k][currentLang];
+    await loadRemoteListings();
+    const items = userListings.filter(i => favs.has(String(i.id)));
+    if(!items.length) return '<div class="dash-card"><h2>' + T('dash.favorites') + '</h2><p class="dash-note">' + T('dash.noFavs') + '</p></div>';
+    return '<div class="dash-card"><h2>' + T('dash.favorites') + '</h2><div class="listings-grid fav-grid">' + items.map(listingCardHtml).join('') + '</div></div>';
   }
 
   function renderListings(){
@@ -736,6 +791,7 @@
   function refreshAuthUI(){
     const g=document.getElementById('authGuest'), a=document.getElementById('authUser'), chip=document.getElementById('userChip');
     if(!g||!a) return;
+    syncFavorites();
     if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent='@'+((currentUser.user_metadata||{}).username||'')+' \u25be'; }
     else { g.style.display='inline-flex'; a.style.display='none'; chip.textContent=''; }
   }
@@ -912,9 +968,9 @@
     crumb.textContent = T(it.type === 'plate' ? 'nav.plates.crumb' : 'nav.numbers.crumb');
     crumb.setAttribute('href', (it.type === 'plate' ? 'plates.html' : 'numbers.html') + (currentLang === 'ar' ? '?lang=ar' : ''));
 
-    document.getElementById('detailVisual').innerHTML = it.type === 'plate'
+    document.getElementById('detailVisual').innerHTML = (it.type === 'plate'
       ? plateHtml(it.code, it.number, true)
-      : '<div class="number-lg">' + escapeHtml(it.value) + '</div>';
+      : '<div class="number-lg">' + escapeHtml(it.value) + '</div>') + favBtnHtml(it.id);
 
     const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'x plate.jo';
     document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
@@ -1008,10 +1064,13 @@
     }catch(err){ console.warn(err); }
   }
   document.addEventListener('click', function(e){
+    const fb = e.target.closest && e.target.closest('.fav-btn');
+    if(fb){ e.preventDefault(); e.stopPropagation(); toggleFav(fb.getAttribute('data-fav')); return; }
     const chip = e.target.closest && e.target.closest('.card-phone');
     if(chip){ e.preventDefault(); e.stopPropagation(); showContactForItem(chip.getAttribute('data-contact')); }
   }, true);
   document.addEventListener('keydown', function(e){
+    if((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('fav-btn')){ e.preventDefault(); toggleFav(e.target.getAttribute('data-fav')); }
     if((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('card-phone')){
       e.preventDefault(); showContactForItem(e.target.getAttribute('data-contact'));
     }
@@ -1024,7 +1083,7 @@
   document.addEventListener('click', function(e){ if(!e.target.closest || !e.target.closest('#userMenu')) closeUserMenu(); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeUserMenu(); });
 
-  const DASH_TABS = ['profile','membership','plates','numbers','package'];
+  const DASH_TABS = ['profile','membership','plates','numbers','favorites','package'];
   let dashTab = 'profile', dashProfile = null;
 
   function goDash(tab, e){
@@ -1087,7 +1146,7 @@
       return;
     }
     nav.style.display = '';
-    const names = {profile:'dash.profile', membership:'dash.membership', plates:'dash.plates', numbers:'dash.numbers', package:'dash.package'};
+    const names = {profile:'dash.profile', membership:'dash.membership', plates:'dash.plates', numbers:'dash.numbers', favorites:'dash.favorites', package:'dash.package'};
     nav.innerHTML = DASH_TABS.map(k => '<button type="button" class="dash-tab' + (k === dashTab ? ' active' : '') + '" onclick="showDashTab(\'' + k + '\')">' + T(names[k]) + '</button>').join('') +
       '<button type="button" class="dash-tab dash-logout" onclick="logout(event)">' + T('nav.logout') + '</button>';
 
@@ -1095,6 +1154,7 @@
     if(dashTab === 'profile') html = await dashProfileHtml();
     else if(dashTab === 'membership') html = await dashMembershipHtml();
     else if(dashTab === 'plates' || dashTab === 'numbers') html = await dashListingsHtml(dashTab === 'plates' ? 'plate' : 'number');
+    else if(dashTab === 'favorites') html = await dashFavoritesHtml();
     else html = await dashPackageHtml();
     if(seq !== dashRenderSeq) return;      // a newer render superseded this one
     panel.innerHTML = html;

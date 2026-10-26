@@ -631,3 +631,17 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 
 .feat-promo{margin:10px 0;} .feat-promo label{display:block; font-size:.82rem; color:var(--muted); margin-bottom:5px;}
 .feat-promo input{width:100%; background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px 12px; font-size:.9rem; text-transform:uppercase; direction:ltr; text-align:left;}
+
+/* favorites heart + featured card */
+.fav-btn{position:absolute; top:10px; inset-inline-end:10px; z-index:3; width:32px; height:32px; border-radius:50%; background:#fff; border:1px solid var(--line); display:grid; place-items:center; font-size:1.1rem; color:#555; cursor:pointer; line-height:1; box-shadow:0 1px 3px rgba(0,0,0,.12);}
+.fav-btn:hover{color:#E4405F; border-color:#E4405F;} .fav-btn.on{color:#E4405F;}
+.detail-visual{position:relative;} .detail-visual .fav-btn{top:14px; inset-inline-end:14px; width:38px; height:38px; font-size:1.3rem;}
+.listing-card .count{margin-inline-end:40px;}
+.listing-card.is-featured{background:#FBF5EE; border:1px solid #F0B24B; box-shadow:0 4px 16px rgba(240,178,75,.25); padding-top:56px;}
+.feat-ribbon{position:absolute; top:0; inset-inline:0; height:38px; display:flex; align-items:center; justify-content:center; background:#F2BE6B; color:#fff; font-weight:800; letter-spacing:.3px; font-family:Georgia,'Times New Roman',serif; border-radius:var(--radius) var(--radius) 0 0; font-size:1rem;}
+.feat-ribbon::after{content:''; position:absolute; inset:4px; border:1.5px dashed rgba(255,255,255,.85); border-radius:5px; pointer-events:none;}
+.listing-card.is-featured .fav-btn{top:5px; width:28px; height:28px; font-size:1rem;}
+.listing-card.is-featured .price{color:#E8466B;}
+.card-phone.card-phone-btn{display:flex; justify-content:center; width:100%; border-radius:8px; background:#fff; border:1px solid #E7DCCB; padding:10px 12px; font-size:.9rem;}
+.card-phone.card-phone-btn b{margin-inline-end:2px;}
+.fav-grid{grid-template-columns:repeat(2,1fr);} @media(max-width:700px){.fav-grid{grid-template-columns:1fr;}}
