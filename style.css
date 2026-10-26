@@ -1,11 +1,11 @@
 /* x plate.jo — shared styles */
   :root{
-    --bg:#0A0D12;
-    --surface:#12161F;
-    --surface-2:#181D28;
-    --line:#242B38;
-    --text:#E9ECF1;
-    --muted:#8B93A3;
+    --bg:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-2:#F3F5F8;
+    --line:#DDE2EA;
+    --text:#000000;
+    --muted:#4A5568;
     --gold:#3B5BDB;
     --gold-dim:#2A3E8F;
     --teal:#1FB6A6;
@@ -438,11 +438,6 @@
 #loginErr{margin-bottom:12px;}
 @media (max-width:520px){ #registerForm .field-row{grid-template-columns:1fr;} }
 
-/* ===== homepage: all text white ===== */
-body.home{--text:#FFFFFF; --muted:#FFFFFF;}
-body.home :is(p,li,span,h1,h2,h3,h4,h5,label,a,div):not(.modal-overlay *){color:#FFFFFF;}
-body.home .modal-overlay{--muted:#8B93A3;}
-body.home .mark{color:#FFFFFF !important;}
 
 /* ===== listing detail page ===== */
 a.listing-card{display:block; color:inherit; text-decoration:none; transition:border-color .15s, transform .15s;}
@@ -542,32 +537,19 @@ button.user-chip:hover{border-color:var(--gold);}
   .my-grid, .dash-card .field-row{grid-template-columns:1fr;}
 }
 
-/* ===== light theme (toggle button in the header): white page, black text ===== */
-html[data-theme="light"]{color-scheme:light;}
-html[data-theme="light"], html[data-theme="light"] body{
-  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F3F5F8; --line:#DDE2EA;
-  --text:#000000; --muted:#4A5568; --gold-dim:#2A3E8F;
-}
-html[data-theme="light"] header{background:rgba(255,255,255,.92);}
-html[data-theme="light"] .hero{background:#FFFFFF;}
-html[data-theme="light"] .modal-overlay{background:rgba(20,24,32,.45);}
-html[data-theme="light"] .modal, html[data-theme="light"] .dropdown, html[data-theme="light"] .user-dropdown{box-shadow:0 14px 34px rgba(20,30,50,.18);}
-html[data-theme="light"] .listing-card, html[data-theme="light"] .feature-card, html[data-theme="light"] .detail-card, html[data-theme="light"] .dash-card{box-shadow:0 1px 3px rgba(20,30,50,.06);}
-html[data-theme="light"] .register-banner{background:#F3F5F8; border-color:var(--line);}
-html[data-theme="light"] .important-box{background:rgba(228,87,46,.07);}
-html[data-theme="light"] .dash-msg.err{color:#B3361B;}
-html[data-theme="light"] .upload-error-banner{color:#B3361B;}
-html[data-theme="light"] .field input, html[data-theme="light"] .field textarea{color:#000;}
-/* homepage forced white text in the dark theme: use black in the light theme */
-html[data-theme="light"] body.home{--text:#000000; --muted:#4A5568;}
-html[data-theme="light"] body.home :is(p,li,span,h1,h2,h3,h4,h5,label,a,div):not(.modal-overlay *){color:var(--text);}
-html[data-theme="light"] body.home .modal-overlay{--muted:#4A5568;}
-html[data-theme="light"] body.home .mark{color:#000 !important;}
+/* ===== white site theme: overrides for things that were hard-coded for the old dark look ===== */
+header{background:rgba(255,255,255,.92);}
+.hero{background:#FFFFFF;}
+.modal-overlay{background:rgba(20,24,32,.45);}
+.modal, .dropdown, .user-dropdown{box-shadow:0 14px 34px rgba(20,30,50,.18);}
+.listing-card, .feature-card, .detail-card, .dash-card{box-shadow:0 1px 3px rgba(20,30,50,.06);}
+.register-banner{background:#F3F5F8; border-color:var(--line);}
+.important-box{background:rgba(228,87,46,.07);}
+.dash-msg.err{color:#B3361B;}
+.upload-error-banner{color:#B3361B;}
+.field input, .field textarea{color:#000;}
 /* coloured / filled elements keep their own colours */
-html[data-theme="light"] body.home :is(.btn-gold, .btn-gold *){color:#FFFFFF;}
-html[data-theme="light"] .btn-gold, html[data-theme="light"] .dash-tab.active, html[data-theme="light"] .contact-wa, html[data-theme="light"] .contact-call, html[data-theme="light"] .contact-btn:not(:disabled){color:#FFFFFF;}
-html[data-theme="light"] .tag, html[data-theme="light"] .kicker, html[data-theme="light"] .price, html[data-theme="light"] .cta, html[data-theme="light"] .visit{color:var(--gold);}
-html[data-theme="light"] body.home :is(.tag, .kicker, .price, .cta, .visit){color:var(--gold);}
-html[data-theme="light"] .dash-logout, html[data-theme="light"] .logout-link, html[data-theme="light"] .btn.danger{color:var(--danger);}
-html[data-theme="light"] .important-box h3{color:var(--danger);}
-.icon-btn.theme-on{border-color:var(--gold);}
+.btn-gold, .dash-tab.active, .contact-wa, .contact-call, .contact-btn:not(:disabled){color:#FFFFFF;}
+.tag, .kicker, .price, .cta, .visit{color:var(--gold);}
+.dash-logout, .logout-link, .btn.danger{color:var(--danger);}
+.important-box h3{color:var(--danger);}
