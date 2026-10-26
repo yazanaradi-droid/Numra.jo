@@ -181,6 +181,9 @@
     "feat.forever":{en:"Unlimited",ar:"ما لا نهاية"},
     "feat.total":{en:"Fee to pay:",ar:"الرسوم المطلوبة:"},
     "feat.note":{en:"Your ad is published now. It becomes featured after payment is confirmed.",ar:"يُنشر إعلانك الآن، ويصبح مميزاً بعد تأكيد الدفع."},
+    "feat.promoLabel":{en:"Activation code (if you have one)",ar:"كود التفعيل (إن وجد)"},
+    "feat.promoOk":{en:"Code accepted - your ad is featured now.",ar:"تم قبول الكود - إعلانك مميز الآن."},
+    "feat.promoBad":{en:"The code is not valid.",ar:"الكود غير صالح."},
     "feat.badge":{en:"Featured",ar:"مميز"},
     "feat.pending":{en:"Featured - awaiting payment",ar:"مميز - بانتظار الدفع"},
     "feat.payTitle":{en:"To activate the featured ad",ar:"لتفعيل الإعلان المميز"},
@@ -587,7 +590,7 @@
     document.getElementById('upNumber').value = '';
     document.getElementById('upValue').value = '';
     document.getElementById('upPrice').value = '';
-    const fch=document.getElementById('upFeatured'); if(fch){ fch.checked=false; toggleFeatured(); }
+    const pc=document.getElementById('upPromo'); if(pc) pc.value=''; const fch=document.getElementById('upFeatured'); if(fch){ fch.checked=false; toggleFeatured(); }
     document.getElementById('uploadErrorBanner').classList.remove('show');
     ['upCode','upNumber','upValue','upPrice'].forEach(id=>{
       document.getElementById(id).classList.remove('field-invalid');
@@ -643,15 +646,15 @@
     const featOn = document.getElementById('upFeatured').checked;
     const featPlan = featOn ? document.querySelector('input[name=featPlan]:checked').value : null;
     if(featPlan) row.featured_plan = featPlan;
-    let newItem = null, featuredSkipped = false, wasUpdated = false;
+    let newItem = null, featuredSkipped = false, wasUpdated = false, promoOk = false;
     const submitBtn = document.querySelector('#uploadForm .modal-submit'); submitBtn.disabled = true;
     try{
       let data, error;
-      ({data, error} = await sb.rpc('xp_publish_listing', {p_type:row.type, p_code:row.code||null, p_number:row.number||null, p_value:row.value||null, p_price:row.price, p_plan:featPlan}));
+      ({data, error} = await sb.rpc('xp_publish_listing', {p_type:row.type, p_code:row.code||null, p_number:row.number||null, p_value:row.value||null, p_price:row.price, p_plan:featPlan, p_promo:(document.getElementById('upPromo').value||'').trim() || null}));
       if(error && /already_listed/.test(error.message||'')){ showBanner('uploadErrorBanner','upload.dupErr'); return false; }
       if(error && /featured|xp_publish_listing|function/i.test(error.message||'') && !/duplicate|unique/i.test(error.message||'')){   // SQL not installed yet: old behaviour
         ({data, error} = await sb.from('xp_listings').insert(row).select().single());
-      } else if(!error){ wasUpdated = !!data._updated; }
+      } else if(!error){ wasUpdated = !!data._updated; promoOk = !!data._promo; }
       if(error && /duplicate|unique/i.test(error.message||'')){ showBanner('uploadErrorBanner','upload.dupErr'); return false; }
       if(error && featPlan && /featured/i.test(error.message||'')){   // featured columns not installed yet: publish as a normal ad
         delete row.featured_plan; featuredSkipped = true;
@@ -676,10 +679,14 @@
     if(sh && sp){ sh.setAttribute('data-i18n', wasUpdated ? 'upload.updatedTitle' : 'upload.successTitle'); sp.setAttribute('data-i18n', wasUpdated ? 'upload.updatedDesc' : 'upload.successDesc'); sh.textContent = translations[sh.getAttribute('data-i18n')][currentLang]; sp.textContent = translations[sp.getAttribute('data-i18n')][currentLang]; }
     const payBox = document.getElementById('featPayBox');
     if(payBox){
-      if(featPlan && !featuredSkipped){
+      const promoTyped = !!(document.getElementById('upPromo').value||'').trim();
+      if(featPlan && promoOk){
+        payBox.innerHTML = '<h4>★ ' + translations['feat.promoOk'][currentLang] + '</h4>';
+        payBox.style.display = 'block';
+      } else if(featPlan && !featuredSkipped){
         const amt = FEATURED_PRICES[featPlan];
         const alias = CLIQ_ALIAS ? (currentLang==='ar' ? ' إلى: ' : ' to: ') + CLIQ_ALIAS : '';
-        payBox.innerHTML = '<h4>' + translations['feat.payTitle'][currentLang] + '</h4><p>' +
+        payBox.innerHTML = (promoTyped ? '<p><b>' + translations['feat.promoBad'][currentLang] + '</b></p>' : '') + '<h4>' + translations['feat.payTitle'][currentLang] + '</h4><p>' +
           translations['feat.payBody'][currentLang].replace('{amt}', amt).replace('{alias}', alias) + '</p>' +
           (newItem ? '<p class="pay-id">#' + escapeHtml(String(newItem.id).slice(0,8)) + '</p>' : '') +
           '<a href="#" class="btn btn-ghost" onclick="closeUpload(); openInfo(\'contact\', event)">' + translations['feat.payBtn'][currentLang] + '</a>';
@@ -1222,14 +1229,17 @@
     if(f.style.display === 'block'){ f.style.display = 'none'; return; }
     const T = k => translations[k][currentLang];
     f.innerHTML = featOpts(rank, 'featDash-' + id) +
+      '<div class="feat-promo"><label>' + T('feat.promoLabel') + '</label><input type="text" class="promo-in" autocomplete="off" dir="ltr" placeholder="CODE"></div>' +
       '<button type="button" class="btn btn-gold" onclick="dashFeatSend(\'' + id + '\')">' + T(rank ? 'feat.upBtn' : 'feat.reqBtn') + '</button><p class="feat-note"></p>';
     f.style.display = 'block';
   }
   async function dashFeatSend(id){
     const f = document.querySelector('#df-' + id + ' .dash-feat-form');
     const r = f.querySelector('input:checked'); if(!r) return;
-    const {error} = await sb.rpc('xp_request_featured', {lid:id, plan:r.value});
+    const code = (f.querySelector('.promo-in').value || '').trim();
+    const {data, error} = await sb.rpc('xp_request_featured', {lid:id, plan:r.value, p_promo: code || null});
     if(error){ console.warn(error); f.querySelector('.feat-note').textContent = translations['feat.reqErr'][currentLang]; return; }
+    if(code && data !== true){ f.querySelector('.feat-note').textContent = translations['feat.promoBad'][currentLang]; setTimeout(renderDashboard, 1800); return; }
     renderDashboard();
   }
 
