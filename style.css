@@ -558,3 +558,18 @@ header{background:rgba(255,255,255,.92);}
 #plateFields .field-row{direction:ltr;}
 #upCode, #upNumber, #upValue, #upPrice, #regPhone, #regUsername, #loginUsername{direction:ltr; text-align:left;}
 #upCode::placeholder, #upNumber::placeholder, #upValue::placeholder, #upPrice::placeholder, #regPhone::placeholder, #regUsername::placeholder, #loginUsername::placeholder{text-align:left;}
+
+/* ===== search panel ===== */
+.search-panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; margin-top:22px;}
+.search-panel h2{font-family:var(--font-display); font-size:1.25rem; margin-bottom:14px;}
+.search-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+.search-grid select, .search-grid input{width:100%; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:11px 16px; color:var(--text); font:inherit; font-size:.9rem; min-width:0;}
+.search-grid select:focus, .search-grid input:focus{outline:none; border-color:var(--gold);}
+.search-grid input{direction:ltr; text-align:left;}
+.search-grid input::placeholder{color:var(--muted);}
+html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;}
+.search-actions{display:flex; gap:10px; margin-top:14px;}
+.search-actions .btn-gold{flex:1;}
+#searchNote{margin-top:12px;}
+@media (max-width:820px){ .search-grid{grid-template-columns:1fr 1fr;} }
+@media (max-width:480px){ .search-grid{grid-template-columns:1fr;} }

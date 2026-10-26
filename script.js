@@ -191,6 +191,23 @@
     "dash.view":{en:"View",ar:"عرض"},
     "dash.delete":{en:"Delete",ar:"حذف"},
     "dash.confirmDelete":{en:"Click again to confirm",ar:"اضغط مرة أخرى للتأكيد"},
+    "search.title":{en:"Search",ar:"بحث"},
+    "search.codeAll":{en:"Code",ar:"الكود"},
+    "search.prefixAll":{en:"Prefix",ar:"البادئة"},
+    "search.digitsAll":{en:"All numbers",ar:"جميع الأرقام"},
+    "search.digits1":{en:"1 digit",ar:"رقم واحد"},
+    "search.digits2":{en:"2 digits",ar:"رقمان"},
+    "search.digits3":{en:"3 digits",ar:"3 أرقام"},
+    "search.digits4":{en:"4 digits",ar:"4 أرقام"},
+    "search.digits5":{en:"5 digits",ar:"5 أرقام"},
+    "search.contains":{en:"Contains: e.g. 12345",ar:"يتضمن: مثال 12345"},
+    "search.max":{en:"Highest price",ar:"أعلى سعر"},
+    "search.min":{en:"Lowest price",ar:"أقل سعر"},
+    "search.starts":{en:"Starts with: e.g. 123",ar:"يبدأ بـ: مثال 123"},
+    "search.ends":{en:"Ends with: e.g. 000",ar:"ينتهي بـ: مثال 000"},
+    "search.button":{en:"Search",ar:"بحث"},
+    "search.reset":{en:"Clear",ar:"مسح"},
+    "search.closest":{en:"No exact match \u2014 showing the closest results.",ar:"لا توجد نتيجة مطابقة تماماً \u2014 هذه أقرب النتائج."},
     "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
     "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
@@ -283,6 +300,7 @@
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     applyTranslations(currentLang);
     if(typeof renderListings === 'function') renderListings();
+    renderSearchPanel();
     renderListingPage();
     renderDashboard();
     const filterInput = document.getElementById('filterInput');
@@ -346,7 +364,6 @@
     }catch(err){ console.warn('Could not load listings:', err); }
   }
   let currentUploadType = (typeof PAGE_TYPE !== 'undefined') ? PAGE_TYPE : 'plate';
-  let filterQuery = '';
 
   function escapeHtml(str){
     return String(str).replace(/[&<>"\']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
@@ -360,6 +377,78 @@
       '<div class="plate-digits"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></div>' +
       '</div>';
   }
+
+  /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
+  const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
+  const digitsOnly = v => normDigits(v).replace(/\D/g,'');
+  let searchState = {code:'', digits:'', prefix:'', contains:'', starts:'', ends:'', max:'', min:''};
+
+  function searchCriteria(){
+    const s = searchState, c = {};
+    if(PAGE_TYPE === 'plate'){ if(s.code) c.code = s.code; if(s.digits) c.digits = +s.digits; }
+    else if(s.prefix) c.prefix = s.prefix;
+    const ct = digitsOnly(s.contains), st = digitsOnly(s.starts), en = digitsOnly(s.ends);
+    if(ct) c.contains = ct; if(st) c.starts = st; if(en) c.ends = en;
+    const num = v => { const t = normDigits(v).replace(/[^0-9.]/g,''); const n = parseFloat(t); return t !== '' && !isNaN(n) ? n : null; };
+    const mx = num(s.max), mn = num(s.min);
+    if(mx !== null) c.max = mx; if(mn !== null) c.min = mn;
+    return c;
+  }
+  function commonPrefixLen(a,b){ let i=0; while(i<a.length && i<b.length && a[i]===b[i]) i++; return i; }
+  function commonSuffixLen(a,b){ let i=0; while(i<a.length && i<b.length && a[a.length-1-i]===b[b.length-1-i]) i++; return i; }
+  function longestCommonSubstring(a,b){
+    let best = 0; const prev = new Array(b.length+1).fill(0);
+    for(let i=1;i<=a.length;i++){ let diag = 0; for(let j=1;j<=b.length;j++){ const tmp = prev[j]; prev[j] = a[i-1]===b[j-1] ? diag+1 : 0; if(prev[j]>best) best = prev[j]; diag = tmp; } }
+    return best;
+  }
+  /* each credit is between 0 (no match) and 1 (exact match) */
+  function creditsFor(item, c){
+    const num = String(item.type === 'plate' ? item.number : item.value).replace(/\D/g,'');
+    const full = item.type === 'plate' ? String(item.code) + num : num;
+    const price = parseFloat(item.price);
+    const out = [];
+    if(c.code !== undefined) out.push(String(item.code) === c.code ? 1 : Math.max(0, 1 - Math.abs(+item.code - +c.code) / 10));
+    if(c.prefix !== undefined) out.push(num.startsWith(c.prefix) ? 1 : commonPrefixLen(num, c.prefix) / c.prefix.length);
+    if(c.digits !== undefined) out.push(num.length === c.digits ? 1 : 1 / (1 + Math.abs(num.length - c.digits)));
+    if(c.contains !== undefined) out.push((num.includes(c.contains) || full.includes(c.contains)) ? 1 : longestCommonSubstring(num, c.contains) / c.contains.length);
+    if(c.starts !== undefined) out.push(num.startsWith(c.starts) ? 1 : commonPrefixLen(num, c.starts) / c.starts.length);
+    if(c.ends !== undefined) out.push(num.endsWith(c.ends) ? 1 : commonSuffixLen(num, c.ends) / c.ends.length);
+    if(c.max !== undefined) out.push(price <= c.max ? 1 : (price > 0 ? c.max / price : 0));
+    if(c.min !== undefined) out.push(price >= c.min ? 1 : (c.min > 0 ? price / c.min : 0));
+    return out;
+  }
+  function closestMatches(items, c){
+    return items.map(i => { const cr = creditsFor(i, c); return {i, score: cr.reduce((a,b)=>a+b,0) / cr.length}; })
+      .filter(x => x.score >= 0.4).sort((a,b) => b.score - a.score).slice(0, 6).map(x => x.i);
+  }
+
+  function readSearchState(){
+    document.querySelectorAll('#searchPanel [data-k]').forEach(el => { searchState[el.getAttribute('data-k')] = el.value; });
+  }
+  function renderSearchPanel(keepState){
+    const mount = document.getElementById('searchPanel'); if(!mount) return;
+    if(!keepState) readSearchState();
+    const T = k => translations[k][currentLang], st = searchState, e = escapeHtml;
+    const select = (id, key, allLabel, opts) => '<select id="' + id + '" data-k="' + key + '"><option value="">' + e(allLabel) + '</option>' +
+      opts.map(o => '<option value="' + e(o[0]) + '"' + (st[key] === o[0] ? ' selected' : '') + '>' + e(o[1]) + '</option>').join('') + '</select>';
+    const input = (id, key, ph) => '<input id="' + id + '" data-k="' + key + '" type="text" inputmode="numeric" autocomplete="off" value="' + e(st[key]) + '" placeholder="' + e(ph) + '">';
+    let first = '';
+    if(PAGE_TYPE === 'plate'){
+      first = select('sCode', 'code', T('search.codeAll'), Array.from({length:99}, (_,i) => [String(i+1), String(i+1)])) +
+              select('sDigits', 'digits', T('search.digitsAll'), [1,2,3,4,5].map(n => [String(n), T('search.digits' + n)]));
+    } else {
+      first = select('sPrefix', 'prefix', T('search.prefixAll'), ['077','078','079'].map(x => [x, x]));
+    }
+    mount.innerHTML = '<form class="search-panel" onsubmit="return runSearch(event)"><h2>' + T('search.title') + '</h2>' +
+      '<div class="search-grid">' + first +
+      input('sContains', 'contains', T('search.contains')) +
+      input('sMax', 'max', T('search.max')) + input('sMin', 'min', T('search.min')) +
+      input('sStarts', 'starts', T('search.starts')) + input('sEnds', 'ends', T('search.ends')) +
+      '</div><div class="search-actions"><button class="btn btn-gold" type="submit">' + T('search.button') + '</button>' +
+      '<button class="btn btn-ghost" type="button" onclick="resetSearch()">' + T('search.reset') + '</button></div></form>';
+  }
+  function runSearch(e){ if(e) e.preventDefault(); readSearchState(); renderListings(); return false; }
+  function resetSearch(){ searchState = {code:'', digits:'', prefix:'', contains:'', starts:'', ends:'', max:'', min:''}; renderSearchPanel(true); renderListings(); }
 
   function listingHref(item){
     return 'listing.html?id=' + encodeURIComponent(item.id) + (currentLang === 'ar' ? '&lang=ar' : '');
@@ -387,21 +476,24 @@
     const empty = document.getElementById('listingsEmpty');
 
     let items = userListings.filter(i => i.type === PAGE_TYPE);
-    if(filterQuery){
-      const q = filterQuery.toLowerCase();
-      items = items.filter(i=>{
-        const hay = i.type === 'plate'
-          ? (i.code + ' ' + i.number)
-          : i.value;
-        return String(hay).toLowerCase().includes(q);
-      });
+    const note = document.getElementById('searchNote');
+    if(note) note.style.display = 'none';
+    const crit = searchCriteria();
+    const active = Object.keys(crit).length > 0;
+    if(active){
+      const exact = items.filter(i => creditsFor(i, crit).every(x => x >= 1));
+      if(exact.length){ items = exact; }
+      else {
+        items = closestMatches(items, crit);
+        if(note && items.length){ note.textContent = translations['search.closest'][currentLang]; note.style.display = 'block'; }
+      }
     }
 
     if(items.length === 0){
       grid.innerHTML = '';
       empty.style.display = 'block';
-      empty.setAttribute('data-i18n', filterQuery ? 'listings.emptyFiltered' : 'listings.empty');
-      empty.textContent = translations[filterQuery ? 'listings.emptyFiltered' : 'listings.empty'][currentLang];
+      empty.setAttribute('data-i18n', active ? 'listings.emptyFiltered' : 'listings.empty');
+      empty.textContent = translations[active ? 'listings.emptyFiltered' : 'listings.empty'][currentLang];
       return;
     }
     empty.style.display = 'none';
@@ -409,11 +501,6 @@
     grid.innerHTML = items.map(listingCardHtml).join('');
   }
 
-  function runFilter(){
-    const input = document.getElementById('filterInput');
-    filterQuery = input ? input.value.trim() : '';
-    renderListings();
-  }
 
   /* ============ upload modal ============ */
   function openUpload(type, e){
@@ -979,11 +1066,6 @@
       }
     });
 
-    const filterInput = document.getElementById('filterInput');
-    if(filterInput){
-      filterInput.setAttribute('placeholder', translations['filter.placeholder.' + PAGE_TYPE][currentLang]);
-      filterInput.addEventListener('input', runFilter);
-    }
 
     const ru=document.getElementById('regUsername');
     if(ru) ru.addEventListener('input', function(){ if(ru.value.trim()){ clearTimeout(ru._t); ru._t=setTimeout(checkUsername,350); } else { setErr('regUsernameErr',null); markInvalid('regUsername',false); } });
@@ -995,6 +1077,7 @@
       } else mark();
     })();
     applyTranslations(currentLang);
+    renderSearchPanel();
     refreshAuthUI();
     renderListings();
     authReady = initAuth();
