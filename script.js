@@ -3,7 +3,7 @@
   const translations = {
     "nav.brand":{en:"x plate.jo",ar:"x plate.jo"},
     "hero.eyebrowHome":{en:"#1 marketplace",ar:"المنصة رقم 1"},
-    "hero.titleHome":{en:'License plates<br>and <span class="accent">mobile numbers</span>',ar:'لوحات السيارات<br>و<span class="accent">أرقام الموبايل</span>'},
+    "hero.titleHome":{en:'License plates &amp; phone numbers',ar:'لوحات سيارات و أرقام هواتف'},
     "hero.leadHome":{en:"The biggest marketplace for buying and selling license plates and VIP mobile numbers. Pick a category to see what\u2019s available.",ar:"أكبر منصة لبيع وشراء لوحات السيارات وأرقام الموبايل المميزة. اختر فئة لترى المتاح."},
     "page.plates.eyebrow":{en:"License Plates",ar:"لوحات السيارات"},
     "page.plates.title":{en:"Browse license plates",ar:"تصفح لوحات السيارات"},
@@ -36,7 +36,7 @@
 
     "hero.breadcrumb":{en:"/ License plates and mobile numbers",ar:"/ لوحات السيارات وأرقام الموبايل"},
     "hero.eyebrow":{en:"#1 marketplace",ar:"المنصة رقم 1"},
-    "hero.title":{en:'License plates<br>and <span class="accent">mobile numbers</span>',ar:'لوحات السيارات<br>و<span class="accent">أرقام الموبايل</span>'},
+    "hero.title":{en:'License plates &amp; phone numbers',ar:'لوحات سيارات و أرقام هواتف'},
     "hero.lead":{en:"The biggest marketplace for buying and selling license plates and VIP mobile numbers.",ar:"أكبر منصة لبيع وشراء لوحات السيارات وأرقام الموبايل المميزة."},
     "hero.browsePlates":{en:"Browse Plates",ar:"تصفح اللوحات"},
     "hero.browseNumbers":{en:"Browse Numbers",ar:"تصفح الأرقام"},
