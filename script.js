@@ -942,6 +942,7 @@
     const T = k => translations[k][currentLang];
     const f = detailFeat;
     const active = f.featured_status === 'active' && (!f.featured_until || new Date(f.featured_until) > new Date());
+    if(!active && f.featured_status !== 'pending'){ box.style.display = 'none'; return; }   // no "make your ad featured" box on non-featured ads
     const pendingPlan = (!active && f.featured_status === 'pending') ? f.featured_plan : (active ? f.featured_request : null);
     let h = '';
     if(active){
