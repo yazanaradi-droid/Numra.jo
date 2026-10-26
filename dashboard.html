@@ -6,7 +6,7 @@
 <title>My account | x plate.jo</title>
 <meta name="description" content="Manage your x plate.jo account, listings and package.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202610261744">
+<link rel="stylesheet" href="style.css?v=202610261750">
 </head>
 <body>
 
@@ -224,8 +224,8 @@
         <div class="field" id="plateFields">
           <label data-i18n="upload.plateValue">Plate number</label>
           <div class="field-row">
-            <input id="upCode" type="text" inputmode="numeric" maxlength="2" placeholder="23" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
-            <input id="upNumber" type="text" inputmode="numeric" placeholder="45678" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
+            <input id="upCode" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" maxlength="2" oninput="this.value=this.value.toUpperCase().replace(/[^0-9XYZ]/g,'')" placeholder="23" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
+            <input id="upNumber" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" maxlength="5" oninput="this.value=this.value.toUpperCase().replace(/[^0-9XYZ]/g,'')" placeholder="45678" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
           </div>
           <div class="hint" data-i18n="upload.codeHint">Code (1–99) and number, shown as code-number.</div>
         </div>
@@ -272,6 +272,6 @@
 
 <script>const PAGE_TYPE = 'dashboard';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202610261744"></script>
+<script src="script.js?v=202610261750"></script>
 </body>
 </html>

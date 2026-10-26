@@ -267,7 +267,7 @@
     "upload.plateValue":{en:"Plate number",ar:"رقم اللوحة"},
     "upload.numberValue":{en:"Mobile number",ar:"رقم الموبايل"},
     "upload.country":{en:"Country",ar:"الدولة"},
-    "upload.codeHint":{en:"Code (1\u201399) and number, shown as code-number.",ar:"الرمز (1-99) والرقم، يظهران كـ رمز-رقم."},
+    "upload.codeHint":{en:"Code (1\u201399, letters X Y Z allowed) and number (1\u20135 digits/letters X Y Z).",ar:"الرمز (1-99 ويسمح بالأحرف X Y Z) والرقم (من 1 إلى 5 أرقام أو أحرف X Y Z)."},
 
     "listings.tag":{en:"Catalog",ar:"الفهرس"},
     "listings.title":{en:"Browse listings",ar:"تصفح الإعلانات"},
@@ -442,7 +442,7 @@
 
   /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
   const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
-  const digitsOnly = v => normDigits(v).replace(/\D/g,'');
+  const digitsOnly = v => normDigits(v).toUpperCase().replace(/[^0-9XYZ]/g,'');
   let searchState = {code:'', digits:'', prefix:'', contains:'', starts:'', ends:'', max:'', min:''};
 
   function searchCriteria(){
@@ -469,11 +469,11 @@
     return escapeHtml(it.price) + ' ' + (currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD');
   }
   function creditsFor(item, c){
-    const num = String(item.type === 'plate' ? item.number : item.value).replace(/\D/g,'');
+    const num = String(item.type === 'plate' ? item.number : item.value).toUpperCase().replace(/[^0-9XYZ]/g,'');
     const full = item.type === 'plate' ? String(item.code) + num : num;
     const price = parseFloat(item.price), hasP = !isNaN(price);
     const out = [];
-    if(c.code !== undefined) out.push(String(item.code) === c.code ? 1 : Math.max(0, 1 - Math.abs(+item.code - +c.code) / 10));
+    if(c.code !== undefined) out.push(String(item.code) === c.code ? 1 : (/^\d+$/.test(item.code) && /^\d+$/.test(c.code) ? Math.max(0, 1 - Math.abs(+item.code - +c.code) / 10) : 0));
     if(c.prefix !== undefined) out.push(num.startsWith(c.prefix) ? 1 : commonPrefixLen(num, c.prefix) / c.prefix.length);
     if(c.digits !== undefined) out.push(num.length === c.digits ? 1 : 1 / (1 + Math.abs(num.length - c.digits)));
     if(c.contains !== undefined) out.push((num.includes(c.contains) || full.includes(c.contains)) ? 1 : longestCommonSubstring(num, c.contains) / c.contains.length);
@@ -620,11 +620,11 @@
     const norm = v => String(v).replace(/[٠-٩۰-۹]/g, d=>{ const i=AR.indexOf(d); return i>-1 ? i : FA.indexOf(d); }).trim();
     const isPlate = currentUploadType === 'plate';
     const ids = isPlate ? ['upCode','upNumber','upPrice'] : ['upValue','upPrice'];
-    ids.forEach(id=>{ const el=document.getElementById(id); el.value = norm(el.value); });
+    ids.forEach(id=>{ const el=document.getElementById(id); el.value = norm(el.value); if(id==='upCode'||id==='upNumber') el.value = el.value.toUpperCase().replace(/[^0-9XYZ]/g,''); });
     { const pr=document.getElementById('upPrice'); pr.value = pr.value.replace(/[,\u066c\u060c\s]/g,'').replace(/\u066b/g,'.').replace(/[^0-9.]/g,''); }
     const checks = {
-      upCode:  v => /^\d{1,2}$/.test(v) && +v>=1 && +v<=99,
-      upNumber:v => v.length>=1,
+      upCode:  v => /^\d{1,2}$/.test(v) ? (+v>=1 && +v<=99) : /^[0-9XYZ]{1,2}$/.test(v),
+      upNumber:v => /^[0-9XYZ]{1,5}$/.test(v),
       upValue: v => /^[0-9+\s-]{7,15}$/.test(v),
       upPrice: v => v === '' || (/^\d+(\.\d+)?$/.test(v) && +v>0)
     };
