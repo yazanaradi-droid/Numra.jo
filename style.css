@@ -620,3 +620,5 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .dash-feat-form{margin-top:10px; padding:10px; border:1px solid #F59F00; border-radius:10px; background:#FFF8E6;}
 .dash-feat-form .btn-gold{width:100%; justify-content:center;}
 .dash-feat-form .feat-opt.sel{background:#FFF1CC; border-color:#F59F00;}
+.dash-feat .feat-open{background:#1B2A4E; border-color:#1B2A4E; color:#fff;}
+.dash-feat .feat-open:hover{background:#26396B; border-color:#26396B;}
