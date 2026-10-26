@@ -539,8 +539,7 @@
     return '<a class="listing-card' + (item.featured ? ' is-featured' : '') + '" href="' + listingHref(item) + '">' +
       (item.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') +
       favBtnHtml(item.id) +
-      '<span class="count" style="display:block; margin-bottom:10px;">' + badgeLabel + '</span>' +
-      valueBlock +
+      '<div class="card-visual">' + valueBlock + '</div>' +
       '<div class="price">' + priceText(item) + '</div>' +
       phoneHtml +
       '<div class="meta">' + metaLabel + '</div>' +

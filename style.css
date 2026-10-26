@@ -654,3 +654,4 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .my-item.is-featured{background:#FBF5EE; border-color:#F0B24B; box-shadow:0 4px 16px rgba(240,178,75,.25);}
 .my-item .count, .my-item .plate, .my-item .row{margin-top:30px;}
 .listing-card .count{margin-inline-start:40px;}
+.listing-card .card-visual{margin-top:30px;}
