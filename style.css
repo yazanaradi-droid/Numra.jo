@@ -658,3 +658,15 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 
 .plate-digits .pw{display:inline-flex; align-items:center; gap:.04em; transform:scaleX(var(--k,1)); transform-origin:center; letter-spacing:.05em;}
 .plate-digits{min-width:0;}
+
+/* raised (embossed) digits: black faces, light top-left edge, stepped grey extrusion to the lower right, soft cast shadow */
+.plate-digits .pc, .plate-digits .pd, .plate-digits .pn{
+  background:linear-gradient(180deg,#34353A 0%,#0B0B0D 28%,#000 60%,#17181B 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
+  filter:
+    drop-shadow(-.006em -.006em 0 rgba(255,255,255,.85))
+    drop-shadow(.007em .009em 0 #5E6068)
+    drop-shadow(.014em .018em 0 #7C7F88)
+    drop-shadow(.021em .027em 0 #9A9DA6)
+    drop-shadow(.035em .050em .035em rgba(60,64,74,.5));
+}
