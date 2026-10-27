@@ -263,6 +263,7 @@
     "search.closest":{en:"No exact match \u2014 showing the closest results.",ar:"لا توجد نتيجة مطابقة تماماً \u2014 هذه أقرب النتائج."},
     "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
     "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
+    "listings.loadErr":{en:"Could not load the live listings right now (permissions or connection). Run supabase-fix-guest-access.sql in Supabase.",ar:"تعذّر تحميل الإعلانات الحية الآن (صلاحيات أو اتصال). شغّل ملف supabase-fix-guest-access.sql في Supabase."},
     "auth.rate":{en:"Too many attempts. Please wait a minute and try again.",ar:"محاولات كثيرة. انتظر دقيقة ثم حاول مرة أخرى."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
     "auth.confirmOn":{en:"Account created, but email confirmation is still enabled in Supabase. Turn off \u201cConfirm email\u201d in Authentication settings.",ar:"تم إنشاء الحساب لكن تأكيد البريد ما زال مفعّلاً في Supabase. عطّل \u201cConfirm email\u201d من إعدادات Authentication."},
@@ -418,6 +419,7 @@
     grid.innerHTML = items.map(listingCardHtml).join('');
     document.getElementById('homeListings').style.display = items.length ? 'block' : 'none';
   }
+  let listingsLoadError = false;
   async function loadRemoteListings(){
     if(!sb) return;
     try{
@@ -430,7 +432,8 @@
       if(error) throw error;
       userListings = [...data.map(rowToItem), ...seedListings];
       userListings = dedupeListings(sortFeatured(userListings));
-    }catch(err){ console.warn('Could not load listings:', err); }
+      listingsLoadError = false;
+    }catch(err){ console.warn('Could not load listings:', err); listingsLoadError = true; }
   }
   let currentUploadType = (typeof PAGE_TYPE !== 'undefined') ? PAGE_TYPE : 'plate';
 
@@ -644,6 +647,7 @@
     }
     empty.style.display = 'none';
 
+    if(listingsLoadError && note){ note.textContent = translations['listings.loadErr'][currentLang]; note.style.display = 'block'; }
     grid.innerHTML = sortFeatured(items).map(listingCardHtml).join('');   // featured ads always come before normal ones
   }
 
