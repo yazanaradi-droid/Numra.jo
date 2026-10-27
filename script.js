@@ -438,13 +438,31 @@
   }
 
   function plateHtml(code, number, large){
-    const L = String(code).length + 1 + String(number).length;           // code + dash + number
-    const fs = Math.min(0.25, 0.68 / ((L + 0.6) * 0.46)).toFixed(3);   // shrink long numbers so they stay inside the plate
-    return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:' + fs + '">' +
+    /* every plate uses the SAME digit height; long numbers are squeezed sideways (fitPlates) instead of shrunk */
+    return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:.22">' +
       '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
-      '<div class="plate-digits"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></div>' +
+      '<div class="plate-digits"><span class="pw"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></span></div>' +
       '</div>';
   }
+  function fitPlates(){
+    document.querySelectorAll('.plate-digits').forEach(d => {
+      const pw = d.querySelector('.pw'); if(!pw || !d.clientWidth) return;
+      pw.style.removeProperty('--k');
+      const plate = d.closest('.plate'), avail = plate.clientWidth * .67;
+      const nat = pw.offsetWidth; if(!nat) return;
+      pw.style.setProperty('--k', Math.min(1, avail / nat).toFixed(3));
+    });
+  }
+  (function(){
+    let q = false;
+    const run = () => { q = false; fitPlates(); };
+    const sched = () => { if(!q){ q = true; requestAnimationFrame(run); } };
+    document.addEventListener('DOMContentLoaded', () => {
+      new MutationObserver(m => { if(m.some(x => x.addedNodes.length || x.type === 'attributes')) sched(); }).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['class']});
+      if(document.fonts && document.fonts.ready) document.fonts.ready.then(sched);
+      window.addEventListener('resize', sched); sched();
+    });
+  })();
 
   /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
   const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });

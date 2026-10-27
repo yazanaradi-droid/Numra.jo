@@ -73,17 +73,17 @@
     font-size:calc(var(--fs, .2) * 100cqw); letter-spacing:.05em; white-space:nowrap;
   }
   /* strongly raised, glossy, stamped look shared by every character on the plate */
-  .plate-digits > span, .plate-country .ar, .plate-country .en{
+  .plate-digits .pc, .plate-digits .pd, .plate-digits .pn, .plate-country .ar, .plate-country .en{
     background:linear-gradient(172deg,#6E7177 0%,#15161A 26%,#000 55%,#2A2C31 100%);
     -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
     filter:drop-shadow(0 0 .7px #fff) drop-shadow(0 0 1.6px rgba(255,255,255,.9)) drop-shadow(0 1.3px 0 rgba(255,255,255,.75)) drop-shadow(1px 2px 1.6px rgba(0,0,0,.65));
   }
   /* if the condensed font could not be loaded, squeeze the fallback font so the digits stay tall and narrow */
   html.no-cond .plate-digits{letter-spacing:.03em;}
-  html.no-cond .plate-digits > span{display:inline-block; transform:scaleX(.74);}
-  html.no-cond .plate-digits > .pc{transform-origin:right center;}
-  html.no-cond .plate-digits > .pd{transform-origin:center;}
-  html.no-cond .plate-digits > .pn{transform-origin:left center;}
+  html.no-cond .plate-digits .pc, html.no-cond .plate-digits .pd, html.no-cond .plate-digits .pn{display:inline-block; transform:scaleX(.74);}
+  html.no-cond .plate-digits .pc{transform-origin:right center;}
+  html.no-cond .plate-digits .pd{transform-origin:center;}
+  html.no-cond .plate-digits .pn{transform-origin:left center;}
 
   /* ===== header ===== */
   header{
@@ -655,3 +655,6 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .my-item .count, .my-item .plate, .my-item .row{margin-top:30px;}
 .listing-card .count{margin-inline-start:40px;}
 .listing-card .card-visual{margin-top:30px;}
+
+.plate-digits .pw{display:inline-flex; align-items:center; gap:.04em; transform:scaleX(var(--k,1)); transform-origin:center; letter-spacing:.05em;}
+.plate-digits{min-width:0;}
