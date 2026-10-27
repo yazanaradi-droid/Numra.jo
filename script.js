@@ -423,14 +423,16 @@
   async function loadRemoteListings(){
     if(!sb) return;
     try{
-      let {data, error} = await sb.rpc('xp_listings_feed');
-      if(error){   // feed function not installed yet: fall back to the plain table (no phone preview)
-        ({data, error} = await sb.from('xp_listings')
-          .select('id,type,code,number,value,price,created_at')
-          .order('created_at', {ascending:false}).limit(500));
-      }
-      if(error) throw error;
-      userListings = [...data.map(rowToItem), ...seedListings];
+      /* the table is public; the feed adds the masked phone + featured flag. Use both so no ad can be lost if the feed drops a row */
+      const [feed, tbl] = await Promise.all([
+        sb.rpc('xp_listings_feed').then(r => r, e => ({error:e})),
+        sb.from('xp_listings').select('id,type,code,number,value,price,created_at').order('created_at', {ascending:false}).limit(500).then(r => r, e => ({error:e}))
+      ]);
+      if(feed.error && tbl.error) throw tbl.error;
+      const byId = new Map();
+      (tbl.data || []).forEach(r => byId.set(String(r.id), r));
+      (feed.data || []).forEach(r => byId.set(String(r.id), Object.assign({}, byId.get(String(r.id)) || {}, r)));
+      userListings = [...Array.from(byId.values()).map(rowToItem), ...seedListings];
       userListings = dedupeListings(sortFeatured(userListings));
       listingsLoadError = false;
     }catch(err){ console.warn('Could not load listings:', err); listingsLoadError = true; }
