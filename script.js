@@ -416,7 +416,7 @@
   function renderHomeListings(){
     const grid = document.getElementById('homeListingsGrid'); if(!grid) return;
     const items = sortFeatured(userListings).slice(0, 12);
-    grid.innerHTML = items.map(listingCardHtml).join('');
+    grid.innerHTML = items.map(safeCard).join('');
     document.getElementById('homeListings').style.display = items.length ? 'block' : 'none';
   }
   let listingsLoadError = false;
@@ -552,6 +552,7 @@
   function listingHref(item){
     return 'listing.html?id=' + encodeURIComponent(item.id) + (currentLang === 'ar' ? '&lang=ar' : '');
   }
+  function safeCard(it){ try{ return listingCardHtml(it); }catch(err){ console.warn('bad listing skipped:', it, err); return ''; } }
   function listingCardHtml(item){
     const badgeKey = item.type === 'plate' ? 'listings.plateBadge' : 'listings.numberBadge';
     const badgeLabel = translations[badgeKey][currentLang];
@@ -616,7 +617,7 @@
     await loadRemoteListings();
     const items = sortFeatured(userListings.filter(i => favs.has(String(i.id))));
     if(!items.length) return '<div class="dash-card"><h2>' + T('dash.favorites') + '</h2><p class="dash-note">' + T('dash.noFavs') + '</p></div>';
-    return '<div class="dash-card"><h2>' + T('dash.favorites') + '</h2><div class="listings-grid fav-grid">' + items.map(listingCardHtml).join('') + '</div></div>';
+    return '<div class="dash-card"><h2>' + T('dash.favorites') + '</h2><div class="listings-grid fav-grid">' + items.map(safeCard).join('') + '</div></div>';
   }
 
   function renderListings(){
@@ -648,7 +649,7 @@
     empty.style.display = 'none';
 
     if(listingsLoadError && note){ note.textContent = translations['listings.loadErr'][currentLang]; note.style.display = 'block'; }
-    grid.innerHTML = sortFeatured(items).map(listingCardHtml).join('');   // featured ads always come before normal ones
+    grid.innerHTML = sortFeatured(items).map(safeCard).join('');   // featured ads always come before normal ones
   }
 
 
@@ -1033,7 +1034,7 @@
       .slice(0, 6);
     const simWrap = document.getElementById('similarWrap');
     simWrap.style.display = sim.length ? 'block' : 'none';
-    document.getElementById('similarGrid').innerHTML = sim.map(listingCardHtml).join('');
+    document.getElementById('similarGrid').innerHTML = sim.map(safeCard).join('');
   }
 
   function featOpts(minRank, name){
