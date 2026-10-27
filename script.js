@@ -445,6 +445,11 @@
       '</div>';
   }
   function fitPlates(){
+    document.querySelectorAll('.plate-country').forEach(cn => {   // الاردن and JORDAN get exactly the same width
+      const plate = cn.closest('.plate'); if(!plate.clientWidth) return;
+      const T = plate.clientWidth * .16;
+      cn.querySelectorAll('.ar, .en').forEach(el => { el.style.transform = 'none'; const w = el.offsetWidth; if(w) el.style.transform = 'scaleX(' + (T / w).toFixed(3) + ')'; el.style.transformOrigin = 'left center'; });
+    });
     document.querySelectorAll('.plate-digits').forEach(d => {
       const pw = d.querySelector('.pw'); if(!pw || !d.clientWidth) return;
       pw.style.removeProperty('--k');
