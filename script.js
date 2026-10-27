@@ -439,7 +439,7 @@
 
   function plateHtml(code, number, large){
     /* every plate uses the SAME digit height; long numbers are squeezed sideways (fitPlates) instead of shrunk */
-    return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:.22">' +
+    return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:.205">' +
       '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
       '<div class="plate-digits"><span class="pw"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></span></div>' +
       '</div>';
@@ -453,7 +453,7 @@
     document.querySelectorAll('.plate-digits').forEach(d => {
       const pw = d.querySelector('.pw'); if(!pw || !d.clientWidth) return;
       pw.style.removeProperty('--k');
-      const plate = d.closest('.plate'), avail = plate.clientWidth * .67;
+      const plate = d.closest('.plate'), avail = plate.clientWidth * .68;
       const nat = pw.offsetWidth; if(!nat) return;
       pw.style.setProperty('--k', Math.min(1, avail / nat).toFixed(3));
     });

@@ -670,3 +670,7 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
     drop-shadow(.021em .027em 0 #9A9DA6)
     drop-shadow(.035em .050em .035em rgba(60,64,74,.5));
 }
+
+/* fixed grid: the code, the dash and the first digit always sit in the same place (1 to 5 digit numbers) */
+.plate-digits .pw{display:inline-grid; grid-template-columns:2ch auto 5ch; column-gap:.1em; align-items:center; font-variant-numeric:tabular-nums; letter-spacing:0;}
+.plate-digits .pc{text-align:right;} .plate-digits .pn{text-align:left;} .plate-digits .pd{text-align:center;}
