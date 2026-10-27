@@ -263,6 +263,7 @@
     "search.closest":{en:"No exact match \u2014 showing the closest results.",ar:"لا توجد نتيجة مطابقة تماماً \u2014 هذه أقرب النتائج."},
     "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
     "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
+    "auth.rate":{en:"Too many attempts. Please wait a minute and try again.",ar:"محاولات كثيرة. انتظر دقيقة ثم حاول مرة أخرى."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
     "auth.confirmOn":{en:"Account created, but email confirmation is still enabled in Supabase. Turn off \u201cConfirm email\u201d in Authentication settings.",ar:"تم إنشاء الحساب لكن تأكيد البريد ما زال مفعّلاً في Supabase. عطّل \u201cConfirm email\u201d من إعدادات Authentication."},
     "upload.serverErr":{en:"Could not save the listing. Please try again.",ar:"تعذّر حفظ الإعلان. حاول مرة أخرى."},
@@ -909,7 +910,15 @@
     const btn=document.querySelector('#loginForm .modal-submit'); btn.disabled=true;
     try{
       const {data, error} = await sb.auth.signInWithPassword({ email: toEmail(uname), password: pw });
-      if(error || !data.session){ showBanner('loginErr','login.err'); return false; }
+      if(error || !data.session){
+        const msg = String((error && error.message) || ''), st = error && error.status;
+        console.warn('login failed:', error);
+        if(/confirm/i.test(msg)) showBanner('loginErr','auth.confirmOn');
+        else if(!error || /invalid|credentials/i.test(msg) || st === 400) showBanner('loginErr','login.err');
+        else if(st === 429 || /rate|too many/i.test(msg)) showBanner('loginErr','auth.rate');
+        else showBanner('loginErr','auth.offline');
+        return false;
+      }
       currentUser = data.session.user; refreshAuthUI();
       document.getElementById('loginPassword').value='';
       closeRegister();
