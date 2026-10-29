@@ -573,7 +573,7 @@
     const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
     const valueBlock = item.type === 'plate'
       ? plateHtml(item.code, item.number, false)
-      : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(item.value) + '</div></div>';
+      : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(fmtMobile(item.value)) + '</div></div>';
     const T = k => translations[k][currentLang];
     const phoneHtml = !item.phoneMasked ? '' : (item.featured
       ? '<span class="card-phone card-phone-btn" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><b>' + T('feat.callLabel') + '</b> <span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>'
@@ -997,7 +997,8 @@
     const p = String(phone||'').replace(/\s+/g,'');
     return p.length > 3 ? p.slice(0, p.length-3) + 'xxx' : p;
   }
-  function itemLabel(item){ return item.type === 'plate' ? item.code + ' - ' + item.number : item.value; }
+  function fmtMobile(v){ const d = String(v||'').replace(/\D/g,''); return /^07\d{8}$/.test(d) ? d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6) : String(v||''); }
+  function itemLabel(item){ return item.type === 'plate' ? item.code + ' - ' + item.number : fmtMobile(item.value); }
 
   let detailFeat = null;
   const PLAN_RANK = {'2w':1, '1m':2, 'forever':3};
@@ -1058,7 +1059,7 @@
 
     document.getElementById('detailVisual').innerHTML = (it.type === 'plate'
       ? plateHtml(it.code, it.number, true)
-      : '<div class="number-lg">' + escapeHtml(it.value) + '</div>') + favBtnHtml(it.id);
+      : '<div class="number-lg">' + escapeHtml(fmtMobile(it.value)) + '</div>') + favBtnHtml(it.id);
 
     const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'x plate.jo';
     document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
@@ -1366,7 +1367,7 @@
       '<button class="btn btn-gold" type="button" onclick="openUpload(\'' + type + '\', event)">' + T(type === 'plate' ? 'page.uploadCta.plate' : 'page.uploadCta.number') + '</button></div>';
     if(!items.length) return '<div class="dash-card">' + head + '<p class="dash-note">' + T(type === 'plate' ? 'dash.noPlates' : 'dash.noNumbers') + '</p></div>';
     return '<div class="dash-card">' + head + '<div class="my-grid">' + items.map(it => {
-      const vis = it.type === 'plate' ? plateHtml(it.code, it.number, false) : '<div class="row"><div class="num-icon">📱</div><div class="value">' + escapeHtml(it.value) + '</div></div>';
+      const vis = it.type === 'plate' ? plateHtml(it.code, it.number, false) : '<div class="row"><div class="num-icon">📱</div><div class="value">' + escapeHtml(fmtMobile(it.value)) + '</div></div>';
       const date = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
       return '<div class="my-item' + (it.featured ? ' is-featured' : '') + '">' + (it.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') + favBtnHtml(it.id) + vis +
         '<div class="price">' + priceText(it) + '</div><div class="meta">' + date + '</div>' +
