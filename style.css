@@ -701,3 +701,6 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .plate, .plate *, .plate-digits, .plate-digits .pw{direction:ltr;}
 .listing-card .row, .my-item .row, .detail-card .row{direction:ltr;}
 .listing-card .value, .my-item .value, .detail-card .value{direction:ltr; unicode-bidi:isolate; text-align:left;}
+.number-lg, #upValue, #contactCallNum, .card-phone, .feat-note bdi{direction:ltr; unicode-bidi:isolate; text-align:left;}
+.number-lg{text-align:start;}
+html[dir=rtl] .number-lg{text-align:right; direction:ltr;}
