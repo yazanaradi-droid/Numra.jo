@@ -704,3 +704,7 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .number-lg, #upValue, #contactCallNum, .card-phone, .feat-note bdi{direction:ltr; unicode-bidi:isolate; text-align:left;}
 .number-lg{text-align:start;}
 html[dir=rtl] .number-lg{text-align:right; direction:ltr;}
+/* mobile numbers: slightly larger, airier digits */
+.listing-card .value, .my-item .value{font-size:1.3rem; letter-spacing:.14em; word-spacing:.3em;}
+.number-lg{font-size:2.6rem; letter-spacing:.14em; word-spacing:.35em;}
+@media (max-width:600px){ .number-lg{font-size:2rem;} }
