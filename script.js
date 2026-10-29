@@ -274,6 +274,14 @@
     "report.confirm":{en:"Report this ad to the admins?",ar:"هل تريد الإبلاغ عن هذا الإعلان للإدارة؟"},
     "dash.hiddenNote":{en:"Hidden by admin - not visible to others",ar:"مخفي من الإدارة - لا يظهر للآخرين"},
     "nav.admin":{en:"Admin panel",ar:"لوحة الإدارة"},
+    "sold.label":{en:"SOLD",ar:"مباع"},
+    "sold.status":{en:"Status",ar:"الحالة"},
+    "sold.available":{en:"Available",ar:"متوفر"},
+    "sold.sold":{en:"Sold",ar:"مباع"},
+    "sold.price":{en:"Price (JOD)",ar:"السعر (دينار)"},
+    "sold.pricePh":{en:"Contact for price",ar:"تواصل للسعر"},
+    "sold.save":{en:"Save",ar:"حفظ"},
+    "sold.saved":{en:"Saved ✓",ar:"تم الحفظ ✓"},
     "auth.rate":{en:"Too many attempts. Please wait a minute and try again.",ar:"محاولات كثيرة. انتظر دقيقة ثم حاول مرة أخرى."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
     "auth.confirmOn":{en:"Account created, but email confirmation is still enabled in Supabase. Turn off \u201cConfirm email\u201d in Authentication settings.",ar:"تم إنشاء الحساب لكن تأكيد البريد ما زال مفعّلاً في Supabase. عطّل \u201cConfirm email\u201d من إعدادات Authentication."},
@@ -416,7 +424,7 @@
   let userListings = [...seedListings];
 
   function rowToItem(r){
-    return {id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:(r.price==null ? '' : String(r.price)), created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
+    return {sold:!!r.sold, id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:(r.price==null ? '' : String(r.price)), created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
   }
   function itemKey(i){ return i.type === 'plate' ? (i.code + '-' + i.number) : String(i.value||'').replace(/\D/g,''); }
   function dedupeListings(list){ const seen = new Set(); return list.filter(i => { const k = i.type + ':' + itemKey(i); if(seen.has(k)) return false; seen.add(k); return true; }); }
@@ -578,7 +586,8 @@
     const phoneHtml = !item.phoneMasked ? '' : (item.featured
       ? '<span class="card-phone card-phone-btn" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><b>' + T('feat.callLabel') + '</b> <span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>'
       : '<span class="card-phone" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>');
-    return '<a class="listing-card' + (item.featured ? ' is-featured' : '') + '" href="' + listingHref(item) + '">' +
+    return '<a class="listing-card' + (item.featured ? ' is-featured' : '') + (item.sold ? ' is-sold' : '') + '" href="' + listingHref(item) + '">' +
+      (item.sold ? '<span class="sold-ribbon">' + T('sold.label') + '</span>' : '') +
       (item.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') +
       favBtnHtml(item.id) +
       '<div class="card-visual">' + valueBlock + '</div>' +
@@ -1066,7 +1075,7 @@
     document.getElementById('sellerName').textContent = sellerName;
     const dateStr = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
     document.getElementById('sellerDate').textContent = it.seed || !dateStr ? T('detail.sample') : T('detail.listed') + ' ' + dateStr;
-    document.getElementById('detailPrice').innerHTML = priceText(it);
+    document.getElementById('detailPrice').innerHTML = priceText(it) + (it.sold ? ' <span class="sold-badge">' + T('sold.label') + '</span>' : '');
 
     const btn = document.getElementById('contactBtn');
     if(detailSeller && detailSeller.phone){
@@ -1225,12 +1234,13 @@
   async function fetchMyListings(type){
     if(!sb || !currentUser) return [];
     const build = cols => { const q = sb.from('xp_listings').select(cols).eq('user_id', currentUser.id).order('created_at', {ascending:false}); return type ? q.eq('type', type) : q; };
-    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request,hidden');
+    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request,hidden,sold');
+    if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request,hidden'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at'));   // featured columns not installed yet
     if(error){ console.warn(error); return []; }
-    return data.map(r => { const it = rowToItem(r); it.featured = r.featured_status === 'active' && (!r.featured_until || new Date(r.featured_until) > new Date()); it.featuredPlan = r.featured_plan||null; it.featuredUntil = r.featured_until||null; it.featuredRequest = r.featured_request||null; it.hidden = !!r.hidden; return it; });
+    return data.map(r => { const it = rowToItem(r); it.featured = r.featured_status === 'active' && (!r.featured_until || new Date(r.featured_until) > new Date()); it.featuredPlan = r.featured_plan||null; it.featuredUntil = r.featured_until||null; it.featuredRequest = r.featured_request||null; it.hidden = !!r.hidden; it.sold = !!r.sold; return it; });
   }
 
   function dashMsg(id, key, ok){
@@ -1369,9 +1379,12 @@
     return '<div class="dash-card">' + head + '<div class="my-grid">' + items.map(it => {
       const vis = it.type === 'plate' ? plateHtml(it.code, it.number, false) : '<div class="row"><div class="num-icon">📱</div><div class="value">' + escapeHtml(fmtMobile(it.value)) + '</div></div>';
       const date = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
-      return '<div class="my-item' + (it.featured ? ' is-featured' : '') + '">' + (it.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') + favBtnHtml(it.id) + vis +
+      return '<div class="my-item' + (it.featured ? ' is-featured' : '') + (it.sold ? ' is-sold' : '') + '">' + (it.sold ? '<span class="sold-ribbon">' + T('sold.label') + '</span>' : '') + (it.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') + favBtnHtml(it.id) + vis +
         '<div class="price">' + priceText(it) + '</div><div class="meta">' + date + '</div>' +
         (it.hidden ? '<p class="feat-note" style="color:var(--danger)">' + T('dash.hiddenNote') + '</p>' : '') +
+        '<div class="my-edit" id="me-' + escapeHtml(it.id) + '"><label>' + T('sold.price') + '<input type="text" inputmode="decimal" dir="ltr" class="me-price" value="' + escapeHtml(it.price) + '" placeholder="' + T('sold.pricePh') + '"></label>' +
+        '<label>' + T('sold.status') + '<select class="me-sold"><option value="0"' + (it.sold ? '' : ' selected') + '>' + T('sold.available') + '</option><option value="1"' + (it.sold ? ' selected' : '') + '>' + T('sold.sold') + '</option></select></label>' +
+        '<button type="button" class="btn btn-gold" onclick="saveMyListing(\'' + escapeHtml(it.id) + '\', this)">' + T('sold.save') + '</button></div>' +
         dashFeatHtml(it) +
         '<div class="my-actions"><a class="btn btn-ghost" href="' + listingHref(it) + '">' + T('dash.view') + '</a>' +
         '<button type="button" class="btn btn-ghost danger" data-del="' + escapeHtml(it.id) + '" onclick="deleteMyListing(this)">' + T('dash.delete') + '</button></div></div>';
@@ -1414,6 +1427,22 @@
     renderDashboard();
   }
 
+  async function saveMyListing(id, btn){
+    const T = k => translations[k][currentLang];
+    const box = document.getElementById('me-' + id); if(!box || !sb) return;
+    const AR='٠١٢٣٤٥٦٧٨٩';
+    let pv = box.querySelector('.me-price').value.replace(/[٠-٩]/g, d => AR.indexOf(d)).replace(/[,\u066c\u060c\s]/g,'').replace(/\u066b/g,'.');
+    const sold = box.querySelector('.me-sold').value === '1';
+    if(pv !== '' && !/^\d+(\.\d+)?$/.test(pv)){ box.querySelector('.me-price').classList.add('field-invalid'); return; }
+    box.querySelector('.me-price').classList.remove('field-invalid');
+    btn.disabled = true;
+    const {error} = await sb.rpc('xp_update_my_listing', {lid:id, p_price: pv === '' || +pv === 0 ? null : Number(pv), p_sold: sold});
+    btn.disabled = false;
+    if(error){ console.warn(error); btn.textContent = T('auth.genericErr'); return; }
+    const it = userListings.find(x => x.id === id);
+    if(it){ it.price = pv === '' || +pv === 0 ? '' : pv; it.sold = sold; }
+    renderDashboard();
+  }
   async function deleteMyListing(btn){
     const T = k => translations[k][currentLang];
     if(!btn.dataset.armed){          // first click arms the button, second click deletes
