@@ -154,6 +154,7 @@ begin
   if auth.uid() is null then raise exception 'login required'; end if;
   if exists (select 1 from public.xp_profiles where id = auth.uid() and banned) then raise exception 'banned'; end if;
   if p_type not in ('plate','number') then raise exception 'bad type'; end if;
+  if p_type = 'number' and coalesce(p_value,'') !~ '^07[789][0-9]{7}$' then raise exception 'bad number'; end if;
   if p_price is not null and (p_price < 0 or p_price > 100000000) then raise exception 'bad price'; end if;
   if p_type = 'plate' then
     select * into r from public.xp_listings where type='plate' and code = p_code and number = p_number;

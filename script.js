@@ -717,12 +717,13 @@
     const norm = v => String(v).replace(/[٠-٩۰-۹]/g, d=>{ const i=AR.indexOf(d); return i>-1 ? i : FA.indexOf(d); }).trim();
     const isPlate = currentUploadType === 'plate';
     const ids = isPlate ? ['upCode','upNumber','upPrice'] : ['upValue','upPrice'];
-    ids.forEach(id=>{ const el=document.getElementById(id); el.value = norm(el.value); if(id==='upCode'||id==='upNumber') el.value = el.value.toUpperCase().replace(/[^0-9XYZ]/g,''); });
+    ids.forEach(id=>{ const el=document.getElementById(id); el.value = norm(el.value); if(id==='upCode'||id==='upNumber') el.value = el.value.toUpperCase().replace(/[^0-9XYZ]/g,'');
+      if(id==='upValue') el.value = el.value.replace(/\D/g,''); });
     { const pr=document.getElementById('upPrice'); pr.value = pr.value.replace(/[,\u066c\u060c\s]/g,'').replace(/\u066b/g,'.').replace(/[^0-9.]/g,''); }
     const checks = {
       upCode:  v => /^\d{1,2}$/.test(v) ? (+v>=1 && +v<=99) : /^[0-9XYZ]{1,2}$/.test(v),
       upNumber:v => /^[0-9XYZ]{1,5}$/.test(v),
-      upValue: v => /^[0-9+\s-]{7,15}$/.test(v),
+      upValue: v => /^07[789]\d{7}$/.test(v),
       upPrice: v => v === '' || (/^\d+(\.\d+)?$/.test(v) && +v>0)
     };
     let valid = true;

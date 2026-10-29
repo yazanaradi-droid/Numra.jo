@@ -695,3 +695,4 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 .rep-btn{background:none; border:0; color:var(--muted); font:inherit; font-size:.82rem; text-decoration:underline; cursor:pointer; padding:6px 0;}
 .rep-btn:hover{color:var(--danger);}
 .hp-field{position:absolute !important; left:-9999px !important; width:1px; height:1px; opacity:0; pointer-events:none;}
+.num-icon + .value, .listing-card .value, .my-item .value, .detail-title bdi{direction:ltr; unicode-bidi:isolate;}

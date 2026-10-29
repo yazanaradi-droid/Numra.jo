@@ -6,7 +6,7 @@
 <title>My account | x plate.jo</title>
 <meta name="description" content="Manage your x plate.jo account, listings and package.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202610291208">
+<link rel="stylesheet" href="style.css?v=202610291449">
 </head>
 <body>
 
@@ -236,7 +236,7 @@
         </div>
         <div class="field" id="numberFieldWrap" style="display:none;">
           <label for="upValue" data-i18n="upload.numberValue">Mobile number</label>
-          <input id="upValue" type="text" inputmode="tel" placeholder="079 123 4567">
+          <input id="upValue" type="text" inputmode="numeric" maxlength="10" dir="ltr" autocomplete="off" placeholder="0791234567" oninput="this.value=this.value.replace(/[\u0660-\u0669]/g,d=>d.charCodeAt(0)-1632).replace(/[\u06F0-\u06F9]/g,d=>d.charCodeAt(0)-1776).replace(/\D/g,'').slice(0,10)" style="text-align:left">
         </div>
         <div class="field">
           <label for="upPrice"><span data-i18n="upload.price">Price (JOD)</span> <small style="color:var(--muted)" data-i18n="upload.priceOptional">(optional)</small></label>
@@ -277,6 +277,6 @@
 
 <script>const PAGE_TYPE = 'dashboard';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202610291208"></script>
+<script src="script.js?v=202610291449"></script>
 </body>
 </html>
