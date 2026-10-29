@@ -249,7 +249,7 @@
         </div>
         <div class="field" id="numberFieldWrap" style="display:none;">
           <label for="upValue" data-i18n="upload.numberValue">Mobile number</label>
-          <input id="upValue" type="text" inputmode="numeric" maxlength="10" dir="ltr" autocomplete="off" placeholder="0791234567" oninput="this.value=this.value.replace(/[\u0660-\u0669]/g,d=>d.charCodeAt(0)-1632).replace(/[\u06F0-\u06F9]/g,d=>d.charCodeAt(0)-1776).replace(/\D/g,'').slice(0,10)" style="text-align:left">
+          <input id="upValue" type="text" inputmode="numeric" maxlength="12" dir="ltr" autocomplete="off" placeholder="078 000 1111" oninput="var d=this.value.replace(/[\u0660-\u0669]/g,c=>c.charCodeAt(0)-1632).replace(/[\u06F0-\u06F9]/g,c=>c.charCodeAt(0)-1776).replace(/\D/g,'').slice(0,10);this.value=d.length>6?d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6):d.length>3?d.slice(0,3)+' '+d.slice(3):d" style="text-align:left">d.charCodeAt(0)-1632).replace(/[\u06F0-\u06F9]/g,d=>d.charCodeAt(0)-1776).replace(/\D/g,'').slice(0,10)" style="text-align:left">
         </div>
         <div class="field">
           <label for="upPrice"><span data-i18n="upload.price">Price (JOD)</span> <small style="color:var(--muted)" data-i18n="upload.priceOptional">(optional)</small></label>
