@@ -587,10 +587,9 @@
       ? '<span class="card-phone card-phone-btn" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><b>' + T('feat.callLabel') + '</b> <span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>'
       : '<span class="card-phone" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>');
     return '<a class="listing-card' + (item.featured ? ' is-featured' : '') + (item.sold ? ' is-sold' : '') + '" href="' + listingHref(item) + '">' +
-      (item.sold ? '<span class="sold-ribbon">' + T('sold.label') + '</span>' : '') +
       (item.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') +
       favBtnHtml(item.id) +
-      '<div class="card-visual">' + valueBlock + '</div>' +
+      '<div class="card-visual">' + valueBlock + (item.sold ? '<span class="sold-corner"><span class="sold-ribbon">' + T('sold.label') + '</span></span>' : '') + '</div>' +
       '<div class="price">' + priceText(item) + '</div>' +
       phoneHtml +
       '<div class="meta">' + metaLabel + '</div>' +
@@ -1379,7 +1378,7 @@
     return '<div class="dash-card">' + head + '<div class="my-grid">' + items.map(it => {
       const vis = it.type === 'plate' ? plateHtml(it.code, it.number, false) : '<div class="row"><div class="num-icon">📱</div><div class="value">' + escapeHtml(fmtMobile(it.value)) + '</div></div>';
       const date = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
-      return '<div class="my-item' + (it.featured ? ' is-featured' : '') + (it.sold ? ' is-sold' : '') + '">' + (it.sold ? '<span class="sold-ribbon">' + T('sold.label') + '</span>' : '') + (it.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') + favBtnHtml(it.id) + vis +
+      return '<div class="my-item' + (it.featured ? ' is-featured' : '') + (it.sold ? ' is-sold' : '') + '">' + (it.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') + favBtnHtml(it.id) + '<div class="card-visual">' + vis + (it.sold ? '<span class="sold-corner"><span class="sold-ribbon">' + T('sold.label') + '</span></span>' : '') + '</div>' +
         '<div class="price">' + priceText(it) + '</div><div class="meta">' + date + '</div>' +
         (it.hidden ? '<p class="feat-note" style="color:var(--danger)">' + T('dash.hiddenNote') + '</p>' : '') +
         '<div class="my-edit" id="me-' + escapeHtml(it.id) + '"><label>' + T('sold.price') + '<input type="text" inputmode="decimal" dir="ltr" class="me-price" value="' + escapeHtml(it.price) + '" placeholder="' + T('sold.pricePh') + '"></label>' +
