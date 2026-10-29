@@ -723,3 +723,30 @@ html[dir=rtl] .number-lg{text-align:right; direction:ltr;}
 .sold-corner{position:absolute; top:0; right:0; width:72px; height:72px; overflow:hidden; pointer-events:none; z-index:4; border-top-right-radius:10px;}
 .sold-corner .sold-ribbon{top:14px; right:-26px; width:100px; font-size:.7rem; padding:3px 0;}
 .listing-card.is-sold, .my-item.is-sold{overflow:visible;}
+
+/* ===== phone header + mobile menu ===== */
+.logo{display:inline-block; white-space:nowrap; flex-shrink:0;}
+body{overflow-x:clip;}
+.user-chip{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:150px;}
+@media (max-width:920px){
+  header .nav-row{gap:10px;}
+  header.mnav-open nav.primary{display:block; position:absolute; top:100%; left:0; right:0; background:#fff; border-bottom:1px solid var(--line); box-shadow:0 14px 24px rgba(20,30,50,.12); padding:8px 16px 14px; max-height:calc(100vh - 80px); overflow-y:auto;}
+  header.mnav-open nav.primary > ul{flex-direction:column; gap:0;}
+  header.mnav-open nav.primary > ul > li > a{padding:12px 4px; font-size:1rem; color:var(--text); font-weight:600; border-bottom:1px solid var(--line);}
+  header.mnav-open .dropdown{position:static; opacity:1; visibility:visible; transform:none; box-shadow:none; border:0; background:transparent; padding:2px 0 6px 12px; min-width:0;}
+  html[dir=rtl] header.mnav-open .dropdown{padding:2px 12px 6px 0;}
+  header.mnav-open .dropdown a{padding:9px 6px;}
+}
+@media (max-width:600px){
+  header .nav-row{height:60px; gap:6px;}
+  .logo{font-size:1.15rem;}
+  .nav-actions{gap:6px;}
+  .auth-guest, .auth-user{gap:6px;}
+  .nav-actions .icon-btn{width:36px; height:36px; padding:0; font-size:.85rem;}
+  .nav-actions .btn{padding:8px 10px; font-size:.8rem;}
+  .user-chip{max-width:122px; padding:6px 9px; font-size:.74rem;}
+}
+@media (max-width:380px){
+  .nav-actions .auth-guest .btn:last-child{display:none;}
+  .logo{font-size:1.05rem;}
+}

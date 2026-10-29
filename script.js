@@ -370,6 +370,22 @@
     }
   }
 
+  function toggleMobileNav(e){
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    const hd = document.querySelector('header'); if(!hd) return;
+    const open = hd.classList.toggle('mnav-open');
+    const b = hd.querySelector('.menu-toggle'); if(b){ b.setAttribute('aria-expanded', open ? 'true' : 'false'); b.textContent = open ? '\u2715' : '\u2630'; }
+  }
+  function closeMobileNav(){
+    const hd = document.querySelector('header'); if(!hd || !hd.classList.contains('mnav-open')) return;
+    hd.classList.remove('mnav-open');
+    const b = hd.querySelector('.menu-toggle'); if(b){ b.setAttribute('aria-expanded','false'); b.textContent = '\u2630'; }
+  }
+  document.addEventListener('click', function(e){
+    if(!e.target.closest) return;
+    if(e.target.closest('nav.primary a')) closeMobileNav();
+    else if(!e.target.closest('header')) closeMobileNav();
+  });
   function toggleLang(){
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     applyTranslations(currentLang);
