@@ -45,3 +45,18 @@ Accounts and listings are stored in Supabase. One-time setup:
 1. Supabase -> SQL Editor -> paste and run `supabase-setup.sql`.
 2. Authentication -> Providers -> Email -> turn OFF "Confirm email".
 Usernames map to an internal email (`username@users.xplate.jo`), so visitors never type an email.
+
+## Admin panel, security & anti-spam
+
+1. Run `supabase-admin-security.sql` once in Supabase > SQL Editor.
+2. Make yourself admin (replace the username):
+   `insert into public.xp_admins (user_id) select id from public.xp_profiles where lower(username)=lower('YOUR_USERNAME') on conflict do nothing;`
+3. Log in on the site → user menu → **Admin panel** (`admin.html`). Review/hide/delete ads, activate or reject featured requests, ban/unban users, change limits.
+
+What it enforces (server side, in the database):
+- Nobody can edit prices / featured status / hidden flag from the browser; only through controlled functions.
+- Banned users cannot post; their ads are hidden; login is blocked.
+- Daily ad limit + burst limit per user, promo-code brute-force limit, report auto-hide (default 5 reports).
+- Seller phone only for logged-in visitors (toggle in Settings), max 40 phone views/hour per user.
+- Honeypot + minimum-fill-time on registration. Optional Cloudflare Turnstile: put the site key in `TURNSTILE_SITE_KEY` (script.js) and enable CAPTCHA in Supabase > Authentication > Attack Protection.
+- Also in Supabase > Authentication: turn off "Confirm email", keep Rate Limits on, set minimum password length 8.

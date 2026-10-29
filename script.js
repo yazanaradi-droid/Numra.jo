@@ -264,6 +264,16 @@
     "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
     "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
     "listings.loadErr":{en:"Could not load the live listings right now (permissions or connection). Run supabase-fix-guest-access.sql in Supabase.",ar:"تعذّر تحميل الإعلانات الحية الآن (صلاحيات أو اتصال). شغّل ملف supabase-fix-guest-access.sql في Supabase."},
+    "upload.rateErr":{en:"You have reached the posting limit. Please try again later.",ar:"وصلت إلى حد النشر المسموح. حاول لاحقاً."},
+    "upload.bannedErr":{en:"This account is suspended and cannot post ads.",ar:"هذا الحساب موقوف ولا يمكنه نشر إعلانات."},
+    "auth.bannedErr":{en:"This account has been suspended.",ar:"تم إيقاف هذا الحساب."},
+    "detail.loginToSee":{en:"Log in to see the seller's contact",ar:"سجّل الدخول لعرض بيانات التواصل"},
+    "detail.phoneLimit":{en:"Too many contact views. Try again later.",ar:"عدد كبير من طلبات عرض الأرقام. حاول لاحقاً."},
+    "report.btn":{en:"Report this ad",ar:"الإبلاغ عن هذا الإعلان"},
+    "report.done":{en:"Thanks, we will review this ad.",ar:"شكراً، سنراجع هذا الإعلان."},
+    "report.confirm":{en:"Report this ad to the admins?",ar:"هل تريد الإبلاغ عن هذا الإعلان للإدارة؟"},
+    "dash.hiddenNote":{en:"Hidden by admin - not visible to others",ar:"مخفي من الإدارة - لا يظهر للآخرين"},
+    "nav.admin":{en:"Admin panel",ar:"لوحة الإدارة"},
     "auth.rate":{en:"Too many attempts. Please wait a minute and try again.",ar:"محاولات كثيرة. انتظر دقيقة ثم حاول مرة أخرى."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
     "auth.confirmOn":{en:"Account created, but email confirmation is still enabled in Supabase. Turn off \u201cConfirm email\u201d in Authentication settings.",ar:"تم إنشاء الحساب لكن تأكيد البريد ما زال مفعّلاً في Supabase. عطّل \u201cConfirm email\u201d من إعدادات Authentication."},
@@ -355,6 +365,7 @@
   function toggleLang(){
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     applyTranslations(currentLang);
+    if(typeof window.onLangChange === 'function') window.onLangChange();
     if(typeof renderListings === 'function') renderListings();
     renderHomeListings();
     renderSearchPanel();
@@ -753,7 +764,8 @@
       userListings = sortFeatured(userListings);
     }catch(err){
       console.warn(err);
-      showBanner('uploadErrorBanner','upload.serverErr');
+      const em = String((err && err.message) || '');
+      showBanner('uploadErrorBanner', /rate_limited/.test(em) ? 'upload.rateErr' : (/banned/.test(em) ? 'upload.bannedErr' : 'upload.serverErr'));
       return false;
     }finally{ submitBtn.disabled = false; }
     if(typeof PAGE_TYPE !== 'undefined' && PAGE_TYPE === currentUploadType) renderListings();
@@ -822,9 +834,19 @@
   function refreshAuthUI(){
     const g=document.getElementById('authGuest'), a=document.getElementById('authUser'), chip=document.getElementById('userChip');
     if(!g||!a) return;
-    syncFavorites();
+    syncFavorites(); checkAdminLink();
     if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent='@'+((currentUser.user_metadata||{}).username||'')+' \u25be'; }
     else { g.style.display='inline-flex'; a.style.display='none'; chip.textContent=''; }
+  }
+  /* admin link: shown only if the server says this account is an admin (the real check is always server-side) */
+  let adminCheckedFor = null;
+  async function checkAdminLink(){
+    const el = document.getElementById('adminLink');
+    if(!el) return;
+    if(!currentUser || !sb){ el.style.display = 'none'; adminCheckedFor = null; return; }
+    if(adminCheckedFor === currentUser.id) return;
+    adminCheckedFor = currentUser.id;
+    try{ const {data} = await sb.rpc('xp_is_admin'); el.style.display = data === true ? 'block' : 'none'; }catch(e){ el.style.display = 'none'; }
   }
   let authReady = Promise.resolve();
   async function initAuth(){
@@ -837,7 +859,26 @@
     }catch(e){ console.warn(e); }
   }
 
+  /* optional Cloudflare Turnstile (free CAPTCHA). Leave empty to disable. Also enable it in Supabase > Authentication > Attack Protection. */
+  const TURNSTILE_SITE_KEY = '';
+  const capIds = {reg:null, login:null}, capTok = {reg:undefined, login:undefined};
+  function captchaToken(w){ const t = capTok[w]; capTok[w] = undefined; try{ if(window.turnstile && capIds[w] !== null) window.turnstile.reset(capIds[w]); }catch(e){} return t; }
+  function initCaptcha(){
+    if(!TURNSTILE_SITE_KEY) return;
+    const go = () => {
+      [['reg','regCaptcha'],['login','loginCaptcha']].forEach(([w,id]) => {
+        const box = document.getElementById(id);
+        if(box && capIds[w] === null && window.turnstile) capIds[w] = window.turnstile.render(box, {sitekey:TURNSTILE_SITE_KEY, callback:t => { capTok[w] = t; }, 'expired-callback':() => { capTok[w] = undefined; }});
+      });
+    };
+    if(window.turnstile) return go();
+    if(!document.getElementById('tsScript')){
+      const sc = document.createElement('script'); sc.id = 'tsScript'; sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.async = true; sc.onload = go; document.head.appendChild(sc);
+    }
+  }
+  let regOpenedAt = Date.now();
   function openAuth(mode, e, note){
+    regOpenedAt = Date.now(); initCaptcha();
     if(e && e.preventDefault) e.preventDefault();
     document.getElementById('registerOverlay').classList.add('open');
     document.getElementById('registerSuccess').classList.remove('show');
@@ -873,6 +914,12 @@
   async function submitRegister(e){
     e.preventDefault();
     showBanner('regGlobalErr', null);
+    const hp = document.getElementById('regWebsite');
+    if((hp && hp.value) || (Date.now() - regOpenedAt) < 2500){   // bot behaviour: hidden field filled / form submitted instantly -> pretend success, create nothing
+      document.getElementById('registerForm').style.display='none';
+      document.getElementById('registerSuccess').classList.add('show');
+      return false;
+    }
     const username=document.getElementById('regUsername').value.trim();
     const first=document.getElementById('regFirst').value.trim();
     const last=document.getElementById('regLast').value.trim();
@@ -891,7 +938,7 @@
     try{
       const {data, error} = await sb.auth.signUp({
         email: toEmail(username), password: pw,
-        options:{ data:{ username, first_name:first, last_name:last, phone } }
+        options:{ data:{ username, first_name:first, last_name:last, phone }, captchaToken: captchaToken('reg') }
       });
       if(error){
         if(/already|registered|exists|database error/i.test(error.message)){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); }
@@ -916,11 +963,12 @@
     if(!uname.trim() || !pw){ showBanner('loginErr','login.err'); return false; }
     const btn=document.querySelector('#loginForm .modal-submit'); btn.disabled=true;
     try{
-      const {data, error} = await sb.auth.signInWithPassword({ email: toEmail(uname), password: pw });
+      const {data, error} = await sb.auth.signInWithPassword({ email: toEmail(uname), password: pw, options:{ captchaToken: captchaToken('login') } });
       if(error || !data.session){
         const msg = String((error && error.message) || ''), st = error && error.status;
         console.warn('login failed:', error);
-        if(/confirm/i.test(msg)) showBanner('loginErr','auth.confirmOn');
+        if(/banned|suspend/i.test(msg)) showBanner('loginErr','auth.bannedErr');
+        else if(/confirm/i.test(msg)) showBanner('loginErr','auth.confirmOn');
         else if(!error || /invalid|credentials/i.test(msg) || st === 400) showBanner('loginErr','login.err');
         else if(st === 429 || /rate|too many/i.test(msg)) showBanner('loginErr','auth.rate');
         else showBanner('loginErr','auth.offline');
@@ -968,7 +1016,7 @@
         const r = Array.isArray(data) ? data[0] : data;
         if(r){
           detailItem = rowToItem(r);
-          detailSeller = {first:r.first_name, last:r.last_name, username:r.username, phone:r.phone};
+          detailSeller = {first:r.first_name, last:r.last_name, username:r.username, phone:r.phone, locked:r.phone_locked||null};
           detailState = 'ok';
         } else detailState = 'missing';
       }catch(err){ console.warn(err); detailState = 'error'; }
@@ -1023,11 +1071,21 @@
       btn.disabled = false;
       btn.textContent = T('detail.showContact') + '  ' + maskPhone(detailSeller.phone);
       btn.onclick = function(){ openContact(detailItem, detailSeller); };
+    } else if(detailSeller && detailSeller.locked === 'login'){
+      btn.disabled = false;
+      btn.textContent = T('detail.loginToSee');
+      btn.onclick = function(){ openAuth('login', null, true); };
+    } else if(detailSeller && detailSeller.locked === 'limit'){
+      btn.disabled = true;
+      btn.textContent = T('detail.phoneLimit');
+      btn.onclick = null;
     } else {
       btn.disabled = true;
       btn.textContent = T('detail.noContact');
       btn.onclick = null;
     }
+    const rb = document.getElementById('reportBtn');
+    if(rb){ rb.style.display = (it.seed || detailFeat) ? 'none' : 'inline-block'; rb.onclick = reportListing; }
 
     /* featured box intentionally not shown on the listing page */
 
@@ -1037,6 +1095,15 @@
     const simWrap = document.getElementById('similarWrap');
     simWrap.style.display = sim.length ? 'block' : 'none';
     document.getElementById('similarGrid').innerHTML = sim.map(safeCard).join('');
+  }
+
+  async function reportListing(){
+    if(!detailItem || !sb) return;
+    if(!currentUser){ openAuth('login', null, true); return; }
+    if(!confirm(translations['report.confirm'][currentLang])) return;
+    const rb = document.getElementById('reportBtn');
+    const {error} = await sb.rpc('xp_report_listing', {lid: detailItem.id, p_reason: null});
+    if(rb){ rb.textContent = translations[error ? 'auth.genericErr' : 'report.done'][currentLang]; if(!error) rb.disabled = true; }
   }
 
   function featOpts(minRank, name){
@@ -1100,6 +1167,7 @@
       if(error) throw error;
       const r = Array.isArray(data) ? data[0] : data;
       if(r && r.phone) openContact(rowToItem(r), {phone:r.phone});
+      else if(r && r.phone_locked === 'login') openAuth('login', null, true);
     }catch(err){ console.warn(err); }
   }
   document.addEventListener('click', function(e){
@@ -1155,11 +1223,12 @@
   async function fetchMyListings(type){
     if(!sb || !currentUser) return [];
     const build = cols => { const q = sb.from('xp_listings').select(cols).eq('user_id', currentUser.id).order('created_at', {ascending:false}); return type ? q.eq('type', type) : q; };
-    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request');
+    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request,hidden');
+    if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at'));   // featured columns not installed yet
     if(error){ console.warn(error); return []; }
-    return data.map(r => { const it = rowToItem(r); it.featured = r.featured_status === 'active' && (!r.featured_until || new Date(r.featured_until) > new Date()); it.featuredPlan = r.featured_plan||null; it.featuredUntil = r.featured_until||null; it.featuredRequest = r.featured_request||null; return it; });
+    return data.map(r => { const it = rowToItem(r); it.featured = r.featured_status === 'active' && (!r.featured_until || new Date(r.featured_until) > new Date()); it.featuredPlan = r.featured_plan||null; it.featuredUntil = r.featured_until||null; it.featuredRequest = r.featured_request||null; it.hidden = !!r.hidden; return it; });
   }
 
   function dashMsg(id, key, ok){
@@ -1300,6 +1369,7 @@
       const date = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
       return '<div class="my-item' + (it.featured ? ' is-featured' : '') + '">' + (it.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') + favBtnHtml(it.id) + vis +
         '<div class="price">' + priceText(it) + '</div><div class="meta">' + date + '</div>' +
+        (it.hidden ? '<p class="feat-note" style="color:var(--danger)">' + T('dash.hiddenNote') + '</p>' : '') +
         dashFeatHtml(it) +
         '<div class="my-actions"><a class="btn btn-ghost" href="' + listingHref(it) + '">' + T('dash.view') + '</a>' +
         '<button type="button" class="btn btn-ghost danger" data-del="' + escapeHtml(it.id) + '" onclick="deleteMyListing(this)">' + T('dash.delete') + '</button></div></div>';

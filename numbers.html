@@ -6,7 +6,7 @@
 <title>Mobile Numbers | x plate.jo</title>
 <meta name="description" content="Browse all available Jordanian mobile numbers for sale.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202610271655">
+<link rel="stylesheet" href="style.css?v=202610291208">
 </head>
 <body>
 
@@ -59,6 +59,7 @@
             <a href="#" onclick="goDash('numbers',event)" data-i18n="dash.numbers">My numbers</a>
             <a href="#" onclick="goDash('favorites',event)" data-i18n="dash.favorites">Favorites</a>
             <a href="#" onclick="goDash('package',event)" data-i18n="dash.package">My package</a>
+            <a href="admin.html" id="adminLink" style="display:none" data-i18n="nav.admin">Admin panel</a>
             <a href="#" class="logout-link" onclick="logout(event)" data-i18n="nav.logout">Logout</a>
           </div>
         </div>
@@ -167,6 +168,7 @@
       <p class="sub" data-i18n="modal.subtitle">Register with a username to list, buy and negotiate plates and numbers.</p>
       <form onsubmit="return submitRegister(event)" novalidate autocomplete="off">
         <div class="upload-error-banner" id="regGlobalErr"></div>
+        <div class="hp-field" aria-hidden="true"><label for="regWebsite">Website</label><input id="regWebsite" type="text" tabindex="-1" autocomplete="off"></div>
         <div class="field">
           <label for="regUsername" data-i18n="modal.username">Username</label>
           <input id="regUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.usernamePlaceholder" placeholder="e.g. ahmad_k">
@@ -195,6 +197,7 @@
           <input id="regPassword" type="password" autocomplete="new-password" data-i18n-placeholder="modal.passwordPlaceholder" placeholder="At least 6 characters">
           <div class="hint error" id="regPasswordErr"></div>
         </div>
+        <div id="regCaptcha"></div>
         <button class="modal-submit" type="submit" data-i18n="modal.submit">Create Account</button>
         <p class="auth-switch"><span data-i18n="modal.haveAccount">Already have an account?</span> <a href="#" onclick="openAuth('login',event)" data-i18n="modal.goLogin">Log in</a></p>
       </form>
@@ -214,6 +217,7 @@
           <label for="loginPassword" data-i18n="modal.password">Password</label>
           <input id="loginPassword" type="password" autocomplete="current-password" data-i18n-placeholder="login.passwordPlaceholder" placeholder="Your password">
         </div>
+        <div id="loginCaptcha"></div>
         <button class="modal-submit" type="submit" data-i18n="login.submit">Log in</button>
         <p class="auth-switch"><span data-i18n="modal.noAccount">New here?</span> <a href="#" onclick="openAuth('register',event)" data-i18n="modal.goRegister">Create an account</a></p>
       </form>
@@ -286,6 +290,6 @@
 
 <script>const PAGE_TYPE = 'number';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202610271655"></script>
+<script src="script.js?v=202610291208"></script>
 </body>
 </html>
