@@ -385,7 +385,7 @@
   /* ===== branded, fixed-design image of a plate / number (download or share) ===== */
   const SITE_MARK = 'xplate.jo';
   async function buildPlateCanvas(it){
-    try{ await Promise.all([document.fonts.load('700 200px "Barlow Condensed"'), document.fonts.load('800 80px "Cairo"')]); }catch(e){}
+    try{ await Promise.all([document.fonts.load('800 200px "Barlow Condensed"'), document.fonts.load('800 80px "Cairo"')]); }catch(e){}
     const W = 1200, H = 400, c = document.createElement('canvas'); c.width = W; c.height = H;
     const g = c.getContext('2d');
     g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
@@ -396,15 +396,23 @@
     rr(px + 20, py + 20, pw - 40, ph - 40, 16); g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 3; g.stroke();
     rr(px + 7, py + 7, pw - 14, ph - 14, 26); g.strokeStyle = '#0B0B0B'; g.lineWidth = 14; g.stroke();
     let condOk = true; try{ condOk = Array.from(document.fonts).some(f => /Barlow/i.test(f.family) && f.status === 'loaded'); }catch(e){}
-    /* embossed ink: white highlight edge + soft shadow + dark gradient (same look as the plate on the site) */
-    const emboss = (txt, x, y, font, maxW, align, yTop, yBot, sx) => {
-      g.font = font; g.textAlign = align; let w = g.measureText(txt).width * (sx || 1);
+    /* raised, stamped characters: white halo + soft drop shadow + black body + light rim on the top-left edge */
+    const emboss = (txt, x, y, font, maxW, align, _a, _b, sx) => {
+      g.font = font; g.textAlign = align; const w = g.measureText(txt).width * (sx || 1);
       const k = Math.min(1, maxW / w) * (sx || 1);
-      const paint = (dx, dy, fill, blur, shadow) => { g.save(); g.translate(x + dx, y + dy); g.scale(k, 1); g.shadowColor = shadow || 'transparent'; g.shadowBlur = blur || 0; g.fillStyle = fill; g.fillText(txt, 0, 0); g.restore(); };
-      paint(-2, -2, 'rgba(255,255,255,.95)');
-      g.save(); g.shadowOffsetX = 5; g.shadowOffsetY = 8; paint(0, 0, '#000', 10, 'rgba(0,0,0,.5)'); g.restore();
-      const fs = parseInt(font.match(/(\d+)px/)[1], 10), lg = g.createLinearGradient(0, -fs * .72, 0, fs * .02); lg.addColorStop(0, '#5C5F66'); lg.addColorStop(.28, '#14151A'); lg.addColorStop(.6, '#000'); lg.addColorStop(1, '#2A2C31');
-      paint(0, 0, lg);
+      const dir = g.direction;
+      const layer = () => { const o = document.createElement('canvas'); o.width = W; o.height = H; const q = o.getContext('2d'); q.font = font; q.textAlign = align; q.direction = dir; q.textBaseline = 'alphabetic'; return [o, q]; };
+      const put = (q, dx, dy, mode) => { q.save(); q.translate(x + dx, y + dy); q.scale(k, 1); mode === 'stroke' ? q.strokeText(txt, 0, 0) : q.fillText(txt, 0, 0); q.restore(); };
+      // 1) white halo
+      g.save(); g.lineJoin = 'round'; g.lineWidth = 9; g.strokeStyle = 'rgba(255,255,255,.95)'; g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 9; g.shadowOffsetX = 4; g.shadowOffsetY = 7; put(g, 0, 0, 'stroke'); g.restore();
+      // 2) black body
+      const fs = parseInt(font.match(/(\d+)px/)[1], 10);
+      g.save(); g.translate(x, y); g.scale(k, 1); const lg = g.createLinearGradient(0, -fs * .75, 0, fs * .02); lg.addColorStop(0, '#2B2D33'); lg.addColorStop(.35, '#0D0E10'); lg.addColorStop(1, '#000'); g.fillStyle = lg; g.fillText(txt, 0, 0); g.restore();
+      // 3) light rim on the top-left edge
+      const [oa, qa] = layer(); qa.fillStyle = '#000'; put(qa, 0, 0);
+      const [ob, qb] = layer(); qb.drawImage(oa, 0, 0); qb.globalCompositeOperation = 'destination-out'; put(qb, 3, 3);
+      qb.globalCompositeOperation = 'source-in'; qb.fillStyle = 'rgba(150,154,164,.9)'; qb.fillRect(0, 0, W, H);
+      g.drawImage(ob, 0, 0);
     };
     g.textBaseline = 'alphabetic';
     const cx = px + 70, T = 300;
@@ -412,13 +420,13 @@
     emboss('الاردن', cx, py + 122, '800 82px Cairo, Arial', T, 'left', py + 60, py + 140, T / wAr);
     g.direction = 'ltr'; g.font = '800 60px Arial'; const wEn = g.measureText('JORDAN').width;
     emboss('JORDAN', cx, py + 212, '800 60px Arial', T, 'left', py + 165, py + 220, T / wEn);
-    const fd = '700 235px "Barlow Condensed", "Arial Narrow", Arial', sx = condOk ? 1 : .72;
+    const fd = '800 235px "Barlow Condensed", "Arial Narrow", Arial', sx = condOk ? 1 : .72;
     if(it.type === 'plate'){
       emboss(String(it.code), 660, py + 205, fd, 210, 'right', py + 40, py + 215, sx);
       emboss('-', 705, py + 205, fd, 60, 'center', py + 40, py + 215, sx);
       emboss(String(it.number), 905, py + 205, fd, 360, 'center', py + 40, py + 215, sx);
     } else {
-      emboss(fmtMobile(it.value), W / 2 + 90, py + 195, '700 170px "Barlow Condensed", "Arial Narrow", Arial', pw - 420, 'center', py + 40, py + 215, sx);
+      emboss(fmtMobile(it.value), W / 2 + 90, py + 195, '800 170px "Barlow Condensed", "Arial Narrow", Arial', pw - 420, 'center', py + 40, py + 215, sx);
     }
     /* site mark: bottom-right corner, under the plate */
     g.fillStyle = '#2B2E35'; g.textAlign = 'right'; g.font = '800 34px Inter, Arial'; g.fillText(SITE_MARK, px + pw - 14, py + ph + 50);
