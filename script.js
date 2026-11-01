@@ -386,38 +386,42 @@
   const SITE_MARK = 'xplate.jo';
   async function buildPlateCanvas(it){
     try{ await Promise.all([document.fonts.load('700 200px "Barlow Condensed"'), document.fonts.load('800 80px "Cairo"')]); }catch(e){}
-    const W = 1200, H = it.type === 'plate' ? 470 : 470, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const W = 1200, H = 400, c = document.createElement('canvas'); c.width = W; c.height = H;
     const g = c.getContext('2d');
     g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
     const rr = (x, y, w, h, r) => { g.beginPath(); g.moveTo(x+r, y); g.arcTo(x+w, y, x+w, y+h, r); g.arcTo(x+w, y+h, x, y+h, r); g.arcTo(x, y+h, x, y, r); g.arcTo(x, y, x+w, y, r); g.closePath(); };
-    const px = 70, py = 50, pw = W - 140, ph = 270;
+    const px = 70, py = 40, pw = W - 140, ph = 270;
     g.save(); g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
     rr(px, py, pw, ph, 30); const gr = g.createLinearGradient(0, py, 0, py + ph); gr.addColorStop(0, '#E9ECF1'); gr.addColorStop(.5, '#DDE1E8'); gr.addColorStop(1, '#D1D6DF'); g.fillStyle = gr; g.fill(); g.restore();
-    rr(px + 20, py + 20, pw - 40, ph - 40, 16); g.strokeStyle = 'rgba(255,255,255,.8)'; g.lineWidth = 3; g.stroke();
+    rr(px + 20, py + 20, pw - 40, ph - 40, 16); g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 3; g.stroke();
     rr(px + 7, py + 7, pw - 14, ph - 14, 26); g.strokeStyle = '#0B0B0B'; g.lineWidth = 14; g.stroke();
-    const ink = (draw) => { g.save(); g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 10; g.shadowOffsetX = 4; g.shadowOffsetY = 7; g.fillStyle = '#0B0B0B'; draw(); g.restore(); };
-    const fitText = (txt, x, y, font, maxW, align) => { g.font = font; g.textAlign = align || 'left'; let w = g.measureText(txt).width; if(!condOk) w *= .74; g.save(); g.translate(x, y); g.scale(Math.min(1, maxW / w) * (condOk ? 1 : .74), 1); g.fillText(txt, 0, 0); g.restore(); };
     let condOk = true; try{ condOk = Array.from(document.fonts).some(f => /Barlow/i.test(f.family) && f.status === 'loaded'); }catch(e){}
+    /* embossed ink: white highlight edge + soft shadow + dark gradient (same look as the plate on the site) */
+    const emboss = (txt, x, y, font, maxW, align, yTop, yBot, sx) => {
+      g.font = font; g.textAlign = align; let w = g.measureText(txt).width * (sx || 1);
+      const k = Math.min(1, maxW / w) * (sx || 1);
+      const paint = (dx, dy, fill, blur, shadow) => { g.save(); g.translate(x + dx, y + dy); g.scale(k, 1); g.shadowColor = shadow || 'transparent'; g.shadowBlur = blur || 0; g.fillStyle = fill; g.fillText(txt, 0, 0); g.restore(); };
+      paint(-2, -2, 'rgba(255,255,255,.95)');
+      g.save(); g.shadowOffsetX = 5; g.shadowOffsetY = 8; paint(0, 0, '#000', 10, 'rgba(0,0,0,.5)'); g.restore();
+      const fs = parseInt(font.match(/(\d+)px/)[1], 10), lg = g.createLinearGradient(0, -fs * .72, 0, fs * .02); lg.addColorStop(0, '#5C5F66'); lg.addColorStop(.28, '#14151A'); lg.addColorStop(.6, '#000'); lg.addColorStop(1, '#2A2C31');
+      paint(0, 0, lg);
+    };
     g.textBaseline = 'alphabetic';
+    const cx = px + 70, T = 300;
+    g.direction = 'rtl'; g.font = '800 82px Cairo, Arial'; const wAr = g.measureText('الاردن').width;
+    emboss('الاردن', cx, py + 122, '800 82px Cairo, Arial', T, 'left', py + 60, py + 140, T / wAr);
+    g.direction = 'ltr'; g.font = '800 60px Arial'; const wEn = g.measureText('JORDAN').width;
+    emboss('JORDAN', cx, py + 212, '800 60px Arial', T, 'left', py + 165, py + 220, T / wEn);
+    const fd = '700 235px "Barlow Condensed", "Arial Narrow", Arial', sx = condOk ? 1 : .72;
     if(it.type === 'plate'){
-      const cx = px + 70; g.direction = 'rtl';
-      ink(() => { g.font = '800 82px Cairo, Arial'; const w = g.measureText('\u0627\u0644\u0627\u0631\u062f\u0646').width; g.save(); g.translate(cx, py + 125); g.scale(300 / w, 1); g.textAlign = 'left'; g.fillText('\u0627\u0644\u0627\u0631\u062f\u0646', 0, 0); g.restore(); });
-      g.direction = 'ltr';
-      ink(() => { g.font = '800 60px Arial'; const w = g.measureText('JORDAN').width; g.save(); g.translate(cx, py + 215); g.scale(300 / w, 1); g.textAlign = 'left'; g.fillText('JORDAN', 0, 0); g.restore(); });
-      const f = '700 230px "Barlow Condensed", "Arial Narrow", Arial';
-      ink(() => {
-        fitText(String(it.code), 640, py + 205, f, 200, 'right');
-        g.fillRect(668, py + 128, 44, 30);
-        fitText(String(it.number), 725, py + 205, f, 340, 'left');
-      });
+      emboss(String(it.code), 660, py + 205, fd, 210, 'right', py + 40, py + 215, sx);
+      emboss('-', 705, py + 205, fd, 60, 'center', py + 40, py + 215, sx);
+      emboss(String(it.number), 905, py + 205, fd, 360, 'center', py + 40, py + 215, sx);
     } else {
-      const f = '700 150px "Barlow Condensed", "Arial Narrow", Arial';
-      rr(px, py, pw, ph, 30); g.fillStyle = '#F3F5F9'; g.fill(); g.lineWidth = 4; g.strokeStyle = '#3B5BDB'; g.stroke();
-      g.fillStyle = '#0B0B0B'; g.font = '700 130px "JetBrains Mono", "Courier New", monospace'; g.textAlign = 'center'; g.fillText(fmtMobile(it.value), W / 2, py + 185, pw - 80);
+      emboss(fmtMobile(it.value), W / 2 + 90, py + 195, '700 170px "Barlow Condensed", "Arial Narrow", Arial', pw - 420, 'center', py + 40, py + 215, sx);
     }
-    g.fillStyle = '#2B2E35'; g.textAlign = 'right'; g.font = '800 30px Inter, Arial'; g.fillText(SITE_MARK, px + pw - 14, py + ph + 36);
-    g.fillStyle = '#3B5BDB'; g.textAlign = 'center'; g.font = '800 58px Inter, Arial'; g.fillText(SITE_MARK, W / 2, py + ph + 88);
-    g.fillStyle = '#6B7280'; g.font = '500 28px Inter, Arial'; g.fillText(currentLang === 'ar' ? '\u0645\u0646\u0635\u0629 \u0644\u0648\u062d\u0627\u062a \u0627\u0644\u0633\u064a\u0627\u0631\u0627\u062a \u0648\u0623\u0631\u0642\u0627\u0645 \u0627\u0644\u0645\u0648\u0628\u0627\u064a\u0644 \u0641\u064a \u0627\u0644\u0623\u0631\u062f\u0646' : 'Jordan license plates & mobile numbers', W / 2, py + ph + 132);
+    /* site mark: bottom-right corner, under the plate */
+    g.fillStyle = '#2B2E35'; g.textAlign = 'right'; g.font = '800 34px Inter, Arial'; g.fillText(SITE_MARK, px + pw - 14, py + ph + 50);
     return c;
   }
   async function plateImage(mode, btn){
