@@ -713,7 +713,7 @@ html[dir=rtl] .number-lg{text-align:right; direction:ltr;}
 .listing-card.is-sold, .my-item.is-sold{position:relative; overflow:hidden;}
 .sold-ribbon{position:absolute; top:22px; right:-38px; width:150px; text-align:center; transform:rotate(45deg); background:#D92D20; color:#fff; font-weight:800; font-size:.78rem; letter-spacing:.08em; padding:4px 0; z-index:3; box-shadow:0 1px 3px rgba(0,0,0,.25); pointer-events:none;}
 .sold-badge{display:inline-block; background:#D92D20; color:#fff; font-size:.75rem; font-weight:800; padding:2px 10px; border-radius:6px; vertical-align:middle;}
-.is-sold .plate, .is-sold .row{opacity:.75;}
+
 .my-edit{display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:end; margin:10px 0; padding-top:10px; border-top:1px solid var(--line);}
 .my-edit label{display:flex; flex-direction:column; gap:4px; font-size:.78rem; color:var(--muted);}
 .my-edit input, .my-edit select{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; font-size:.9rem; color:var(--text); width:100%;}
@@ -779,3 +779,7 @@ body{overflow-x:clip;}
 .pkg-count{font-size:.95rem; color:var(--muted); margin:2px 0 8px;}
 .pkg-card .sold-corner{top:0; right:0;}
 .feat-star{display:none !important;}
+.is-sold .plate, .is-sold .row, .is-sold .card-visual{opacity:1 !important; filter:none !important;}
+/* every plate in lists/packages: exactly the same size */
+.listing-card .plate, .pkg-cell .plate, .my-item .plate{width:300px; max-width:100%; margin-left:auto; margin-right:auto;}
+.pkg-cell .plate{width:300px; max-width:100%;}
