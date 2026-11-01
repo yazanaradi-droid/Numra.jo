@@ -383,7 +383,7 @@
   }
 
   /* ===== branded, fixed-design image of a plate / number (download or share) ===== */
-  const SITE_MARK = 'x plate.jo';
+  const SITE_MARK = 'xplate.jo';
   async function buildPlateCanvas(it){
     try{ await Promise.all([document.fonts.load('700 200px "Barlow Condensed"'), document.fonts.load('800 80px "Cairo"')]); }catch(e){}
     const W = 1200, H = it.type === 'plate' ? 470 : 470, c = document.createElement('canvas'); c.width = W; c.height = H;
@@ -415,6 +415,7 @@
       rr(px, py, pw, ph, 30); g.fillStyle = '#F3F5F9'; g.fill(); g.lineWidth = 4; g.strokeStyle = '#3B5BDB'; g.stroke();
       g.fillStyle = '#0B0B0B'; g.font = '700 130px "JetBrains Mono", "Courier New", monospace'; g.textAlign = 'center'; g.fillText(fmtMobile(it.value), W / 2, py + 185, pw - 80);
     }
+    g.fillStyle = '#2B2E35'; g.textAlign = 'right'; g.font = '800 30px Inter, Arial'; g.fillText(SITE_MARK, px + pw - 14, py + ph + 36);
     g.fillStyle = '#3B5BDB'; g.textAlign = 'center'; g.font = '800 58px Inter, Arial'; g.fillText(SITE_MARK, W / 2, py + ph + 88);
     g.fillStyle = '#6B7280'; g.font = '500 28px Inter, Arial'; g.fillText(currentLang === 'ar' ? '\u0645\u0646\u0635\u0629 \u0644\u0648\u062d\u0627\u062a \u0627\u0644\u0633\u064a\u0627\u0631\u0627\u062a \u0648\u0623\u0631\u0642\u0627\u0645 \u0627\u0644\u0645\u0648\u0628\u0627\u064a\u0644 \u0641\u064a \u0627\u0644\u0623\u0631\u062f\u0646' : 'Jordan license plates & mobile numbers', W / 2, py + ph + 132);
     return c;
@@ -550,7 +551,7 @@
     return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:.205">' +
       '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
       '<div class="plate-digits"><span class="pw"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></span></div>' +
-      '<span class="plate-site">x plate.jo</span></div>';
+      '<span class="plate-site">xplate.jo</span></div>';
   }
   function fitPlates(){
     document.querySelectorAll('.plate-country').forEach(cn => {   // الاردن and JORDAN get exactly the same width

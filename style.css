@@ -789,3 +789,7 @@ body{overflow-x:clip;}
 .detail-visual .img-actions{flex-basis:100%; width:100%;}
 .detail-visual{flex-wrap:wrap;}
 .detail-visual .img-actions{justify-content:center;}
+/* site mark sits in the bottom-right corner, just under the plate */
+.plate-site{right:1.5cqw !important; bottom:-4.6cqw !important; font-size:3cqw !important; color:#4B5160 !important; opacity:1 !important; text-shadow:none !important; z-index:1;}
+.listing-card .plate, .my-item .plate, .pkg-cell .plate{margin-bottom:16px !important;}
+.detail-visual .plate{margin-bottom:18px;}
