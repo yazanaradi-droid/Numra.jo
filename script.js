@@ -286,6 +286,11 @@
     "sold.pricePh":{en:"Contact for price",ar:"تواصل للسعر"},
     "sold.save":{en:"Save",ar:"حفظ"},
     "sold.saved":{en:"Saved ✓",ar:"تم الحفظ ✓"},
+    "bundle.offer":{en:"Package offer",ar:"عرض باقة"},
+    "bundle.plates":{en:"{n} plates",ar:"{n} لوحات"},
+    "bundle.numbers":{en:"{n} numbers",ar:"{n} أرقام"},
+    "bundle.more":{en:"+{n} more",ar:"+{n} أخرى"},
+    "bundle.inThis":{en:"This ad is part of a package offer",ar:"هذا الإعلان ضمن عرض باقة"},
     "auth.rate":{en:"Too many attempts. Please wait a minute and try again.",ar:"محاولات كثيرة. انتظر دقيقة ثم حاول مرة أخرى."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
     "auth.confirmOn":{en:"Account created, but email confirmation is still enabled in Supabase. Turn off \u201cConfirm email\u201d in Authentication settings.",ar:"تم إنشاء الحساب لكن تأكيد البريد ما زال مفعّلاً في Supabase. عطّل \u201cConfirm email\u201d من إعدادات Authentication."},
@@ -445,7 +450,7 @@
   let userListings = [...seedListings];
 
   function rowToItem(r){
-    return {sold:!!r.sold, id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:(r.price==null ? '' : String(r.price)), created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
+    return {sold:!!r.sold, id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:(r.pkg_id ? (r.pkg_price==null ? '' : String(r.pkg_price)) : (r.price==null ? '' : String(r.price))), pkgId:r.pkg_id||null, created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
   }
   function itemKey(i){ return i.type === 'plate' ? (i.code + '-' + i.number) : String(i.value||'').replace(/\D/g,''); }
   function dedupeListings(list){ const seen = new Set(); return list.filter(i => { const k = i.type + ':' + itemKey(i); if(seen.has(k)) return false; seen.add(k); return true; }); }
@@ -608,6 +613,7 @@
   }
   function safeCard(it){ try{ return listingCardHtml(it); }catch(err){ console.warn('bad listing skipped:', it, err); return ''; } }
   function listingCardHtml(item){
+    if(item.isPackage) return packageCardHtml(item);
     const badgeKey = item.type === 'plate' ? 'listings.plateBadge' : 'listings.numberBadge';
     const badgeLabel = translations[badgeKey][currentLang];
     const metaLabel = item.seed ? translations['listings.verified'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString('en-GB') : translations['listings.justNow'][currentLang]);
@@ -674,6 +680,33 @@
     return '<div class="dash-card"><h2>' + T('dash.favorites') + '</h2><div class="listings-grid fav-grid">' + items.map(safeCard).join('') + '</div></div>';
   }
 
+  /* several plates/numbers listed together = one package card */
+  function groupPackages(items, all){
+    const out = [], done = new Set();
+    items.forEach(i => {
+      if(!i.pkgId){ out.push(i); return; }
+      if(done.has(i.pkgId)) return; done.add(i.pkgId);
+      const mem = all.filter(x => x.pkgId === i.pkgId && x.type === i.type).sort((a,b) => String(a.id).localeCompare(String(b.id)));
+      const first = mem[0] || i;
+      out.push(Object.assign({}, first, {isPackage:true, members:mem, featured:mem.some(x => x.featured), sold:mem.some(x => x.sold)}));
+    });
+    return out;
+  }
+  function packageCardHtml(item){
+    const T = k => translations[k][currentLang];
+    const mem = item.members, shown = mem.slice(0, 10), extra = mem.length - shown.length;
+    const cell = m => m.type === 'plate' ? '<div class="pkg-cell">' + plateHtml(m.code, m.number, false) + '</div>' : '<div class="pkg-cell pkg-numcell">' + escapeHtml(fmtMobile(m.value)) + '</div>';
+    const count = T(item.type === 'plate' ? 'bundle.plates' : 'bundle.numbers').replace('{n}', mem.length);
+    const phoneHtml = !item.phoneMasked ? '' : '<span class="card-phone' + (item.featured ? ' card-phone-btn' : '') + '" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span>' + (item.featured ? '<b>' + T('feat.callLabel') + '</b> ' : '') + '<span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>';
+    return '<a class="listing-card pkg-card' + (item.featured ? ' is-featured' : '') + (item.sold ? ' is-sold' : '') + '" href="' + listingHref(item) + '">' +
+      (item.featured ? '<span class="feat-star" title="' + T('feat.badge') + '">\u2605</span>' : '') + favBtnHtml(item.id) +
+      '<div class="pkg-title">' + T('bundle.offer') + '</div>' +
+      '<div class="pkg-frame"><div class="pkg-grid">' + shown.map(cell).join('') + '</div>' +
+      (extra > 0 ? '<div class="pkg-more">' + T('bundle.more').replace('{n}', extra) + '</div>' : '') +
+      (item.sold ? '<span class="sold-corner"><span class="sold-ribbon">' + T('sold.label') + '</span></span>' : '') + '</div>' +
+      '<div class="pkg-price">' + priceText(item) + '</div><div class="pkg-count">' + count + '</div>' + phoneHtml +
+      '<div class="meta">' + (item.created ? new Date(item.created).toLocaleDateString('en-GB') : '') + '</div></a>';
+  }
   function renderListings(){
     const grid = document.getElementById('listingsGrid');
     if(!grid) return; // homepage has no listing grid
@@ -703,7 +736,7 @@
     empty.style.display = 'none';
 
     if(listingsLoadError && note){ note.textContent = translations['listings.loadErr'][currentLang]; note.style.display = 'block'; }
-    grid.innerHTML = sortFeatured(items).map(safeCard).join('');   // featured ads always come before normal ones
+    grid.innerHTML = sortFeatured(groupPackages(items, userListings.filter(i => i.type === PAGE_TYPE))).map(safeCard).join('');   // featured ads always come before normal ones
   }
 
 
@@ -1114,6 +1147,10 @@
     document.getElementById('sellerName').textContent = sellerName;
     const dateStr = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
     document.getElementById('sellerDate').textContent = it.seed || !dateStr ? T('detail.sample') : T('detail.listed') + ' ' + dateStr;
+    let pk = document.getElementById('detailPkg');
+    if(!pk){ pk = document.createElement('div'); pk.id = 'detailPkg'; document.getElementById('detailPrice').insertAdjacentElement('afterend', pk); }
+    const mem = it.pkgId ? userListings.filter(x => x.pkgId === it.pkgId && x.type === it.type) : [];
+    pk.innerHTML = mem.length > 1 ? '<div class="pkg-title" style="margin:10px 0 6px">' + T('bundle.inThis') + ' (' + mem.length + ')</div><div class="pkg-grid">' + mem.map(m => m.type === 'plate' ? '<a class="pkg-cell" href="' + listingHref(m) + '">' + plateHtml(m.code, m.number, false) + '</a>' : '<a class="pkg-cell pkg-numcell" href="' + listingHref(m) + '">' + escapeHtml(fmtMobile(m.value)) + '</a>').join('') + '</div>' : '';
     document.getElementById('detailPrice').innerHTML = priceText(it) + (it.sold ? ' <span class="sold-badge">' + T('sold.label') + '</span>' : '');
 
     const btn = document.getElementById('contactBtn');
@@ -1273,7 +1310,8 @@
   async function fetchMyListings(type){
     if(!sb || !currentUser) return [];
     const build = cols => { const q = sb.from('xp_listings').select(cols).eq('user_id', currentUser.id).order('created_at', {ascending:false}); return type ? q.eq('type', type) : q; };
-    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request,hidden,sold');
+    let {data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request,hidden,sold,pkg_id,pkg_price');
+    if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request,hidden,sold'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request,hidden'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until,featured_request'));
     if(error) ({data, error} = await build('id,type,code,number,value,price,created_at,featured_plan,featured_status,featured_until'));

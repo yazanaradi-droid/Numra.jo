@@ -764,3 +764,17 @@ body{overflow-x:clip;}
 .search-main select:focus{outline:none; border-color:var(--gold);}
 .search-main .btn{padding-top:11px; padding-bottom:11px;}
 @media (max-width:600px){ .search-main select{flex:1 1 45%;} .search-main .search-more-btn{flex:1 1 45%; justify-content:center;} }
+
+/* ===== package offer card ===== */
+.pkg-card{grid-column:span 2;}
+@media (max-width:820px){ .pkg-card{grid-column:span 1;} }
+.pkg-title{font-family:var(--font-display); font-weight:800; font-size:1.15rem; color:#E5484D; margin:2px 0 8px; padding-inline-end:90px;}
+.pkg-frame{position:relative; border:2px solid #F4A6B4; border-radius:12px; padding:12px; background:#fff;}
+.pkg-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.pkg-cell{display:block; min-width:0; direction:ltr;}
+.pkg-cell .plate{width:100%; margin:0;}
+.pkg-numcell{background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:10px 6px; text-align:center; font-family:var(--font-mono); font-weight:700; font-size:1.05rem; letter-spacing:.08em; word-spacing:.2em; color:var(--text);}
+.pkg-more{text-align:center; margin-top:8px; font-weight:700; color:var(--muted); font-size:.85rem;}
+.pkg-price{font-size:1.7rem; font-weight:800; color:#E5484D; margin-top:12px;}
+.pkg-count{font-size:.95rem; color:var(--muted); margin:2px 0 8px;}
+.pkg-card .sold-corner{top:0; right:0;}

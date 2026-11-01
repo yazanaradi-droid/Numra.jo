@@ -3,17 +3,17 @@
   const L = {
     en: {
       plate1:'Add a new plate', plateN:'Add new plates (multiple)', num1:'Add a new number', numN:'Add new numbers (multiple)',
-      note:'Tip: you can use the letters X, Y and Z to hide some digits.', code:'Code', number:'Plate number', mobile:'Mobile number', price:'Price (JOD, optional)',
+      note:'Tip: you can use the letters X, Y and Z to hide some digits.', code:'Code', number:'Plate number', mobile:'Mobile number', price:'Price (JOD, optional)', pkgPrice:'Package price (JOD, optional)', pkgHint:'All items you add here are shown together as one package offer with one price. Leave empty for "Contact for price".',
       addRow:'+ Add 10 more rows', submit:'Advertise now', login:'Please log in to add listings.', loginBtn:'Log in',
       bad:'Check this row', ok:'Published ✓', upd:'Updated ✓', dup:'Already listed by another account', rate:'Posting limit reached, try later', banned:'Account suspended', err:'Could not save',
-      done:'Done', toDash:'Go to my listings', more:'Add more', empty:'Fill at least one row.', remove:'Remove', loading:'Loading…', pricePh:'Contact for price'
+      done:'Done', toDash:'Go to my listings', toSite:'View on the site', more:'Add more', empty:'Fill at least one row.', remove:'Remove', loading:'Loading…', pricePh:'Contact for price'
     },
     ar: {
       plate1:'إضافة لوحة جديدة', plateN:'إضافة لوحات جديدة (متعددة)', num1:'إضافة رقم جديد', numN:'إضافة أرقام جديدة (متعددة)',
-      note:'ملاحظة: يمكن استخدام الأحرف X و Y و Z لإخفاء بعض الأرقام.', code:'الرمز', number:'رقم اللوحة', mobile:'رقم الموبايل', price:'السعر (دينار، اختياري)',
+      note:'ملاحظة: يمكن استخدام الأحرف X و Y و Z لإخفاء بعض الأرقام.', code:'الرمز', number:'رقم اللوحة', mobile:'رقم الموبايل', price:'السعر (دينار، اختياري)', pkgPrice:'سعر الباقة (دينار، اختياري)', pkgHint:'كل ما تضيفه هنا يظهر معاً كعرض باقة واحد بسعر واحد. اتركه فارغاً لتظهر عبارة «تواصل للسعر».',
       addRow:'+ إضافة 10 صفوف أخرى', submit:'أعلن الآن', login:'سجّل الدخول لإضافة الإعلانات.', loginBtn:'تسجيل الدخول',
       bad:'تحقق من هذا الصف', ok:'تم النشر ✓', upd:'تم التحديث ✓', dup:'معروض مسبقاً من حساب آخر', rate:'وصلت إلى حد النشر، حاول لاحقاً', banned:'الحساب موقوف', err:'تعذّر الحفظ',
-      done:'تم', toDash:'الذهاب إلى إعلاناتي', more:'إضافة المزيد', empty:'املأ صفاً واحداً على الأقل.', remove:'حذف', loading:'جارٍ التحميل…', pricePh:'تواصل للسعر'
+      done:'تم', toDash:'الذهاب إلى إعلاناتي', toSite:'عرض في الموقع', more:'إضافة المزيد', empty:'املأ صفاً واحداً على الأقل.', remove:'حذف', loading:'جارٍ التحميل…', pricePh:'تواصل للسعر'
     }
   };
   const T = k => (L[currentLang] || L.en)[k] || k;
@@ -34,25 +34,26 @@
   }
 
   function rowHtml(i){
-    const price = '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '">';
+    const price = multi ? '' : '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '">';
     const rm = multi ? '<button type="button" class="btn btn-ghost ar-rm" title="' + T('remove') + '" style="padding:8px 12px">✕</button>' : '';
     const stat = '<div class="ar-stat" style="font-size:.82rem;grid-column:1/-1"></div>';
     if(type === 'plate'){
-      return '<div class="ar-row" data-i="' + i + '" style="display:grid;grid-template-columns:80px 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px">' +
+      return '<div class="ar-row" data-i="' + i + '" style="display:grid;grid-template-columns:' + (multi ? '80px 1fr auto' : '80px 1fr 1fr auto') + ';gap:8px;align-items:end;margin-bottom:12px">' +
         '<div class="field" style="margin:0"><label>' + T('code') + '</label><input class="ar-code" maxlength="2" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
         '<div class="field" style="margin:0"><label>' + T('number') + '</label><input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
-        '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>' + '<div>' + rm + '</div>' + stat + '</div>';
+        (multi ? '' : '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>') + '<div>' + rm + '</div>' + stat + '</div>';
     }
-    return '<div class="ar-row" data-i="' + i + '" style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin-bottom:12px">' +
+    return '<div class="ar-row" data-i="' + i + '" style="display:grid;grid-template-columns:' + (multi ? '1fr auto' : '1fr 1fr auto') + ';gap:10px;align-items:end;margin-bottom:12px">' +
       '<div class="field" style="margin:0"><label>' + T('mobile') + '</label><input class="ar-mob" inputmode="numeric" maxlength="12" autocomplete="off" dir="ltr" placeholder="078 000 1111" style="' + IN + '"></div>' +
-      '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>' + '<div>' + rm + '</div>' + stat + '</div>';
+      (multi ? '' : '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>') + '<div>' + rm + '</div>' + stat + '</div>';
   }
 
   function render(){
     setTitles();
     const keep = collect(true);
     let h = '<p class="dash-note" style="margin-bottom:16px">' + (type === 'plate' ? T('note') : '') + '</p><form id="addForm" novalidate><div id="addRows"></div>';
-    if(multi) h += '<button type="button" class="btn btn-ghost" id="addRowBtn" style="margin-bottom:16px">' + T('addRow') + '</button><br>';
+    if(multi) h += '<button type="button" class="btn btn-ghost" id="addRowBtn" style="margin-bottom:16px">' + T('addRow') + '</button>' +
+      '<div class="field" style="max-width:320px;margin-bottom:16px"><label>' + T('pkgPrice') + '</label><input id="pkgPrice" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '"><div class="hint" style="margin-top:6px">' + T('pkgHint') + '</div></div>';
     h += '<button type="submit" class="btn btn-gold" id="addSubmit">' + T('submit') + '</button></form><div id="addDone"></div>';
     card().innerHTML = h;
     const n = Math.max(multi ? START_ROWS : 1, keep.length);
@@ -65,6 +66,7 @@
     const el = d.firstChild; box.appendChild(el);
     if(v){ for(const k in v){ const i = el.querySelector('.' + k); if(i) i.value = v[k]; } }
   }
+  const pkgPriceVal = () => { const e = document.getElementById('pkgPrice'); return e ? e.value : ''; };
   function collect(raw){
     const out = [];
     document.querySelectorAll('.ar-row').forEach(r => {
@@ -79,7 +81,7 @@
     else if(t.classList.contains('ar-mob')){
       const d = latin(t.value).replace(/\D/g, '').slice(0, 10);
       t.value = d.length > 6 ? d.slice(0,3) + ' ' + d.slice(3,6) + ' ' + d.slice(6) : d.length > 3 ? d.slice(0,3) + ' ' + d.slice(3) : d;
-    } else if(t.classList.contains('ar-price')) t.value = latin(t.value).replace(/[,٬،\s]/g, '').replace(/٫/g, '.').replace(/[^0-9.]/g, '');
+    } else if(t.classList.contains('ar-price') || t.id === 'pkgPrice') t.value = latin(t.value).replace(/[,٬،\s]/g, '').replace(/٫/g, '.').replace(/[^0-9.]/g, '');
   });
   document.addEventListener('click', function(e){
     const t = e.target.closest && e.target.closest('#addRowBtn, .ar-rm'); if(!t) return;
@@ -88,7 +90,7 @@
   });
 
   function parse(r){
-    const price = r.querySelector('.ar-price').value;
+    const pe = r.querySelector('.ar-price'); const price = pe ? pe.value : '';
     if(price !== '' && !(/^\d+(\.\d+)?$/.test(price) && +price >= 0)) return null;
     const p = price === '' || +price === 0 ? null : Number(price);
     if(type === 'plate'){
@@ -118,6 +120,28 @@
     document.getElementById('addDone').innerHTML = '';
     const btn = document.getElementById('addSubmit'); btn.disabled = true;
     let okCount = 0;
+    if(multi){
+      const pv = latin(pkgPriceVal()).replace(/[,\u066c\u060c\s]/g, '');
+      if(pv !== '' && !/^\d+(\.\d+)?$/.test(pv)){ document.getElementById('pkgPrice').style.borderColor = 'var(--danger)'; btn.disabled = false; return; }
+      const price = pv === '' || +pv === 0 ? null : Number(pv);
+      let res;
+      if(todo.length >= 2){
+        const list = todo.map(x => type === 'plate' ? {code:x.d.p_code, number:x.d.p_number} : {value:x.d.p_value});
+        res = await sb.rpc('xp_publish_package', {p_type:type, p_items:list, p_price:price});
+      } else {
+        res = await sb.rpc('xp_publish_listing', Object.assign({p_plan:null, p_promo:null}, todo[0].d, {p_price:price}));
+      }
+      btn.disabled = false;
+      if(res.error){
+        const m = String(res.error.message || '');
+        const msg = /already_listed|duplicate|unique/i.test(m) ? T('dup') : /rate_limited/.test(m) ? T('rate') : /banned/.test(m) ? T('banned') : T('err');
+        document.getElementById('addDone').innerHTML = '<p class="dash-note" style="color:var(--danger)">' + msg + '</p>';
+        return;
+      }
+      todo.forEach(x => { const s = x.r.querySelector('.ar-stat'); s.textContent = T('ok'); s.style.color = '#1a8f4c'; x.r.querySelectorAll('input').forEach(i => i.disabled = true); });
+      document.getElementById('addDone').innerHTML = '<p style="margin-top:14px"><a class="btn btn-gold" href="' + (type === 'plate' ? 'plates.html' : 'numbers.html') + (currentLang === 'ar' ? '?lang=ar' : '') + '">' + T('toSite') + '</a> <a class="btn btn-ghost" href="dashboard.html?tab=' + (type === 'plate' ? 'plates' : 'numbers') + (currentLang === 'ar' ? '&lang=ar' : '') + '">' + T('toDash') + '</a></p>';
+      return;
+    }
     for(const x of todo){
       const s = x.r.querySelector('.ar-stat');
       const {data, error} = await sb.rpc('xp_publish_listing', Object.assign({p_plan:null, p_promo:null}, x.d));
