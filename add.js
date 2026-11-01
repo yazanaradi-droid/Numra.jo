@@ -1,0 +1,154 @@
+/* x plate.jo — add listing page (single or multiple). Publishes through the same server function as the old pop-up. */
+(function(){
+  const L = {
+    en: {
+      plate1:'Add a new plate', plateN:'Add new plates (multiple)', num1:'Add a new number', numN:'Add new numbers (multiple)',
+      note:'Tip: you can use the letters X, Y and Z to hide some digits.', code:'Code', number:'Plate number', mobile:'Mobile number', price:'Price (JOD, optional)',
+      addRow:'+ Add 10 more rows', submit:'Advertise now', login:'Please log in to add listings.', loginBtn:'Log in',
+      bad:'Check this row', ok:'Published ✓', upd:'Updated ✓', dup:'Already listed by another account', rate:'Posting limit reached, try later', banned:'Account suspended', err:'Could not save',
+      done:'Done', toDash:'Go to my listings', more:'Add more', empty:'Fill at least one row.', remove:'Remove', loading:'Loading…', pricePh:'Contact for price'
+    },
+    ar: {
+      plate1:'إضافة لوحة جديدة', plateN:'إضافة لوحات جديدة (متعددة)', num1:'إضافة رقم جديد', numN:'إضافة أرقام جديدة (متعددة)',
+      note:'ملاحظة: يمكن استخدام الأحرف X و Y و Z لإخفاء بعض الأرقام.', code:'الرمز', number:'رقم اللوحة', mobile:'رقم الموبايل', price:'السعر (دينار، اختياري)',
+      addRow:'+ إضافة 10 صفوف أخرى', submit:'أعلن الآن', login:'سجّل الدخول لإضافة الإعلانات.', loginBtn:'تسجيل الدخول',
+      bad:'تحقق من هذا الصف', ok:'تم النشر ✓', upd:'تم التحديث ✓', dup:'معروض مسبقاً من حساب آخر', rate:'وصلت إلى حد النشر، حاول لاحقاً', banned:'الحساب موقوف', err:'تعذّر الحفظ',
+      done:'تم', toDash:'الذهاب إلى إعلاناتي', more:'إضافة المزيد', empty:'املأ صفاً واحداً على الأقل.', remove:'حذف', loading:'جارٍ التحميل…', pricePh:'تواصل للسعر'
+    }
+  };
+  const T = k => (L[currentLang] || L.en)[k] || k;
+  const q = new URLSearchParams(location.search);
+  const type = q.get('type') === 'number' ? 'number' : 'plate';
+  const multi = q.get('mode') === 'multi';
+  const MAXROWS = 100, START_ROWS = 20;
+  let rows = 0;
+  const card = () => document.getElementById('addCard');
+  const AR = '٠١٢٣٤٥٦٧٨٩', FA = '۰۱۲۳۴۵۶۷۸۹';
+  const latin = v => String(v).replace(/[٠-٩۰-۹]/g, d => { const i = AR.indexOf(d); return i > -1 ? i : FA.indexOf(d); });
+  const IN = 'width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:11px 13px;color:var(--text);font:inherit;font-size:.95rem;';
+
+  function titleKey(){ return type === 'plate' ? (multi ? 'plateN' : 'plate1') : (multi ? 'numN' : 'num1'); }
+  function setTitles(){
+    const t = T(titleKey());
+    document.getElementById('addTitle').textContent = t; document.getElementById('addCrumb').textContent = t; document.title = t + ' | x plate.jo';
+  }
+
+  function rowHtml(i){
+    const price = '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '">';
+    const rm = multi ? '<button type="button" class="btn btn-ghost ar-rm" title="' + T('remove') + '" style="padding:8px 12px">✕</button>' : '';
+    const stat = '<div class="ar-stat" style="font-size:.82rem;grid-column:1/-1"></div>';
+    if(type === 'plate'){
+      return '<div class="ar-row" data-i="' + i + '" style="display:grid;grid-template-columns:80px 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px">' +
+        '<div class="field" style="margin:0"><label>' + T('code') + '</label><input class="ar-code" maxlength="2" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
+        '<div class="field" style="margin:0"><label>' + T('number') + '</label><input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
+        '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>' + '<div>' + rm + '</div>' + stat + '</div>';
+    }
+    return '<div class="ar-row" data-i="' + i + '" style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin-bottom:12px">' +
+      '<div class="field" style="margin:0"><label>' + T('mobile') + '</label><input class="ar-mob" inputmode="numeric" maxlength="12" autocomplete="off" dir="ltr" placeholder="078 000 1111" style="' + IN + '"></div>' +
+      '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>' + '<div>' + rm + '</div>' + stat + '</div>';
+  }
+
+  function render(){
+    setTitles();
+    const keep = collect(true);
+    let h = '<p class="dash-note" style="margin-bottom:16px">' + (type === 'plate' ? T('note') : '') + '</p><form id="addForm" novalidate><div id="addRows"></div>';
+    if(multi) h += '<button type="button" class="btn btn-ghost" id="addRowBtn" style="margin-bottom:16px">' + T('addRow') + '</button><br>';
+    h += '<button type="submit" class="btn btn-gold" id="addSubmit">' + T('submit') + '</button></form><div id="addDone"></div>';
+    card().innerHTML = h;
+    const n = Math.max(multi ? START_ROWS : 1, keep.length);
+    for(let i = 0; i < n; i++) addRow(keep[i]);
+  }
+  function addRow(v){
+    const box = document.getElementById('addRows');
+    if(box.children.length >= MAXROWS) return;
+    const d = document.createElement('div'); d.innerHTML = rowHtml(rows++);
+    const el = d.firstChild; box.appendChild(el);
+    if(v){ for(const k in v){ const i = el.querySelector('.' + k); if(i) i.value = v[k]; } }
+  }
+  function collect(raw){
+    const out = [];
+    document.querySelectorAll('.ar-row').forEach(r => {
+      const o = {}; ['ar-code','ar-num','ar-mob','ar-price'].forEach(c => { const i = r.querySelector('.' + c); if(i) o[c] = i.value; }); out.push(o);
+    });
+    return out;
+  }
+
+  document.addEventListener('input', function(e){
+    const t = e.target; if(!t.classList) return;
+    if(t.classList.contains('ar-code') || t.classList.contains('ar-num')) t.value = latin(t.value).toUpperCase().replace(/[^0-9XYZ]/g, '');
+    else if(t.classList.contains('ar-mob')){
+      const d = latin(t.value).replace(/\D/g, '').slice(0, 10);
+      t.value = d.length > 6 ? d.slice(0,3) + ' ' + d.slice(3,6) + ' ' + d.slice(6) : d.length > 3 ? d.slice(0,3) + ' ' + d.slice(3) : d;
+    } else if(t.classList.contains('ar-price')) t.value = latin(t.value).replace(/[,٬،\s]/g, '').replace(/٫/g, '.').replace(/[^0-9.]/g, '');
+  });
+  document.addEventListener('click', function(e){
+    const t = e.target.closest && e.target.closest('#addRowBtn, .ar-rm'); if(!t) return;
+    if(t.id === 'addRowBtn'){ for(let i = 0; i < 10; i++) addRow(); }
+    else { const r = t.closest('.ar-row'); if(document.querySelectorAll('.ar-row').length > 1) r.remove(); else r.querySelectorAll('input').forEach(i => i.value = ''); }
+  });
+
+  function parse(r){
+    const price = r.querySelector('.ar-price').value;
+    if(price !== '' && !(/^\d+(\.\d+)?$/.test(price) && +price >= 0)) return null;
+    const p = price === '' || +price === 0 ? null : Number(price);
+    if(type === 'plate'){
+      const c = r.querySelector('.ar-code').value, n = r.querySelector('.ar-num').value;
+      if(!c && !n && price === '') return {empty:true};
+      const okC = /^\d{1,2}$/.test(c) ? (+c >= 1 && +c <= 99) : /^[0-9XYZ]{1,2}$/.test(c);
+      if(!okC || !/^[0-9XYZ]{1,5}$/.test(n)) return null;
+      return {p_type:'plate', p_code:c, p_number:n, p_value:null, p_price:p};
+    }
+    const m = r.querySelector('.ar-mob').value.replace(/\D/g, '');
+    if(!m && price === '') return {empty:true};
+    if(!/^07[789]\d{7}$/.test(m)) return null;
+    return {p_type:'number', p_code:null, p_number:null, p_value:m, p_price:p};
+  }
+
+  document.addEventListener('submit', async function(e){
+    if(e.target.id !== 'addForm') return;
+    e.preventDefault();
+    const rs = Array.from(document.querySelectorAll('.ar-row'));
+    const items = rs.map(r => ({r, d: parse(r)}));
+    items.forEach(x => { x.r.querySelector('.ar-stat').textContent = ''; });
+    const todo = items.filter(x => !(x.d && x.d.empty));
+    let bad = false;
+    todo.forEach(x => { if(!x.d){ bad = true; const s = x.r.querySelector('.ar-stat'); s.textContent = T('bad'); s.style.color = 'var(--danger)'; } });
+    if(!todo.length){ document.getElementById('addDone').innerHTML = '<p class="dash-note" style="color:var(--danger)">' + T('empty') + '</p>'; return; }
+    if(bad) return;
+    document.getElementById('addDone').innerHTML = '';
+    const btn = document.getElementById('addSubmit'); btn.disabled = true;
+    let okCount = 0;
+    for(const x of todo){
+      const s = x.r.querySelector('.ar-stat');
+      const {data, error} = await sb.rpc('xp_publish_listing', Object.assign({p_plan:null, p_promo:null}, x.d));
+      if(error){
+        const m = String(error.message || '');
+        s.textContent = /already_listed|duplicate|unique/i.test(m) ? T('dup') : /rate_limited/.test(m) ? T('rate') : /banned/.test(m) ? T('banned') : T('err');
+        s.style.color = 'var(--danger)';
+        if(/rate_limited/.test(m)) break;
+      } else { okCount++; s.textContent = data && data._updated ? T('upd') : T('ok'); s.style.color = '#1a8f4c'; x.r.querySelectorAll('input').forEach(i => i.disabled = true); x.r.dataset.done = '1'; }
+    }
+    btn.disabled = false;
+    if(okCount){
+      document.getElementById('addDone').innerHTML = '<p style="margin-top:14px"><a class="btn btn-gold" href="dashboard.html?tab=' + (type === 'plate' ? 'plates' : 'numbers') + (currentLang === 'ar' ? '&lang=ar' : '') + '">' + T('toDash') + '</a></p>';
+    }
+  });
+
+  window.onLangChange = function(){ if(sb && currentUser) render(); else showLogin(); };
+  function showLogin(){
+    setTitles();
+    card().innerHTML = '<p class="dash-note">' + T('login') + '</p><button class="btn btn-gold" type="button" onclick="openAuth(\'login\', null, true)">' + T('loginBtn') + '</button>';
+  }
+
+  document.addEventListener('DOMContentLoaded', async function(){
+    if(!document.getElementById('addRoot')) return;
+    setTitles(); card().innerHTML = '<p class="dash-note">' + T('loading') + '</p>';
+    try{ await authReady; }catch(e){}
+    if(!sb || !currentUser){
+      showLogin(); openAuth('login', null, true);
+      if(sb) sb.auth.onAuthStateChange((ev, ss) => { if(ss) location.reload(); });
+      return;
+    }
+    render();
+  });
+})();

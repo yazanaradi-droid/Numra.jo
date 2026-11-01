@@ -24,6 +24,7 @@
     "nav.uploadOnCar":{en:"Add a new plate",ar:"إضافة لوحة جديدة"},
     "nav.uploadMultiPlates":{en:"Add new plates (multiple)",ar:"إضافة لوحات جديدة (متعددة)"},
     "nav.uploadMulti":{en:"Upload New (Multiple)",ar:"إضافة أرقام جديدة (متعددة)"},
+    "nav.uploadNumberSingle":{en:"Add a new number",ar:"إضافة رقم جديد"},
     "nav.uploadNumberBg":{en:"Upload Number On Background",ar:"إضافة رقم على خلفية"},
     "nav.uploadPackage":{en:"Upload Package",ar:"إضافة باقة"},
     "nav.uploadDiscount":{en:"Upload Discount",ar:"إضافة عرض خصم"},
@@ -707,8 +708,15 @@
 
 
   /* ============ upload modal ============ */
+  function goAdd(type, mode, e){
+    if(e && e.preventDefault) e.preventDefault();
+    closeMobileNav && closeMobileNav();
+    window.location.href = 'add.html?type=' + type + '&mode=' + mode + (currentLang === 'ar' ? '&lang=ar' : '');
+  }
   function openUpload(type, e){
-    e.preventDefault();
+    if(e && e.preventDefault) e.preventDefault();
+    return goAdd(type, 'single');
+    /* (old pop-up below is no longer used) */
     if(!currentUser){ openAuth('login', null, true); return; }
     currentUploadType = type;
     document.getElementById('uploadOverlay').classList.add('open');
