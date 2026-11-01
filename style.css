@@ -778,3 +778,4 @@ body{overflow-x:clip;}
 .pkg-price{font-size:1.7rem; font-weight:800; color:#E5484D; margin-top:12px;}
 .pkg-count{font-size:.95rem; color:var(--muted); margin:2px 0 8px;}
 .pkg-card .sold-corner{top:0; right:0;}
+.feat-star{display:none !important;}
