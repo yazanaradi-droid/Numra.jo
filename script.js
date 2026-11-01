@@ -275,6 +275,7 @@
     "report.done":{en:"Thanks, we will review this ad.",ar:"شكراً، سنراجع هذا الإعلان."},
     "report.confirm":{en:"Report this ad to the admins?",ar:"هل تريد الإبلاغ عن هذا الإعلان للإدارة؟"},
     "dash.hiddenNote":{en:"Hidden by admin - not visible to others",ar:"مخفي من الإدارة - لا يظهر للآخرين"},
+    "nav.dashboard":{en:"Dashboard",ar:"لوحة التحكم"},
     "nav.admin":{en:"Admin panel",ar:"لوحة الإدارة"},
     "sold.label":{en:"SOLD",ar:"مباع"},
     "sold.status":{en:"Status",ar:"الحالة"},
@@ -391,6 +392,7 @@
   function toggleLang(){
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     applyTranslations(currentLang);
+    refreshAuthUI();
     if(typeof window.onLangChange === 'function') window.onLangChange();
     if(typeof renderListings === 'function') renderListings();
     renderHomeListings();
@@ -874,7 +876,7 @@
     const g=document.getElementById('authGuest'), a=document.getElementById('authUser'), chip=document.getElementById('userChip');
     if(!g||!a) return;
     syncFavorites(); checkAdminLink();
-    if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent='@'+((currentUser.user_metadata||{}).username||'')+' \u25be'; }
+    if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent=translations['nav.dashboard'][currentLang]+' \u25be'; chip.title='@'+((currentUser.user_metadata||{}).username||''); }
     else { g.style.display='inline-flex'; a.style.display='none'; chip.textContent=''; }
   }
   /* admin link: shown only if the server says this account is an admin (the real check is always server-side) */
