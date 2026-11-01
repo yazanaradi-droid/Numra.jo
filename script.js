@@ -258,6 +258,8 @@
     "search.min":{en:"Lowest price",ar:"أقل سعر"},
     "search.starts":{en:"Starts with: e.g. 123",ar:"يبدأ بـ: مثال 123"},
     "search.ends":{en:"Ends with: e.g. 000",ar:"ينتهي بـ: مثال 000"},
+    "search.more":{en:"+ More options",ar:"+ خيارات أكثر"},
+    "search.less":{en:"− Fewer options",ar:"− خيارات أقل"},
     "search.button":{en:"Search",ar:"بحث"},
     "search.reset":{en:"Clear",ar:"مسح"},
     "search.closest":{en:"No exact match \u2014 showing the closest results.",ar:"لا توجد نتيجة مطابقة تماماً \u2014 هذه أقرب النتائج."},
@@ -575,16 +577,28 @@
     } else {
       first = select('sPrefix', 'prefix', T('search.prefixAll'), ['077','078','079'].map(x => [x, x]));
     }
-    mount.innerHTML = '<form class="search-panel" onsubmit="return runSearch(event)"><h2>' + T('search.title') + '</h2>' +
-      '<div class="search-grid">' + first +
+    const extraFilled = ['contains','max','min','starts','ends'].some(k => st[k]);
+    const open = searchMoreOpen || extraFilled;
+    mount.innerHTML = '<form class="search-panel compact" onsubmit="return runSearch(event)">' +
+      '<div class="search-main">' + first +
+      '<button class="btn btn-ghost search-more-btn' + (open ? ' on' : '') + '" type="button" id="searchMoreBtn" aria-expanded="' + open + '" onclick="toggleSearchMore()">' + T(open ? 'search.less' : 'search.more') + '</button>' +
+      '<button class="btn btn-gold" type="submit">' + T('search.button') + '</button>' +
+      '<button class="btn btn-ghost" type="button" onclick="resetSearch()">' + T('search.reset') + '</button></div>' +
+      '<div class="search-more' + (open ? ' open' : '') + '" id="searchMore"><div class="search-grid">' +
       input('sContains', 'contains', T('search.contains')) +
       input('sMax', 'max', T('search.max')) + input('sMin', 'min', T('search.min')) +
       input('sStarts', 'starts', T('search.starts')) + input('sEnds', 'ends', T('search.ends')) +
-      '</div><div class="search-actions"><button class="btn btn-gold" type="submit">' + T('search.button') + '</button>' +
-      '<button class="btn btn-ghost" type="button" onclick="resetSearch()">' + T('search.reset') + '</button></div></form>';
+      '</div></div></form>';
+  }
+  let searchMoreOpen = false;
+  function toggleSearchMore(){
+    searchMoreOpen = !searchMoreOpen; readSearchState();
+    const extraFilled = ['contains','max','min','starts','ends'].some(k => searchState[k]);
+    if(!searchMoreOpen && extraFilled) searchMoreOpen = true;   // can't hide filters that are active
+    renderSearchPanel(true);
   }
   function runSearch(e){ if(e) e.preventDefault(); readSearchState(); renderListings(); return false; }
-  function resetSearch(){ searchState = {code:'', digits:'', prefix:'', contains:'', starts:'', ends:'', max:'', min:''}; renderSearchPanel(true); renderListings(); }
+  function resetSearch(){ searchState = {code:'', digits:'', prefix:'', contains:'', starts:'', ends:'', max:'', min:''}; searchMoreOpen = false; renderSearchPanel(true); renderListings(); }
 
   function listingHref(item){
     return 'listing.html?id=' + encodeURIComponent(item.id) + (currentLang === 'ar' ? '&lang=ar' : '');

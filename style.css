@@ -750,3 +750,17 @@ body{overflow-x:clip;}
   .nav-actions .auth-guest .btn:last-child{display:none;}
   .logo{font-size:1.05rem;}
 }
+
+/* compact search: main row + collapsible extra filters */
+.search-panel.compact{padding:12px 14px;}
+.search-main{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+.search-main select{flex:1 1 130px; min-width:0;}
+.search-main .btn{white-space:nowrap;}
+.search-main .btn-gold{flex:1 1 120px; justify-content:center;}
+.search-more-btn.on{border-color:var(--gold); color:var(--gold);}
+.search-more{display:none; margin-top:10px;}
+.search-more.open{display:block;}
+.search-main select{background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:11px 16px; color:var(--text); font:inherit; font-size:.9rem;}
+.search-main select:focus{outline:none; border-color:var(--gold);}
+.search-main .btn{padding-top:11px; padding-bottom:11px;}
+@media (max-width:600px){ .search-main select{flex:1 1 45%;} .search-main .search-more-btn{flex:1 1 45%; justify-content:center;} }
