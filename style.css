@@ -783,3 +783,9 @@ body{overflow-x:clip;}
 /* every plate in lists/packages: exactly the same size */
 .listing-card .plate, .pkg-cell .plate, .my-item .plate{width:300px; max-width:100%; margin-left:auto; margin-right:auto;}
 .pkg-cell .plate{width:300px; max-width:100%;}
+.plate-site{position:absolute; right:6.5cqw; bottom:2.2cqw; z-index:3; font:800 2.6cqw/1 Inter,Arial,sans-serif; letter-spacing:.04em; color:#2B2E35; opacity:.8; pointer-events:none; text-shadow:0 1px 0 rgba(255,255,255,.7);}
+.img-actions{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+.plate, .plate *{-webkit-user-select:none; user-select:none;}
+.detail-visual .img-actions{flex-basis:100%; width:100%;}
+.detail-visual{flex-wrap:wrap;}
+.detail-visual .img-actions{justify-content:center;}

@@ -291,6 +291,9 @@
     "bundle.numbers":{en:"{n} numbers",ar:"{n} أرقام"},
     "bundle.more":{en:"+{n} more",ar:"+{n} أخرى"},
     "bundle.inThis":{en:"This ad is part of a package",ar:"هذا الإعلان ضمن باقة"},
+    "img.download":{en:"Download image",ar:"تحميل الصورة"},
+    "img.share":{en:"Share",ar:"مشاركة"},
+    "img.busy":{en:"Preparing…",ar:"جارٍ التحضير…"},
     "auth.rate":{en:"Too many attempts. Please wait a minute and try again.",ar:"محاولات كثيرة. انتظر دقيقة ثم حاول مرة أخرى."},
     "auth.genericErr":{en:"Something went wrong. Please try again.",ar:"حدث خطأ. حاول مرة أخرى."},
     "auth.confirmOn":{en:"Account created, but email confirmation is still enabled in Supabase. Turn off \u201cConfirm email\u201d in Authentication settings.",ar:"تم إنشاء الحساب لكن تأكيد البريد ما زال مفعّلاً في Supabase. عطّل \u201cConfirm email\u201d من إعدادات Authentication."},
@@ -377,6 +380,60 @@
         infoBody.innerHTML = translations['info.' + infoKey + '.body'][lang];
       }
     }
+  }
+
+  /* ===== branded, fixed-design image of a plate / number (download or share) ===== */
+  const SITE_MARK = 'x plate.jo';
+  async function buildPlateCanvas(it){
+    try{ await Promise.all([document.fonts.load('700 200px "Barlow Condensed"'), document.fonts.load('800 80px "Cairo"')]); }catch(e){}
+    const W = 1200, H = it.type === 'plate' ? 470 : 470, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
+    const rr = (x, y, w, h, r) => { g.beginPath(); g.moveTo(x+r, y); g.arcTo(x+w, y, x+w, y+h, r); g.arcTo(x+w, y+h, x, y+h, r); g.arcTo(x, y+h, x, y, r); g.arcTo(x, y, x+w, y, r); g.closePath(); };
+    const px = 70, py = 50, pw = W - 140, ph = 270;
+    g.save(); g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
+    rr(px, py, pw, ph, 30); const gr = g.createLinearGradient(0, py, 0, py + ph); gr.addColorStop(0, '#E9ECF1'); gr.addColorStop(.5, '#DDE1E8'); gr.addColorStop(1, '#D1D6DF'); g.fillStyle = gr; g.fill(); g.restore();
+    rr(px + 20, py + 20, pw - 40, ph - 40, 16); g.strokeStyle = 'rgba(255,255,255,.8)'; g.lineWidth = 3; g.stroke();
+    rr(px + 7, py + 7, pw - 14, ph - 14, 26); g.strokeStyle = '#0B0B0B'; g.lineWidth = 14; g.stroke();
+    const ink = (draw) => { g.save(); g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 10; g.shadowOffsetX = 4; g.shadowOffsetY = 7; g.fillStyle = '#0B0B0B'; draw(); g.restore(); };
+    const fitText = (txt, x, y, font, maxW, align) => { g.font = font; g.textAlign = align || 'left'; let w = g.measureText(txt).width; if(!condOk) w *= .74; g.save(); g.translate(x, y); g.scale(Math.min(1, maxW / w) * (condOk ? 1 : .74), 1); g.fillText(txt, 0, 0); g.restore(); };
+    let condOk = true; try{ condOk = Array.from(document.fonts).some(f => /Barlow/i.test(f.family) && f.status === 'loaded'); }catch(e){}
+    g.textBaseline = 'alphabetic';
+    if(it.type === 'plate'){
+      const cx = px + 70; g.direction = 'rtl';
+      ink(() => { g.font = '800 82px Cairo, Arial'; const w = g.measureText('\u0627\u0644\u0627\u0631\u062f\u0646').width; g.save(); g.translate(cx, py + 125); g.scale(300 / w, 1); g.textAlign = 'left'; g.fillText('\u0627\u0644\u0627\u0631\u062f\u0646', 0, 0); g.restore(); });
+      g.direction = 'ltr';
+      ink(() => { g.font = '800 60px Arial'; const w = g.measureText('JORDAN').width; g.save(); g.translate(cx, py + 215); g.scale(300 / w, 1); g.textAlign = 'left'; g.fillText('JORDAN', 0, 0); g.restore(); });
+      const f = '700 230px "Barlow Condensed", "Arial Narrow", Arial';
+      ink(() => {
+        fitText(String(it.code), 640, py + 205, f, 200, 'right');
+        g.fillRect(668, py + 128, 44, 30);
+        fitText(String(it.number), 725, py + 205, f, 340, 'left');
+      });
+    } else {
+      const f = '700 150px "Barlow Condensed", "Arial Narrow", Arial';
+      rr(px, py, pw, ph, 30); g.fillStyle = '#F3F5F9'; g.fill(); g.lineWidth = 4; g.strokeStyle = '#3B5BDB'; g.stroke();
+      g.fillStyle = '#0B0B0B'; g.font = '700 130px "JetBrains Mono", "Courier New", monospace'; g.textAlign = 'center'; g.fillText(fmtMobile(it.value), W / 2, py + 185, pw - 80);
+    }
+    g.fillStyle = '#3B5BDB'; g.textAlign = 'center'; g.font = '800 58px Inter, Arial'; g.fillText(SITE_MARK, W / 2, py + ph + 88);
+    g.fillStyle = '#6B7280'; g.font = '500 28px Inter, Arial'; g.fillText(currentLang === 'ar' ? '\u0645\u0646\u0635\u0629 \u0644\u0648\u062d\u0627\u062a \u0627\u0644\u0633\u064a\u0627\u0631\u0627\u062a \u0648\u0623\u0631\u0642\u0627\u0645 \u0627\u0644\u0645\u0648\u0628\u0627\u064a\u0644 \u0641\u064a \u0627\u0644\u0623\u0631\u062f\u0646' : 'Jordan license plates & mobile numbers', W / 2, py + ph + 132);
+    return c;
+  }
+  async function plateImage(mode, btn){
+    if(!detailItem) return;
+    const old = btn.textContent; btn.disabled = true; btn.textContent = translations['img.busy'][currentLang];
+    try{
+      const c = await buildPlateCanvas(detailItem);
+      const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+      const name = 'xplate-' + String(itemLabel(detailItem)).replace(/[^0-9A-Za-z]+/g, '-') + '.png';
+      const file = new File([blob], name, {type:'image/png'});
+      if(mode === 'share' && navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], title:SITE_MARK, text:SITE_MARK + ' - ' + itemLabel(detailItem), url:location.href});
+      } else {
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      }
+    }catch(err){ if(!err || err.name !== 'AbortError') console.warn(err); }
+    btn.disabled = false; btn.textContent = old;
   }
 
   function toggleMobileNav(e){
@@ -493,7 +550,7 @@
     return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:.205">' +
       '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
       '<div class="plate-digits"><span class="pw"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></span></div>' +
-      '</div>';
+      '<span class="plate-site">x plate.jo</span></div>';
   }
   function fitPlates(){
     document.querySelectorAll('.plate-country').forEach(cn => {   // الاردن and JORDAN get exactly the same width
@@ -1140,7 +1197,9 @@
 
     document.getElementById('detailVisual').innerHTML = (it.type === 'plate'
       ? plateHtml(it.code, it.number, true)
-      : '<div class="number-lg">' + escapeHtml(fmtMobile(it.value)) + '</div>') + favBtnHtml(it.id);
+      : '<div class="number-lg">' + escapeHtml(fmtMobile(it.value)) + '</div>') + favBtnHtml(it.id) +
+      '<div class="img-actions"><button type="button" class="btn btn-ghost" onclick="plateImage(\'download\', this)">\u2b07 ' + T('img.download') + '</button>' +
+      '<button type="button" class="btn btn-ghost" onclick="plateImage(\'share\', this)">\u2197 ' + T('img.share') + '</button></div>';
 
     const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'x plate.jo';
     document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
