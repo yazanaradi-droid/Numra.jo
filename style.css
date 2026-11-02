@@ -672,7 +672,7 @@ html[dir="rtl"] .search-grid input::placeholder{text-align:right; direction:rtl;
 }
 
 /* fixed grid: the code, the dash and the first digit always sit in the same place (1 to 5 digit numbers) */
-.plate-digits .pw{display:inline-grid; grid-template-columns:2ch auto 5ch; column-gap:.1em; align-items:center; font-variant-numeric:tabular-nums; letter-spacing:0;}
+.plate-digits .pw{display:inline-grid; grid-template-columns:minmax(2ch,max-content) auto minmax(5ch,max-content); column-gap:.1em; align-items:center; font-variant-numeric:tabular-nums; letter-spacing:0;}
 .plate-digits .pc{text-align:right;} .plate-digits .pn{text-align:left;} .plate-digits .pd{text-align:center;}
 .plate-digits .pn{text-align:center;}
 
@@ -793,3 +793,5 @@ body{overflow-x:clip;}
 .plate-site{right:1.5cqw !important; bottom:-4.6cqw !important; font-size:3cqw !important; color:#4B5160 !important; opacity:1 !important; text-shadow:none !important; z-index:1;}
 .listing-card .plate, .my-item .plate, .pkg-cell .plate{margin-bottom:16px !important;}
 .detail-visual .plate{margin-bottom:18px;}
+/* letters X/Y/Z are wider than digits: let each part take its full width so the gradient fill never cuts a glyph */
+.plate-digits .pc, .plate-digits .pn{width:max-content; min-width:100%; padding:0 .06em; box-sizing:content-box; white-space:nowrap;}
