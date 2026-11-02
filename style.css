@@ -795,3 +795,6 @@ body{overflow-x:clip;}
 .detail-visual .plate{margin-bottom:18px;}
 /* letters X/Y/Z are wider than digits: let each part take its full width so the gradient fill never cuts a glyph */
 .plate-digits .pc, .plate-digits .pn{width:max-content; min-width:100%; padding:0 .06em; box-sizing:content-box; white-space:nowrap;}
+.my-item{padding-bottom:20px;}
+.my-actions{margin-top:16px; flex-wrap:wrap; justify-content:flex-start; align-items:center;}
+.my-actions .btn{padding:9px 16px; line-height:1.2;}
