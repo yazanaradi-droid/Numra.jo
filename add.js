@@ -38,7 +38,7 @@
     const rm = multi ? '<button type="button" class="btn btn-ghost ar-rm" title="' + T('remove') + '" style="padding:8px 12px">✕</button>' : '';
     const stat = '<div class="ar-stat" style="font-size:.82rem;grid-column:1/-1"></div>';
     if(type === 'plate'){
-      return '<div class="ar-row" data-i="' + i + '" style="display:grid;grid-template-columns:' + (multi ? '80px 1fr auto' : '80px 1fr 1fr auto') + ';gap:8px;align-items:end;margin-bottom:12px">' +
+      return '<div class="ar-row" data-i="' + i + '" style="direction:ltr;text-align:left;display:grid;grid-template-columns:' + (multi ? '80px 1fr auto' : '80px 1fr 1fr auto') + ';gap:8px;align-items:end;margin-bottom:12px">' +
         '<div class="field" style="margin:0"><label>' + T('code') + '</label><input class="ar-code" maxlength="2" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
         '<div class="field" style="margin:0"><label>' + T('number') + '</label><input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
         (multi ? '' : '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>') + '<div>' + rm + '</div>' + stat + '</div>';
