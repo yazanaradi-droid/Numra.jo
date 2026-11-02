@@ -798,3 +798,6 @@ body{overflow-x:clip;}
 .my-item{padding-bottom:20px;}
 .my-actions{margin-top:16px; flex-wrap:wrap; justify-content:flex-start; align-items:center;}
 .my-actions .btn{padding:9px 16px; line-height:1.2;}
+.plate-digits .pw{column-gap:.2em !important;}
+.plate-digits .pd{padding:0 .04em;}
+.plate-digits .pc{padding-right:.14em !important;}
