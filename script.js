@@ -347,7 +347,10 @@
   // preserve language across page navigation via ?lang=ar in the URL
   (function(){
     const params = new URLSearchParams(window.location.search);
-    if(params.get('lang') === 'ar') currentLang = 'ar';
+    let saved = null; try{ saved = localStorage.getItem('xp_lang'); }catch(e){}
+    const q = params.get('lang');
+    if(q === 'ar' || q === 'en') currentLang = q; else if(saved === 'ar' || saved === 'en') currentLang = saved;
+    try{ localStorage.setItem('xp_lang', currentLang); }catch(e){}
   })();
 
   function navTo(url, e){
@@ -467,6 +470,7 @@
   });
   function toggleLang(){
     currentLang = currentLang === 'en' ? 'ar' : 'en';
+    try{ localStorage.setItem('xp_lang', currentLang); }catch(e){}
     applyTranslations(currentLang);
     refreshAuthUI();
     if(typeof window.onLangChange === 'function') window.onLangChange();
