@@ -3,14 +3,14 @@
   const L = {
     en: {
       plate1:'Add a new plate', plateN:'Add new plates (multiple)', num1:'Add a new number', numN:'Add new numbers (multiple)',
-      note:'Tip: you can use the letters X, Y and Z to hide some digits.', code:'Code', number:'Plate number', mobile:'Mobile number', price:'Price (JOD, optional)', pkgPrice:'Package price (JOD, optional)', pkgHint:'All items you add here are shown together as one package with one price. Leave empty for "Contact for price".',
+      note:'Tip: you can use the letters X, Y and Z to hide some digits.', code:'Code', number:'Plate number', mobile:'Mobile number', prefix:'Code', mobile7:'Number (7 digits)', price:'Price (JOD, optional)', pkgPrice:'Package price (JOD, optional)', pkgHint:'All items you add here are shown together as one package with one price. Leave empty for "Contact for price".',
       addRow:'+ Add 10 more rows', submit:'Advertise now', login:'Please log in to add listings.', loginBtn:'Log in',
       bad:'Check this row', ok:'Published ✓', upd:'Updated ✓', dup:'Already listed by another account', rate:'Posting limit reached, try later', banned:'Account suspended', err:'Could not save',
       done:'Done', toDash:'Go to my listings', toSite:'View on the site', more:'Add more', empty:'Fill at least one row.', remove:'Remove', loading:'Loading…', pricePh:'Contact for price'
     },
     ar: {
       plate1:'إضافة لوحة جديدة', plateN:'إضافة لوحات جديدة (متعددة)', num1:'إضافة رقم جديد', numN:'إضافة أرقام جديدة (متعددة)',
-      note:'ملاحظة: يمكن استخدام الأحرف X و Y و Z لإخفاء بعض الأرقام.', code:'الرمز', number:'رقم اللوحة', mobile:'رقم الموبايل', price:'السعر (دينار، اختياري)', pkgPrice:'سعر الباقة (دينار، اختياري)', pkgHint:'كل ما تضيفه هنا يظهر معاً كباقة واحدة بسعر واحد. اتركه فارغاً لتظهر عبارة «تواصل للسعر».',
+      note:'ملاحظة: يمكن استخدام الأحرف X و Y و Z لإخفاء بعض الأرقام.', code:'الرمز', number:'رقم اللوحة', mobile:'رقم الموبايل', prefix:'الكود', mobile7:'الرقم (7 أرقام)', price:'السعر (دينار، اختياري)', pkgPrice:'سعر الباقة (دينار، اختياري)', pkgHint:'كل ما تضيفه هنا يظهر معاً كباقة واحدة بسعر واحد. اتركه فارغاً لتظهر عبارة «تواصل للسعر».',
       addRow:'+ إضافة 10 صفوف أخرى', submit:'أعلن الآن', login:'سجّل الدخول لإضافة الإعلانات.', loginBtn:'تسجيل الدخول',
       bad:'تحقق من هذا الصف', ok:'تم النشر ✓', upd:'تم التحديث ✓', dup:'معروض مسبقاً من حساب آخر', rate:'وصلت إلى حد النشر، حاول لاحقاً', banned:'الحساب موقوف', err:'تعذّر الحفظ',
       done:'تم', toDash:'الذهاب إلى إعلاناتي', toSite:'عرض في الموقع', more:'إضافة المزيد', empty:'املأ صفاً واحداً على الأقل.', remove:'حذف', loading:'جارٍ التحميل…', pricePh:'تواصل للسعر'
@@ -43,8 +43,9 @@
         '<div class="field" style="margin:0"><label>' + T('number') + '</label><input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
         (multi ? '' : '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>') + '<div>' + rm + '</div>' + stat + '</div>';
     }
-    return '<div class="ar-row" data-i="' + i + '" style="display:grid;grid-template-columns:' + (multi ? '1fr auto' : '1fr 1fr auto') + ';gap:10px;align-items:end;margin-bottom:12px">' +
-      '<div class="field" style="margin:0"><label>' + T('mobile') + '</label><input class="ar-mob" inputmode="numeric" maxlength="12" autocomplete="off" dir="ltr" placeholder="078 000 1111" style="' + IN + '"></div>' +
+    return '<div class="ar-row" data-i="' + i + '" style="direction:ltr;text-align:left;display:grid;grid-template-columns:' + (multi ? '110px 1fr auto' : '110px 1fr 1fr auto') + ';gap:10px;align-items:end;margin-bottom:12px">' +
+      '<div class="field" style="margin:0"><label>' + T('prefix') + '</label><select class="ar-pre" dir="ltr" style="' + IN + '"><option value="079">079</option><option value="078">078</option><option value="077">077</option></select></div>' +
+      '<div class="field" style="margin:0"><label>' + T('mobile7') + '</label><input class="ar-mob" inputmode="numeric" maxlength="8" autocomplete="off" dir="ltr" placeholder="123 4567" style="' + IN + '"></div>' +
       (multi ? '' : '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>') + '<div>' + rm + '</div>' + stat + '</div>';
   }
 
@@ -70,7 +71,7 @@
   function collect(raw){
     const out = [];
     document.querySelectorAll('.ar-row').forEach(r => {
-      const o = {}; ['ar-code','ar-num','ar-mob','ar-price'].forEach(c => { const i = r.querySelector('.' + c); if(i) o[c] = i.value; }); out.push(o);
+      const o = {}; ['ar-code','ar-num','ar-pre','ar-mob','ar-price'].forEach(c => { const i = r.querySelector('.' + c); if(i) o[c] = i.value; }); out.push(o);
     });
     return out;
   }
@@ -79,8 +80,8 @@
     const t = e.target; if(!t.classList) return;
     if(t.classList.contains('ar-code') || t.classList.contains('ar-num')) t.value = latin(t.value).toUpperCase().replace(/[^0-9XYZ]/g, '');
     else if(t.classList.contains('ar-mob')){
-      const d = latin(t.value).replace(/\D/g, '').slice(0, 10);
-      t.value = d.length > 6 ? d.slice(0,3) + ' ' + d.slice(3,6) + ' ' + d.slice(6) : d.length > 3 ? d.slice(0,3) + ' ' + d.slice(3) : d;
+      const d = latin(t.value).replace(/\D/g, '').slice(0, 7);
+      t.value = d.length > 3 ? d.slice(0,3) + ' ' + d.slice(3) : d;
     } else if(t.classList.contains('ar-price') || t.id === 'pkgPrice') t.value = latin(t.value).replace(/[,٬،\s]/g, '').replace(/٫/g, '.').replace(/[^0-9.]/g, '');
   });
   document.addEventListener('click', function(e){
@@ -100,8 +101,8 @@
       if(!okC || !/^[0-9XYZ]{1,5}$/.test(n)) return null;
       return {p_type:'plate', p_code:c, p_number:n, p_value:null, p_price:p};
     }
-    const m = r.querySelector('.ar-mob').value.replace(/\D/g, '');
-    if(!m && price === '') return {empty:true};
+    const rest = r.querySelector('.ar-mob').value.replace(/\D/g, ''), m = r.querySelector('.ar-pre').value + rest;
+    if(!rest && price === '') return {empty:true};
     if(!/^07[789]\d{7}$/.test(m)) return null;
     return {p_type:'number', p_code:null, p_number:null, p_value:m, p_price:p};
   }
