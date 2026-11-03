@@ -4,7 +4,7 @@ on:
     - cron: '17 3 */3 * *'     # every 3 days: keeps the free Supabase project from pausing
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
   keepalive:
     runs-on: ubuntu-latest
@@ -16,8 +16,9 @@ jobs:
           curl -sS --fail "https://xfkahevdccmogaxboffy.supabase.co/rest/v1/xp_listings?select=id,type,code,number,value,price,created_at&order=created_at.desc&limit=1000" \
             -H "apikey: sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx" -o backups/listings.json
           python3 -c "import json;d=json.load(open('backups/listings.json'));print(len(d),'ads backed up')"
-      - name: Commit the backup if it changed
-        run: |
-          git config user.name "backup-bot"; git config user.email "backup-bot@users.noreply.github.com"
-          git add backups/listings.json
-          git diff --cached --quiet || (git commit -m "Backup of ads" && git push)
+      - name: Keep the backup as a private workflow artifact (not published in the repo)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ads-backup
+          path: backups/listings.json
+          retention-days: 90
