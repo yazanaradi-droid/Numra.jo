@@ -1,4 +1,4 @@
-/* x plate.jo — admin panel. Everything is enforced server-side (xp_admin_* functions check xp_is_admin()). */
+/* Souq Al Arqam — admin panel. Everything is enforced server-side (xp_admin_* functions check xp_is_admin()). */
 (function(){
   const L = {
     en: {

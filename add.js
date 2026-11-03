@@ -1,4 +1,4 @@
-/* x plate.jo — add listing page (single or multiple). Publishes through the same server function as the old pop-up. */
+/* Souq Al Arqam — add listing page (single or multiple). Publishes through the same server function as the old pop-up. */
 (function(){
   const L = {
     en: {
@@ -30,7 +30,7 @@
   function titleKey(){ return type === 'plate' ? (multi ? 'plateN' : 'plate1') : (multi ? 'numN' : 'num1'); }
   function setTitles(){
     const t = T(titleKey());
-    document.getElementById('addTitle').textContent = t; document.getElementById('addCrumb').textContent = t; document.title = t + ' | x plate.jo';
+    document.getElementById('addTitle').textContent = t; document.getElementById('addCrumb').textContent = t; document.title = t + ' | Souq Al Arqam';
   }
 
   function rowHtml(i){

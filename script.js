@@ -1,7 +1,7 @@
-/* x plate.jo — shared logic (translations, modals, listings) */
+/* Souq Al Arqam — shared logic (translations, modals, listings) */
 
   const translations = {
-    "nav.brand":{en:"x plate.jo",ar:"x plate.jo"},
+    "nav.brand":{en:"Souq Al Arqam",ar:"Souq Al Arqam"},
     "hero.eyebrowHome":{en:"#1 marketplace",ar:"المنصة رقم 1"},
     "hero.titleHome":{en:'License plates &amp; phone numbers',ar:'لوحات سيارات و أرقام هواتف'},
     "hero.leadHome":{en:"A marketplace for buying and selling license plates and VIP mobile numbers.",ar:"منصة لبيع وشراء لوحات السيارات وأرقام الموبايل المميزة."},
@@ -75,7 +75,7 @@
     "links.snd.desc":{en:"The official portal for e-government services in Jordan.",ar:"البوابة الرسمية للخدمات الحكومية الإلكترونية في الأردن."},
     "links.visit":{en:"Visit the website →",ar:"زيارة الموقع ←"},
 
-    "register.kicker":{en:"Join x plate.jo",ar:"انضم إلى x plate.jo"},
+    "register.kicker":{en:"Join Souq Al Arqam",ar:"انضم إلى Souq Al Arqam"},
     "register.title":{en:"Enjoy our services — register now",ar:"استمتع بخدماتنا — سجّل الآن"},
     "register.desc":{en:"Create a free account to list, buy, sell and negotiate on license plates and mobile numbers.",ar:"أنشئ حساباً مجانياً لعرض وشراء وبيع والتفاوض على لوحات السيارات وأرقام الموبايل."},
     "register.cta":{en:"Register Now",ar:"سجّل الآن"},
@@ -96,7 +96,7 @@
     "footer.marketplace":{en:"Marketplace",ar:"السوق"},
     "footer.company":{en:"Company",ar:"الشركة"},
     "footer.legal":{en:"Legal",ar:"قانوني"},
-    "footer.copyright":{en:"© 2026 X PLATE.JO Commercial Broker",ar:"© 2026 إكس بليت.جو للوساطة التجارية"},
+    "footer.copyright":{en:"© 2026 Souq Al Arqam Commercial Broker",ar:"© 2026 Souq Al Arqam للوساطة التجارية"},
 
     "nav.login":{en:"Login",ar:"دخول"},
     "nav.logout":{en:"Logout",ar:"خروج"},
@@ -141,7 +141,7 @@
     "detail.sample":{en:"Sample listing",ar:"إعلان تجريبي"},
     "detail.showContact":{en:"Show contact number",ar:"عرض رقم التواصل"},
     "detail.noContact":{en:"No contact number for this sample listing",ar:"لا يوجد رقم تواصل لهذا الإعلان التجريبي"},
-    "detail.waMessage":{en:"Hello, I'm interested in {x} listed on x plate.jo",ar:"مرحباً، أنا مهتم بـ {x} المعروض في x plate.jo"},
+    "detail.waMessage":{en:"Hello, I'm interested in {x} listed on Souq Al Arqam",ar:"مرحباً، أنا مهتم بـ {x} المعروض في Souq Al Arqam"},
     "detail.important":{en:"Important information",ar:"معلومات مهمة"},
     "detail.tip1":{en:"Do not transfer money directly.",ar:"لا تقم بتحويل المال مباشرة."},
     "detail.tip2":{en:"Meet the seller in person.",ar:"قابل البائع شخصياً."},
@@ -329,16 +329,16 @@
     "upload.successDesc":{en:"Buyers can now see your listing.",ar:"يمكن للمشترين الآن رؤية إعلانك."},
     "upload.viewListing":{en:"View listings",ar:"عرض الإعلانات"},
 
-    "info.contact.body":{en:'<p>We\u2019d love to hear from you — this is placeholder demo contact info:</p><ul><li>Email: support@xplate.jo</li><li>Location: Amman, Jordan</li></ul>',
-                         ar:'<p>يسعدنا تواصلك معنا — هذه معلومات اتصال تجريبية:</p><ul><li>البريد الإلكتروني: support@xplate.jo</li><li>الموقع: عمان، الأردن</li></ul>'},
-    "info.about.body":{en:'<p>x plate.jo is a demo marketplace for buying and selling license plates and mobile numbers.</p><p>This page is placeholder content built for a local prototype — it is not a real company.</p>',
-                       ar:'<p>x plate.jo هي منصة تجريبية لبيع وشراء لوحات السيارات وأرقام الموبايل.</p><p>هذه الصفحة محتوى تجريبي لعرض توضيحي محلي — وليست شركة حقيقية.</p>'},
+    "info.contact.body":{en:'<p>We\u2019d love to hear from you — this is placeholder demo contact info:</p><ul><li>Email: support@example.com</li><li>Location: Amman, Jordan</li></ul>',
+                         ar:'<p>يسعدنا تواصلك معنا — هذه معلومات اتصال تجريبية:</p><ul><li>البريد الإلكتروني: support@example.com</li><li>الموقع: عمان، الأردن</li></ul>'},
+    "info.about.body":{en:'<p>Souq Al Arqam is a demo marketplace for buying and selling license plates and mobile numbers.</p><p>This page is placeholder content built for a local prototype — it is not a real company.</p>',
+                       ar:'<p>Souq Al Arqam هي منصة تجريبية لبيع وشراء لوحات السيارات وأرقام الموبايل.</p><p>هذه الصفحة محتوى تجريبي لعرض توضيحي محلي — وليست شركة حقيقية.</p>'},
     "info.privacy.body":{en:'<p>Placeholder privacy policy for demo purposes:</p><ul><li>We would only collect the information needed to create listings and accounts.</li><li>We would never sell personal data to third parties.</li><li>You could request deletion of your data at any time.</li></ul>',
                          ar:'<p>سياسة خصوصية تجريبية لأغراض العرض:</p><ul><li>سنجمع فقط المعلومات اللازمة لإنشاء الإعلانات والحسابات.</li><li>لن نبيع بياناتك الشخصية لأي طرف ثالث.</li><li>يمكنك طلب حذف بياناتك في أي وقت.</li></ul>'},
     "info.refund.body":{en:'<p>Placeholder refund policy for demo purposes:</p><ul><li>Listing fees would be refundable within 24 hours if unused.</li><li>Completed transactions between buyers and sellers would be final.</li><li>Contact support for any billing dispute.</li></ul>',
                         ar:'<p>سياسة استرجاع تجريبية لأغراض العرض:</p><ul><li>تكون رسوم الإعلان قابلة للاسترجاع خلال 24 ساعة إذا لم تُستخدم.</li><li>المعاملات المكتملة بين البائع والمشتري تكون نهائية.</li><li>تواصل مع الدعم لأي نزاع متعلق بالفوترة.</li></ul>'},
-    "info.terms.body":{en:'<p>Placeholder terms of service for demo purposes:</p><ul><li>Listings must be accurate and lawfully owned by the seller.</li><li>x plate.jo would only facilitate connections between buyers and sellers.</li><li>Misuse of the platform could result in account suspension.</li></ul>',
-                       ar:'<p>شروط استخدام تجريبية لأغراض العرض:</p><ul><li>يجب أن تكون الإعلانات دقيقة ومملوكة قانونياً للبائع.</li><li>تعمل x plate.jo فقط كوسيط للتواصل بين البائعين والمشترين.</li><li>قد يؤدي إساءة استخدام المنصة إلى تعليق الحساب.</li></ul>'}
+    "info.terms.body":{en:'<p>Placeholder terms of service for demo purposes:</p><ul><li>Listings must be accurate and lawfully owned by the seller.</li><li>Souq Al Arqam would only facilitate connections between buyers and sellers.</li><li>Misuse of the platform could result in account suspension.</li></ul>',
+                       ar:'<p>شروط استخدام تجريبية لأغراض العرض:</p><ul><li>يجب أن تكون الإعلانات دقيقة ومملوكة قانونياً للبائع.</li><li>تعمل Souq Al Arqam فقط كوسيط للتواصل بين البائعين والمشترين.</li><li>قد يؤدي إساءة استخدام المنصة إلى تعليق الحساب.</li></ul>'}
   };
 
 
@@ -386,7 +386,7 @@
   }
 
   /* ===== branded, fixed-design image of a plate / number (download or share) ===== */
-  const SITE_MARK = 'xplate.jo';
+  const SITE_MARK = 'Souq Al Arqam';
   async function buildPlateCanvas(it){
     try{ await Promise.all([document.fonts.load('800 200px "Barlow Condensed"'), document.fonts.load('800 80px "Cairo"')]); }catch(e){}
     const W = 1200, H = 400, c = document.createElement('canvas'); c.width = W; c.height = H;
@@ -567,7 +567,7 @@
     return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:.205">' +
       '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
       '<div class="plate-digits"><span class="pw"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></span></div>' +
-      '<span class="plate-site">xplate.jo</span></div>';
+      '<span class="plate-site">Souq Al Arqam</span></div>';
   }
   function fitPlates(){
     document.querySelectorAll('.plate-country').forEach(cn => {   // الاردن and JORDAN get exactly the same width
@@ -1206,7 +1206,7 @@
     const label = itemLabel(it);
     const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
 
-    document.title = label + ' | x plate.jo';
+    document.title = label + ' | Souq Al Arqam';
     document.getElementById('detailTitle').innerHTML = T(it.type === 'plate' ? 'detail.title.plate' : 'detail.title.number').replace('{x}', '<bdi dir="ltr">' + escapeHtml(label) + '</bdi>');
     const crumb = document.getElementById('detailCrumbType');
     crumb.textContent = T(it.type === 'plate' ? 'nav.plates.crumb' : 'nav.numbers.crumb');
@@ -1218,7 +1218,7 @@
       '<div class="img-actions"><button type="button" class="btn btn-ghost" onclick="plateImage(\'download\', this)">\u2b07 ' + T('img.download') + '</button>' +
       '<button type="button" class="btn btn-ghost" onclick="plateImage(\'share\', this)">\u2197 ' + T('img.share') + '</button></div>';
 
-    const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'x plate.jo';
+    const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'Souq Al Arqam';
     document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
     document.getElementById('sellerName').textContent = sellerName;
     const dateStr = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
