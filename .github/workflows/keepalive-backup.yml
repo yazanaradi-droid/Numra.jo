@@ -13,7 +13,7 @@ jobs:
       - name: Read the public ads (keeps Supabase awake) and save a backup copy
         run: |
           mkdir -p backups
-          curl -sS --fail "https://xfkahevdccmogaxboffy.supabase.co/rest/v1/xp_listings?select=*&order=created_at.desc&limit=1000" \
+          curl -sS --fail "https://xfkahevdccmogaxboffy.supabase.co/rest/v1/xp_listings?select=id,type,code,number,value,price,created_at&order=created_at.desc&limit=1000" \
             -H "apikey: sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx" -o backups/listings.json
           python3 -c "import json;d=json.load(open('backups/listings.json'));print(len(d),'ads backed up')"
       - name: Commit the backup if it changed
