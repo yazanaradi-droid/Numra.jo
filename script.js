@@ -1232,7 +1232,7 @@
     const btn = document.getElementById('contactBtn');
     if(detailSeller && detailSeller.phone){
       btn.disabled = false;
-      btn.textContent = T('detail.showContact') + '  ' + maskPhone(detailSeller.phone);
+      btn.innerHTML = escapeHtml(T('detail.showContact')) + ' <bdi dir="ltr" style="unicode-bidi:isolate">' + escapeHtml(maskPhone(detailSeller.phone)) + '</bdi>';
       btn.onclick = function(){ openContact(detailItem, detailSeller); };
     } else if(detailSeller && detailSeller.locked === 'login'){
       btn.disabled = false;
