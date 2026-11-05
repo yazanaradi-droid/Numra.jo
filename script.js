@@ -20,7 +20,7 @@
     "filter.placeholder.number":{en:"Filter by number...",ar:"تصفية بالرقم..."},
     "listings.emptyFiltered":{en:"No listings match your search.",ar:"لا توجد إعلانات مطابقة لبحثك."},
     "nav.home":{en:"Home",ar:"الرئيسية"},
-    "qb.home":{en:"Home",ar:"الرئيسية"}, "qb.plates":{en:"Plates",ar:"اللوحات"}, "qb.numbers":{en:"Numbers",ar:"الأرقام"},
+    "qb.home":{en:"Home",ar:"الرئيسية"}, "qb.plates":{en:"License Plates",ar:"لوحات السيارات"}, "qb.numbers":{en:"Mobile Numbers",ar:"أرقام الهواتف"},
     "nav.plates":{en:"License Plates ▾",ar:"لوحات السيارات ▾"},
     "nav.plates.all":{en:"See Plates (All)",ar:"عرض كل اللوحات"},
     "nav.numbers":{en:"Mobile Numbers ▾",ar:"أرقام الموبايل ▾"},

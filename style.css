@@ -996,3 +996,9 @@ html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-
 .quickbar a{flex:1; text-align:center; padding:10px 8px; border-radius:999px; border:1.5px solid #2F4390; color:#fff; font-weight:700; font-size:.95rem; text-decoration:none;}
 .quickbar a.active{background:linear-gradient(135deg,#4C6BE6,#2F4BC0); border-color:#4C6BE6;}
 @media (min-width:821px){.quickbar{display:none;}}
+
+/* quick bar: same plain-text look as the desktop menu */
+.quickbar{justify-content:space-around; gap:14px; padding:0 16px; background:rgba(10,13,20,.88);}
+.quickbar a{flex:0 1 auto; border:0 !important; border-radius:0; background:none !important; padding:13px 2px; font-size:.92rem; font-weight:500; color:var(--muted); border-bottom:2px solid transparent !important; white-space:nowrap;}
+.quickbar a:hover{color:#fff;}
+.quickbar a.active{color:#fff; font-weight:700; border-bottom-color:#4C6BE6 !important;}
