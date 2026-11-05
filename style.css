@@ -894,3 +894,6 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 }
 input::placeholder, textarea::placeholder{color:#8D97AB !important;}
 select option{background:#111A36; color:#F2F5FA;}
+input, select, textarea, .field input, .field textarea, .field select, .ar-pre, .ar-mob{color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF;}
+input::placeholder, textarea::placeholder{-webkit-text-fill-color:#9AA5BD; color:#9AA5BD !important;}
+input:-webkit-autofill{-webkit-text-fill-color:#FFFFFF; box-shadow:0 0 0 1000px #111A36 inset;}
