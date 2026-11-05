@@ -143,8 +143,8 @@
     "modal.noAccount":{en:"New here?",ar:"مستخدم جديد؟"},
     "modal.goRegister":{en:"Create an account",ar:"أنشئ حساباً"},
     "modal.successTitle":{en:"Account created!",ar:"تم إنشاء الحساب!"},
-    "modal.successDesc":{en:"Welcome — you are now signed in. This is a demo: your account is stored only in this browser.",
-                          ar:"أهلاً بك — تم تسجيل دخولك. هذا نموذج تجريبي: يُحفظ حسابك في هذا المتصفح فقط."},
+    "modal.successDesc":{en:"Welcome — your account is ready and you are now signed in.",
+                          ar:"أهلاً بك — تم إنشاء حسابك وتسجيل دخولك."},
     "login.title":{en:"Log in",ar:"تسجيل الدخول"},
     "login.subtitle":{en:"Enter your username and password.",ar:"أدخل اسم المستخدم وكلمة المرور."},
     "login.passwordPlaceholder":{en:"Your password",ar:"كلمة المرور"},
@@ -156,9 +156,9 @@
     "nav.numbers.crumb":{en:"Mobile Numbers",ar:"أرقام الموبايل"},
     "detail.by":{en:"By",ar:"بواسطة"},
     "detail.listed":{en:"Listed",ar:"أُضيف في"},
-    "detail.sample":{en:"Sample listing",ar:"إعلان تجريبي"},
+    "detail.sample":{en:"Listed recently",ar:"أُضيف حديثاً"},
     "detail.showContact":{en:"Show contact number",ar:"عرض رقم التواصل"},
-    "detail.noContact":{en:"No contact number for this sample listing",ar:"لا يوجد رقم تواصل لهذا الإعلان التجريبي"},
+    "detail.noContact":{en:"No contact number for this listing",ar:"لا يوجد رقم تواصل لهذا الإعلان"},
     "detail.waMessage":{en:"Hello, I'm interested in {x} listed on Souq Al Arqam",ar:"مرحباً، أنا مهتم بـ {x} المعروض في سوق الأرقام"},
     "detail.important":{en:"Important information",ar:"معلومات مهمة"},
     "detail.tip1":{en:"Do not transfer money directly.",ar:"لا تقم بتحويل المال مباشرة."},
@@ -349,14 +349,14 @@
 
     "info.contact.body":{en:'<p>We\u2019d love to hear from you:</p><ul><li>General inquiries: <a href="mailto:info@souqalarqam.com">info@souqalarqam.com</a></li><li>Support: <a href="mailto:support@souqalarqam.com">support@souqalarqam.com</a></li><li>Location: Amman, Jordan</li></ul>',
                          ar:'<p>يسعدنا تواصلك معنا:</p><ul><li>الاستفسارات العامة: <a href="mailto:info@souqalarqam.com">info@souqalarqam.com</a></li><li>الدعم: <a href="mailto:support@souqalarqam.com">support@souqalarqam.com</a></li><li>الموقع: عمان، الأردن</li></ul>'},
-    "info.about.body":{en:'<p>Souq Al Arqam is a demo marketplace for buying and selling license plates and mobile numbers.</p><p>This page is placeholder content built for a local prototype — it is not a real company.</p>',
-                       ar:'<p>سوق الأرقام هي منصة تجريبية لبيع وشراء لوحات السيارات وأرقام الموبايل.</p><p>هذه الصفحة محتوى تجريبي لعرض توضيحي محلي — وليست شركة حقيقية.</p>'},
-    "info.privacy.body":{en:'<p>Placeholder privacy policy for demo purposes:</p><ul><li>We would only collect the information needed to create listings and accounts.</li><li>We would never sell personal data to third parties.</li><li>You could request deletion of your data at any time.</li></ul>',
-                         ar:'<p>سياسة خصوصية تجريبية لأغراض العرض:</p><ul><li>سنجمع فقط المعلومات اللازمة لإنشاء الإعلانات والحسابات.</li><li>لن نبيع بياناتك الشخصية لأي طرف ثالث.</li><li>يمكنك طلب حذف بياناتك في أي وقت.</li></ul>'},
-    "info.refund.body":{en:'<p>Placeholder refund policy for demo purposes:</p><ul><li>Listing fees would be refundable within 24 hours if unused.</li><li>Completed transactions between buyers and sellers would be final.</li><li>Contact support for any billing dispute.</li></ul>',
-                        ar:'<p>سياسة استرجاع تجريبية لأغراض العرض:</p><ul><li>تكون رسوم الإعلان قابلة للاسترجاع خلال 24 ساعة إذا لم تُستخدم.</li><li>المعاملات المكتملة بين البائع والمشتري تكون نهائية.</li><li>تواصل مع الدعم لأي نزاع متعلق بالفوترة.</li></ul>'},
-    "info.terms.body":{en:'<p>Placeholder terms of service for demo purposes:</p><ul><li>Listings must be accurate and lawfully owned by the seller.</li><li>Souq Al Arqam would only facilitate connections between buyers and sellers.</li><li>Misuse of the platform could result in account suspension.</li></ul>',
-                       ar:'<p>شروط استخدام تجريبية لأغراض العرض:</p><ul><li>يجب أن تكون الإعلانات دقيقة ومملوكة قانونياً للبائع.</li><li>تعمل سوق الأرقام فقط كوسيط للتواصل بين البائعين والمشترين.</li><li>قد يؤدي إساءة استخدام المنصة إلى تعليق الحساب.</li></ul>'}
+    "info.about.body":{en:'<p>Souq Al Arqam is a Jordanian marketplace for buying and selling license plates and VIP mobile numbers (Zain, Orange and Umniah).</p><p>Sellers list their plates and numbers for free, and buyers contact them directly to negotiate. Souq Al Arqam brings both sides together; we are not a party to the sale.</p>',
+                       ar:'<p>سوق الأرقام منصة أردنية لبيع وشراء لوحات السيارات وأرقام الهواتف المميزة (زين، أورنج وأمنية).</p><p>ينشر البائعون لوحاتهم وأرقامهم، ويتواصل المشترون معهم مباشرة للتفاوض. تجمع المنصة الطرفين، وليست طرفاً في عملية البيع.</p>'},
+    "info.privacy.body":{en:'<p>Privacy policy:</p><ul><li>We collect only what is needed to run your account and listings: username, name and phone number.</li><li>A seller\u2019s phone number is shown only to logged-in users who ask to contact the seller.</li><li>We never sell your personal data to third parties.</li><li>You can ask us to delete your account and data at any time: support@souqalarqam.com</li></ul>',
+                       ar:'<p>سياسة الخصوصية:</p><ul><li>نجمع فقط ما يلزم لتشغيل حسابك وإعلاناتك: اسم المستخدم والاسم ورقم الهاتف.</li><li>لا يظهر رقم هاتف البائع إلا للمستخدمين المسجّلين الذين يطلبون التواصل معه.</li><li>لا نبيع بياناتك الشخصية لأي طرف ثالث.</li><li>يمكنك طلب حذف حسابك وبياناتك في أي وقت: support@souqalarqam.com</li></ul>'},
+    "info.refund.body":{en:'<p>Refunds:</p><ul><li>Dealings are directly between buyer and seller. Souq Al Arqam does not hold or transfer payments for sales.</li><li>For any fee paid to the platform (such as featured promotion), contact support@souqalarqam.com.</li></ul>',
+                       ar:'<p>الاسترجاع:</p><ul><li>التعامل يتم مباشرة بين البائع والمشتري، ولا تستلم المنصة أو تحوّل أي مبالغ مقابل عمليات البيع.</li><li>لأي رسوم تُدفع للمنصة (مثل الإعلان المميز) تواصل معنا على support@souqalarqam.com.</li></ul>'},
+    "info.terms.body":{en:'<p>Terms of use:</p><ul><li>Listings must be accurate and the number or plate must be owned by the seller.</li><li>Souq Al Arqam only connects buyers and sellers and is not responsible for dealings between them.</li><li>Do not transfer money before meeting and verifying the seller.</li><li>Misuse, false listings or fraud may result in removing ads and suspending the account.</li></ul>',
+                       ar:'<p>شروط الاستخدام:</p><ul><li>يجب أن تكون الإعلانات دقيقة، وأن يكون الرقم أو اللوحة مملوكاً للبائع.</li><li>تعمل سوق الأرقام كوسيط للتواصل فقط، ولا تتحمل مسؤولية التعاملات بين البائع والمشتري.</li><li>لا تحوّل أي مبلغ قبل مقابلة البائع والتحقق منه.</li><li>قد يؤدي إساءة الاستخدام أو الإعلانات الكاذبة أو الاحتيال إلى حذف الإعلانات وتعليق الحساب.</li></ul>'}
   };
 
 
