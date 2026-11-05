@@ -883,3 +883,14 @@ html[dir="rtl"] .cat-card h3{font-family:'Cairo',var(--font-display); font-style
 .cat-visual .cat-phone:not(.cat-phone-sm){font-size:1.35rem; padding:4px 26px; letter-spacing:.14em;}
 .listing-card.is-featured{background:linear-gradient(160deg,#1B2133,#10141D); border:1px solid #F0B24B; box-shadow:0 4px 22px rgba(240,178,75,.18);}
 .listing-card.is-featured .price{color:#FFB3C2;}
+
+/* brand-blue input frames (add plates/numbers, search, forms) */
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea{
+  background:#111A36 !important; border:1.5px solid #3B5BDB !important; color:#F2F5FA !important; border-radius:10px;
+}
+.search-grid select, .search-grid input, .search-main select{border-radius:999px;}
+input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus{
+  outline:none; border-color:#8FA9E8 !important; box-shadow:0 0 0 3px rgba(76,107,230,.35);
+}
+input::placeholder, textarea::placeholder{color:#8D97AB !important;}
+select option{background:#111A36; color:#F2F5FA;}
