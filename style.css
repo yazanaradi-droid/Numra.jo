@@ -975,3 +975,8 @@ html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-
 .logo-mark{display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:9px; background:linear-gradient(135deg,#4C6BE6,#2F4BC0); color:#fff; font-family:'Barlow Condensed',var(--font-display); font-weight:800; font-style:italic; font-size:1.3rem; letter-spacing:.02em; box-shadow:0 6px 16px rgba(59,91,219,.35); flex:none;}
 @media (max-width:480px){.logo-mark{width:30px; height:30px; font-size:1.1rem;}}
 @media (max-width:480px){.logo{gap:6px;} .logo-mark{width:26px; height:26px; font-size:1rem; border-radius:7px;} header .logo{font-size:.92rem;}}
+
+.logo-name{display:inline-flex; flex-direction:column; line-height:1.1; text-align:start;}
+.logo-ar{font-family:'Cairo',var(--font-display); font-weight:800; font-size:1.15rem; color:#fff;}
+.logo-en{font-family:'Barlow Condensed',var(--font-display); font-weight:700; font-style:italic; font-size:.72rem; letter-spacing:.18em; color:var(--accent-text);}
+@media (max-width:480px){.logo-ar{font-size:1rem;} .logo-en{font-size:.62rem; letter-spacing:.12em;}}
