@@ -2,9 +2,12 @@
 
   const translations = {
     "nav.brand":{en:"Souq Al Arqam",ar:"Souq Al Arqam"},
-    "hero.eyebrowHome":{en:"#1 marketplace",ar:"المنصة رقم 1"},
-    "hero.titleHome":{en:'License plates &amp; phone numbers',ar:'لوحات سيارات و أرقام هواتف'},
-    "hero.leadHome":{en:"A marketplace for buying and selling license plates and VIP mobile numbers.",ar:"منصة لبيع وشراء لوحات السيارات وأرقام الموبايل المميزة."},
+    "hero.eyebrowHome":{en:"Jordan's number marketplace",ar:"السوق الأول في الأردن للوحات والأرقام المميزة"},
+    "hero.titleHome":{en:'Your number.<br><span class="accent">Your signature</span><br>on the road.',ar:'نمرتك<br><span class="accent">توقيعك</span> على الطريق'},
+    "hero.leadHome":{en:"Buy and sell Jordanian license plates and VIP mobile numbers from Zain, Orange and Umniah — safely, negotiating directly with the seller.",ar:"اشترِ وبع لوحات السيارات الأردنية وأرقام الموبايل المميزة من زين وأورنج وأمنية — بأمان، وبتفاوض مباشر مع البائع."},
+    "hero.browse":{en:"Browse plates",ar:"تصفح اللوحات"},
+    "hero.listYours":{en:"List yours",ar:"أضف إعلانك"},
+    "hero.featured":{en:"Featured plate",ar:"لوحة مميزة"},
     "page.plates.eyebrow":{en:"License Plates",ar:"لوحات السيارات"},
     "page.plates.title":{en:"Browse license plates",ar:"تصفح لوحات السيارات"},
     "page.plates.lead":{en:"All available Jordanian license plates, code and number, updated live as sellers list them.",ar:"جميع لوحات السيارات الأردنية المتاحة، بالرمز والرقم، تُحدَّث فوراً مع كل إعلان جديد."},
@@ -608,7 +611,8 @@
     });
   })();
 
-  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false); document.querySelectorAll('.pkg-mini-plate').forEach(e => { e.innerHTML = plateHtml('1', e.dataset.n, false); }); });
+  document.addEventListener('DOMContentLoaded', () => { const hp = document.getElementById('heroPlate'); if(hp) hp.innerHTML = plateHtml('1', '00000', true);
+    const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false); document.querySelectorAll('.pkg-mini-plate').forEach(e => { e.innerHTML = plateHtml('1', e.dataset.n, false); }); });
 
   /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
   const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });

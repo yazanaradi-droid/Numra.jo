@@ -6,7 +6,7 @@
 <title>Souq Al Arqam | License Plates & Mobile Numbers Marketplace</title>
 <meta name="description" content="Buy and sell license plates and VIP mobile numbers in Jordan.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202611051626">
+<link rel="stylesheet" href="style.css?v=202611051725">
 </head>
 <body>
 
@@ -74,13 +74,21 @@
   </div>
 </header>
 
-<section class="hero">
+<section class="hero hero-home">
   <div class="wrap">
-    <div class="hero-grid" style="grid-template-columns:1fr;">
+    <div class="hero-grid hero-home-grid">
       <div>
-        <span class="eyebrow" data-i18n="hero.eyebrowHome">#1 marketplace</span>
-        <h1 data-i18n-html="hero.titleHome">License plates &amp; phone numbers</h1>
-        <p class="lead" data-i18n="hero.leadHome">A marketplace for buying and selling license plates and VIP mobile numbers.</p>
+        <span class="hero-eyebrow" data-i18n="hero.eyebrowHome">Jordan's number marketplace</span>
+        <h1 data-i18n-html="hero.titleHome">Your number.<br><span class="accent">Your signature</span><br>on the road.</h1>
+        <p class="lead" data-i18n="hero.leadHome">Buy and sell Jordanian license plates and VIP mobile numbers from Zain, Orange and Umniah — safely, negotiating directly with the seller.</p>
+        <div class="hero-cta">
+          <a class="btn btn-gold" href="plates.html" onclick="navTo('plates.html', event)" data-i18n="hero.browse">Browse plates</a>
+          <a class="btn btn-ghost" href="#" onclick="goAdd('plate','single',event)" data-i18n="hero.listYours">List yours</a>
+        </div>
+      </div>
+      <div class="hero-plate-wrap">
+        <div class="hero-plate-frame"><div id="heroPlate"></div></div>
+        <div class="hero-plate-cap" data-i18n="hero.featured">Featured plate</div>
       </div>
     </div>
   </div>
@@ -339,6 +347,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611051626"></script>
+<script src="script.js?v=202611051725"></script>
 </body>
 </html>

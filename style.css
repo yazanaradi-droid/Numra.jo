@@ -936,3 +936,26 @@ label, .field label, .dash-card .field label, .dash-note, .ar-stat, .hint:not(.e
 .pkg-cellprice{text-align:center; font-size:.85rem; font-weight:600; color:var(--accent-text); width:100%;}
 .pkg-numcell{flex-direction:column; justify-content:center;}
 .pkg-numtxt{font-family:var(--font-mono); font-weight:700; font-size:1.05rem; letter-spacing:.08em; word-spacing:.2em;}
+
+/* home hero (sporty) */
+.hero-home{padding:80px 0 72px;}
+.hero-home-grid{grid-template-columns:1.05fr .95fr !important; gap:48px;}
+.hero-eyebrow{display:flex; align-items:center; gap:12px; font-size:.78rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--accent-text); margin-bottom:22px;}
+.hero-eyebrow::before{content:''; width:48px; height:2px; background:#C8283A; display:block;}
+html[dir="rtl"] .hero-eyebrow{letter-spacing:0;}
+.hero-home h1{margin-bottom:22px;}
+.hero-home .lead{max-width:540px; font-size:1.1rem; line-height:1.7;}
+.hero-home .hero-cta .btn{padding:15px 30px; border-radius:999px; font-size:.9rem; letter-spacing:.04em;}
+.hero-plate-wrap{display:flex; flex-direction:column; align-items:center; gap:22px;}
+.hero-plate-frame{width:100%; max-width:480px; padding:12px; border-radius:18px; background:linear-gradient(145deg,#2A3A6E,#0E1424); box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px #2A3A6E,0 0 90px rgba(59,91,219,.28); transform:rotate(-4deg);}
+.hero-plate-frame .plate{width:100% !important; max-width:100%;}
+.hero-plate-cap{font-size:.75rem; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:var(--muted);}
+html[dir="rtl"] .hero-plate-cap{letter-spacing:0;}
+@media (max-width:900px){.hero-home-grid{grid-template-columns:1fr !important;} .hero-plate-frame{transform:rotate(-2deg);}}
+.hero-home h1{font-size:clamp(2.4rem,5vw,4.4rem) !important; overflow-wrap:anywhere;}
+.hero-plate-frame .plate-site{display:none;}
+.hero-home-grid > div{min-width:0;}
+@media (max-width:480px){.hero-plate-frame{max-width:94%; margin:0 auto;} .hero-home{padding:48px 0 48px;}}
+.cat-card{min-width:0;} .cat-visual{overflow:hidden;}
+.pkg-mini-plate{flex:0 1 130px; min-width:0;}
+@media (max-width:480px){.pkg-mini-row .cat-phone-sm{font-size:.85rem; padding:3px 8px;} .pkg-mini-plate .plate{width:100% !important;}}
