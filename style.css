@@ -970,3 +970,8 @@ html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-
 .listing-card.is-featured, a.listing-card.is-featured{background:linear-gradient(160deg,#2B2410,#15110A) !important; border:2px solid #D4AF37 !important; box-shadow:0 0 0 1px rgba(212,175,55,.35), 0 10px 34px rgba(212,175,55,.22);}
 .listing-card.is-featured:hover{border-color:#F0CE5A !important; box-shadow:0 0 0 1px #F0CE5A, 0 16px 44px rgba(212,175,55,.32);}
 .listing-card.is-featured .pkg-frame{border-color:#D4AF37;}
+
+.logo{display:inline-flex; align-items:center; gap:10px;}
+.logo-mark{display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:9px; background:linear-gradient(135deg,#4C6BE6,#2F4BC0); color:#fff; font-family:'Barlow Condensed',var(--font-display); font-weight:800; font-style:italic; font-size:1.3rem; letter-spacing:.02em; box-shadow:0 6px 16px rgba(59,91,219,.35); flex:none;}
+@media (max-width:480px){.logo-mark{width:30px; height:30px; font-size:1.1rem;}}
+@media (max-width:480px){.logo{gap:6px;} .logo-mark{width:26px; height:26px; font-size:1rem; border-radius:7px;} header .logo{font-size:.92rem;}}
