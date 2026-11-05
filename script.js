@@ -347,8 +347,8 @@
     "upload.successDesc":{en:"Buyers can now see your listing.",ar:"يمكن للمشترين الآن رؤية إعلانك."},
     "upload.viewListing":{en:"View listings",ar:"عرض الإعلانات"},
 
-    "info.contact.body":{en:'<p>We\u2019d love to hear from you — this is placeholder demo contact info:</p><ul><li>Email: support@example.com</li><li>Location: Amman, Jordan</li></ul>',
-                         ar:'<p>يسعدنا تواصلك معنا — هذه معلومات اتصال تجريبية:</p><ul><li>البريد الإلكتروني: support@example.com</li><li>الموقع: عمان، الأردن</li></ul>'},
+    "info.contact.body":{en:'<p>We\u2019d love to hear from you:</p><ul><li>General inquiries: <a href="mailto:info@souqalarqam.com">info@souqalarqam.com</a></li><li>Support: <a href="mailto:support@souqalarqam.com">support@souqalarqam.com</a></li><li>Location: Amman, Jordan</li></ul>',
+                         ar:'<p>يسعدنا تواصلك معنا:</p><ul><li>الاستفسارات العامة: <a href="mailto:info@souqalarqam.com">info@souqalarqam.com</a></li><li>الدعم: <a href="mailto:support@souqalarqam.com">support@souqalarqam.com</a></li><li>الموقع: عمان، الأردن</li></ul>'},
     "info.about.body":{en:'<p>Souq Al Arqam is a demo marketplace for buying and selling license plates and mobile numbers.</p><p>This page is placeholder content built for a local prototype — it is not a real company.</p>',
                        ar:'<p>سوق الأرقام هي منصة تجريبية لبيع وشراء لوحات السيارات وأرقام الموبايل.</p><p>هذه الصفحة محتوى تجريبي لعرض توضيحي محلي — وليست شركة حقيقية.</p>'},
     "info.privacy.body":{en:'<p>Placeholder privacy policy for demo purposes:</p><ul><li>We would only collect the information needed to create listings and accounts.</li><li>We would never sell personal data to third parties.</li><li>You could request deletion of your data at any time.</li></ul>',
