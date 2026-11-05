@@ -861,16 +861,6 @@ footer{background:#070A10; border-top:1px solid var(--line); color:var(--muted);
   header .icon-btn[title="Favorites"]{display:none;}
 }
 
-/* white card frame around plates/numbers */
-.listing-card, .my-item, .pkg-card{background:#FFFFFF; border:1px solid #E3E7EE; color:#10141D; box-shadow:0 10px 30px rgba(0,0,0,.35);}
-.listing-card:hover{border-color:#3B5BDB; box-shadow:0 0 0 1px #3B5BDB,0 18px 44px rgba(0,0,0,.5);}
-.listing-card .price, .listing-card [class*="price"], .listing-card .card-price{color:#2F4BC0;}
-.listing-card .meta, .listing-card .date, .listing-card small, .listing-card .card-meta{color:#5B6578;}
-.listing-card .card-phone, .listing-card .card-phone.card-phone-btn{background:#F3F5F9; border:1px solid #D5DBE7; color:#10141D;}
-.listing-card .fav-btn{background:#fff; color:#2F4BC0; border:1px solid #D5DBE7;}
-.listing-card h3, .listing-card b{color:#10141D;}
-.listing-card .plate-site{color:#8A93A6;}
-
 /* home category cards: plate / phone preview */
 .cat-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px;}
 .cat-card{position:relative; display:flex; flex-direction:column; padding:24px; border-radius:20px; background:linear-gradient(160deg,#151B29,#0E121B); border:1px solid var(--line); border-top:2px solid #3B5BDB; color:var(--text); transition:.2s;}
