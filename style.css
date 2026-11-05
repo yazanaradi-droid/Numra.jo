@@ -1002,3 +1002,7 @@ html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-
 .quickbar a{flex:0 1 auto; border:0 !important; border-radius:0; background:none !important; padding:13px 2px; font-size:.92rem; font-weight:500; color:var(--muted); border-bottom:2px solid transparent !important; white-space:nowrap;}
 .quickbar a:hover{color:#fff;}
 .quickbar a.active{color:#fff; font-weight:700; border-bottom-color:#4C6BE6 !important;}
+
+/* Arabic: text inside the add-form boxes sits on the right */
+html[dir="rtl"] .ar-row input, html[dir="rtl"] .ar-row select, html[dir="rtl"] #pkgPrice{text-align:right !important;}
+html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
