@@ -962,3 +962,4 @@ html[dir="rtl"] .hero-plate-cap{letter-spacing:0;}
 
 .hero-home h1 .hl{display:block; white-space:nowrap;}
 html:not([dir="rtl"]) .hero-home h1{font-size:clamp(2.1rem,4.6vw,4.2rem) !important;}
+html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-height:1.25;}
