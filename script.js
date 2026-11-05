@@ -605,7 +605,7 @@
     });
   })();
 
-  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false) + plateHtml('1', '0000', false) + plateHtml('1', '000', false); document.querySelectorAll('.pkg-mini-plate').forEach(e => { e.innerHTML = plateHtml('1', e.dataset.n, false); }); });
+  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false); document.querySelectorAll('.pkg-mini-plate').forEach(e => { e.innerHTML = plateHtml('1', e.dataset.n, false); }); });
 
   /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
   const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
