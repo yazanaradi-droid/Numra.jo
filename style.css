@@ -989,3 +989,4 @@ html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-
 @media (max-width:480px){.logo-name .logo-en{font-size:.92rem;}}
 .logo-name{align-items:center !important; text-align:center !important;}
 .logo-name{align-items:flex-end !important; text-align:right !important;} .logo-name .logo-ar{direction:rtl;}
+.logo-name{direction:ltr !important; align-items:flex-end !important; text-align:right !important;}
