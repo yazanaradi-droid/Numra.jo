@@ -51,6 +51,13 @@
     "marketplace.title":{en:"What you can find here",ar:"ما الذي ستجده هنا"},
     "marketplace.subtitle":{en:"License plates and mobile numbers — all in one place.",ar:"لوحات السيارات وأرقام الموبايل — كل شيء في مكان واحد."},
 
+    "cat.plates.title":{en:"Plates",ar:"اللوحات"},
+    "cat.plates.desc":{en:"Single digits, repeats and rare codes.",ar:"أرقام مفردة ومتكررة ورموز نادرة."},
+    "cat.numbers.title":{en:"Numbers",ar:"الأرقام"},
+    "cat.numbers.desc":{en:"VIP mobile numbers on 077, 078 and 079.",ar:"أرقام موبايل مميزة 077 و078 و079."},
+    "cat.packages.title":{en:"Packages",ar:"الباقات"},
+    "cat.packages.desc":{en:"Several numbers under one price.",ar:"عدة أرقام بسعر واحد."},
+    "cat.packages.cta":{en:"View packages →",ar:"عرض الباقات ←"},
     "feature.plates.title":{en:"License Plates",ar:"لوحات السيارات"},
     "feature.plates.desc":{en:"Jordanian license plates, all codes and numbers.",ar:"لوحات سيارات أردنية، كل الرموز والأرقام."},
     "feature.plates.count":{en:"90,000+ listings",ar:"+90,000 إعلان"},
@@ -593,6 +600,8 @@
       window.addEventListener('resize', sched); sched();
     });
   })();
+
+  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('12', '34567', false); });
 
   /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
   const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
