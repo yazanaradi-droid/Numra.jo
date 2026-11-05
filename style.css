@@ -916,3 +916,9 @@ label, .field label, .dash-card .field label, .dash-note, .ar-stat, .hint:not(.e
 #catPlate .plate{width:170px; margin:0 !important;}
 #catPkgPlate .plate{margin:0 !important;}
 .cat-visual .cat-phone:not(.cat-phone-sm){font-size:1.2rem; padding:3px 24px;}
+
+.cat-visual-pkg{gap:6px;}
+.pkg-mini-row{display:flex; direction:ltr; align-items:center; justify-content:center; gap:8px; width:100%;}
+.pkg-mini-plate{flex:0 0 130px;}
+.pkg-mini-plate .plate{width:130px !important; margin:0 !important;}
+.pkg-mini-row .cat-phone-sm{font-size:1rem; padding:3px 10px; letter-spacing:.06em;}
