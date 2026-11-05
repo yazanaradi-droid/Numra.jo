@@ -56,8 +56,10 @@
     "cat.numbers.title":{en:"Numbers",ar:"الأرقام"},
     "cat.numbers.desc":{en:"VIP mobile numbers: 079 , 078 , 077",ar:"أرقام موبايل مميزة: \u200E079 , 078 , 077\u200E"},
     "cat.packages.title":{en:"Packages",ar:"الباقات"},
-    "cat.packages.desc":{en:"Several numbers under one price.",ar:"عدة أرقام بسعر واحد."},
+    "cat.packages.desc":{en:"Several plates or numbers under one price.",ar:"عدة لوحات أو أرقام بسعر واحد."},
     "cat.packages.cta":{en:"View packages →",ar:"عرض الباقات ←"},
+    "bundle.tab.plates":{en:"License plate packages",ar:"باقات لوحات السيارات"},
+    "bundle.tab.numbers":{en:"Mobile number packages",ar:"باقات أرقام الهاتف"},
     "nav.bundles":{en:"Packages",ar:"الباقات"},
     "page.bundles.eyebrow":{en:"Packages",ar:"الباقات"},
     "page.bundles.title":{en:"Packages",ar:"الباقات"},
@@ -794,13 +796,19 @@
       '<div class="pkg-price">' + priceText(item) + '</div><div class="pkg-count">' + count + '</div>' + phoneHtml +
       '<div class="meta">' + (item.created ? new Date(item.created).toLocaleDateString('en-GB') : '') + '</div></a>';
   }
+  let bundleType = 'plate';
+  function setBundleType(t){
+    bundleType = t;
+    document.querySelectorAll('#bundleTabs .catalog-tab').forEach(b => b.classList.toggle('active', b.dataset.bt === t));
+    renderListings();
+  }
   function renderListings(){
     const grid = document.getElementById('listingsGrid');
     if(!grid) return; // homepage has no listing grid
     const empty = document.getElementById('listingsEmpty');
 
     const isBundle = PAGE_TYPE === 'bundle';
-    let items = isBundle ? userListings.filter(i => i.pkgId) : userListings.filter(i => i.type === PAGE_TYPE && !i.pkgId);
+    let items = isBundle ? userListings.filter(i => i.pkgId && i.type === bundleType) : userListings.filter(i => i.type === PAGE_TYPE && !i.pkgId);
     const note = document.getElementById('searchNote');
     if(note) note.style.display = 'none';
     const crit = isBundle ? {} : searchCriteria();

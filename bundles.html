@@ -6,7 +6,7 @@
 <title>Mobile Numbers | Souq Al Arqam</title>
 <meta name="description" content="Browse all available Jordanian mobile numbers for sale.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202611051619">
+<link rel="stylesheet" href="style.css?v=202611051620">
 </head>
 <body>
 
@@ -75,6 +75,10 @@
     <div class="breadcrumb"><a href="index.html" onclick="navTo('index.html', event)" data-i18n="nav.home">Home</a> / <span data-i18n="page.bundles.eyebrow">Packages</span></div>
     <h1 data-i18n="page.bundles.title">Packages</h1>
     <p data-i18n="page.bundles.lead">Several plates or numbers sold together under one price.</p>
+    <div class="catalog-tabs" id="bundleTabs" style="margin-top:22px;">
+      <button type="button" class="catalog-tab active" data-bt="plate" onclick="setBundleType('plate')" data-i18n="bundle.tab.plates">License plate packages</button>
+      <button type="button" class="catalog-tab" data-bt="number" onclick="setBundleType('number')" data-i18n="bundle.tab.numbers">Mobile number packages</button>
+    </div>
     <div id="searchNote" class="dash-note" style="display:none;"></div>
   </div>
 </section>
@@ -277,6 +281,6 @@
 
 <script>const PAGE_TYPE = 'bundle';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611051619"></script>
+<script src="script.js?v=202611051620"></script>
 </body>
 </html>
