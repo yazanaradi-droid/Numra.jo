@@ -922,3 +922,8 @@ label, .field label, .dash-card .field label, .dash-note, .ar-stat, .hint:not(.e
 .pkg-mini-plate{flex:0 0 130px;}
 .pkg-mini-plate .plate{width:130px !important; margin:0 !important;}
 .pkg-mini-row .cat-phone-sm{font-size:1rem; padding:3px 10px; letter-spacing:.06em;}
+
+.pkg-txt-row{display:flex; direction:ltr; justify-content:space-between; width:100%; max-width:250px; font-family:'Barlow Condensed','JetBrains Mono',monospace; font-weight:800; font-size:1.35rem; letter-spacing:.06em; color:#fff; padding:6px 0; border-bottom:1px solid var(--line);}
+.pkg-txt-row:last-child{border-bottom:0;}
+.pkg-txt-row{white-space:nowrap; font-size:1.05rem; max-width:100%; padding:6px 4px;}
+.pkg-txt-row span{white-space:nowrap;}
