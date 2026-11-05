@@ -54,7 +54,7 @@
     "cat.plates.title":{en:"Plates",ar:"اللوحات"},
     "cat.plates.desc":{en:"Single digits, repeats and rare codes.",ar:"أرقام مفردة ومتكررة ورموز نادرة."},
     "cat.numbers.title":{en:"Numbers",ar:"الأرقام"},
-    "cat.numbers.desc":{en:"VIP mobile numbers on 077, 078 and 079.",ar:"أرقام موبايل مميزة 077 و078 و079."},
+    "cat.numbers.desc":{en:"VIP mobile numbers: 079 , 078 , 077",ar:"أرقام موبايل مميزة: \u200E079 , 078 , 077\u200E"},
     "cat.packages.title":{en:"Packages",ar:"الباقات"},
     "cat.packages.desc":{en:"Several numbers under one price.",ar:"عدة أرقام بسعر واحد."},
     "cat.packages.cta":{en:"View packages →",ar:"عرض الباقات ←"},
