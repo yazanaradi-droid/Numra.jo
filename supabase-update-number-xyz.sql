@@ -43,7 +43,7 @@ begin
   if auth.uid() is null then raise exception 'login required'; end if;
   if exists (select 1 from public.xp_profiles where id = auth.uid() and banned) then raise exception 'banned'; end if;
   if p_type not in ('plate','number') then raise exception 'bad type'; end if;
-  if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) < 2 or jsonb_array_length(p_items) > 30 then raise exception 'bad items'; end if;
+  if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) < 2 or jsonb_array_length(p_items) > 6 then raise exception 'bad items'; end if;
   if p_price is not null and (p_price < 0 or p_price > 100000000) then raise exception 'bad price'; end if;
   if p_price = 0 then p_price := null; end if;
   lim := coalesce(nullif(public.xp_setting('max_ads_per_day'), '')::int, 20);

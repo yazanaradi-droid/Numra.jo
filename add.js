@@ -4,14 +4,14 @@
     en: {
       plate1:'Add a new plate', plateN:'Add new plates (multiple)', num1:'Add a new number', numN:'Add new numbers (multiple)',
       note:'Note: you can use the following letters: X, Y and Z to hide some digits.', code:'Code', number:'Plate number', mobile:'Mobile number', prefix:'Code', mobile7:'Number (7 digits)', price:'Price (JOD, optional)', pkgPrice:'Package price (JOD, optional)', pkgHint:'All items you add here are shown together as one package with one price. Leave empty for "Contact for price".',
-      addRow:'+ Add 10 more rows', submit:'Advertise now', login:'Please log in to add listings.', loginBtn:'Log in',
+      addRow:'+ Add a new row (max 6)', submit:'Advertise now', login:'Please log in to add listings.', loginBtn:'Log in',
       bad:'Check this row', ok:'Published ✓', upd:'Updated ✓', dup:'Already listed by another account', rate:'Posting limit reached, try later', banned:'Account suspended', err:'Could not save',
       done:'Done', toDash:'Go to my listings', toSite:'View on the site', more:'Add more', empty:'Fill at least one row.', remove:'Remove', loading:'Loading…', pricePh:'Contact for price'
     },
     ar: {
       plate1:'إضافة لوحة جديدة', plateN:'إضافة لوحات جديدة (متعددة)', num1:'إضافة رقم جديد', numN:'إضافة أرقام جديدة (متعددة)',
       note:'ملاحظة: يمكن استخدام الأحرف التالية: X، Y و Z لإخفاء بعض الأرقام.', code:'الرمز', number:'رقم اللوحة', mobile:'رقم الموبايل', prefix:'الكود', mobile7:'الرقم (7 أرقام)', price:'السعر (دينار، اختياري)', pkgPrice:'سعر الباقة (دينار، اختياري)', pkgHint:'كل ما تضيفه هنا يظهر معاً كباقة واحدة بسعر واحد. اتركه فارغاً لتظهر عبارة «تواصل للسعر».',
-      addRow:'+ إضافة 10 صفوف أخرى', submit:'أعلن الآن', login:'سجّل الدخول لإضافة الإعلانات.', loginBtn:'تسجيل الدخول',
+      addRow:'+ إضافة خانة جديدة (الحد الأقصى 6)', submit:'أعلن الآن', login:'سجّل الدخول لإضافة الإعلانات.', loginBtn:'تسجيل الدخول',
       bad:'تحقق من هذا الصف', ok:'تم النشر ✓', upd:'تم التحديث ✓', dup:'معروض مسبقاً من حساب آخر', rate:'وصلت إلى حد النشر، حاول لاحقاً', banned:'الحساب موقوف', err:'تعذّر الحفظ',
       done:'تم', toDash:'الذهاب إلى إعلاناتي', toSite:'عرض في الموقع', more:'إضافة المزيد', empty:'املأ صفاً واحداً على الأقل.', remove:'حذف', loading:'جارٍ التحميل…', pricePh:'تواصل للسعر'
     }
@@ -20,7 +20,7 @@
   const q = new URLSearchParams(location.search);
   const type = q.get('type') === 'number' ? 'number' : 'plate';
   const multi = q.get('mode') === 'multi';
-  const MAXROWS = 100, START_ROWS = 20;
+  const MAXROWS = 6, START_ROWS = 4;
   let rows = 0;
   const card = () => document.getElementById('addCard');
   const AR = '٠١٢٣٤٥٦٧٨٩', FA = '۰۱۲۳۴۵۶۷۸۹';
@@ -74,11 +74,13 @@
     const n = Math.max(multi ? START_ROWS : 1, keep.length);
     for(let i = 0; i < n; i++) addRow(keep[i]);
   }
+  function syncAddBtn(){ const b = document.getElementById('addRowBtn'), bx = document.getElementById('addRows'); if(b && bx) b.style.display = bx.children.length >= MAXROWS ? 'none' : ''; }
   function addRow(v){
     const box = document.getElementById('addRows');
     if(box.children.length >= MAXROWS) return;
     const d = document.createElement('div'); d.innerHTML = rowHtml(rows++);
     const el = d.firstChild; box.appendChild(el);
+    syncAddBtn();
     if(v){ for(const k in v){ const i = el.querySelector('.' + k); if(i) i.value = v[k]; } }
   }
   const pkgPriceVal = () => { const e = document.getElementById('pkgPrice'); return e ? e.value : ''; };
@@ -100,8 +102,8 @@
   });
   document.addEventListener('click', function(e){
     const t = e.target.closest && e.target.closest('#addRowBtn, .ar-rm'); if(!t) return;
-    if(t.id === 'addRowBtn'){ for(let i = 0; i < 10; i++) addRow(); }
-    else { const r = t.closest('.ar-row'); if(document.querySelectorAll('.ar-row').length > 1) r.remove(); else r.querySelectorAll('input').forEach(i => i.value = ''); }
+    if(t.id === 'addRowBtn'){ addRow(); }
+    else { const r = t.closest('.ar-row'); if(document.querySelectorAll('.ar-row').length > 1){ r.remove(); syncAddBtn(); } else r.querySelectorAll('input').forEach(i => i.value = ''); }
   });
 
   function parse(r){
