@@ -58,6 +58,10 @@
     "cat.packages.title":{en:"Packages",ar:"الباقات"},
     "cat.packages.desc":{en:"Several numbers under one price.",ar:"عدة أرقام بسعر واحد."},
     "cat.packages.cta":{en:"View packages →",ar:"عرض الباقات ←"},
+    "nav.bundles":{en:"Packages",ar:"الباقات"},
+    "page.bundles.eyebrow":{en:"Packages",ar:"الباقات"},
+    "page.bundles.title":{en:"Packages",ar:"الباقات"},
+    "page.bundles.lead":{en:"Several plates or numbers sold together under one price.",ar:"عدة لوحات أو أرقام تُباع معًا بسعر واحد."},
     "feature.plates.title":{en:"License Plates",ar:"لوحات السيارات"},
     "feature.plates.desc":{en:"Jordanian license plates, all codes and numbers.",ar:"لوحات سيارات أردنية، كل الرموز والأرقام."},
     "feature.plates.count":{en:"90,000+ listings",ar:"+90,000 إعلان"},
@@ -601,7 +605,7 @@
     });
   })();
 
-  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false); });
+  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false); const pk = document.getElementById('catPkgPlate'); if(pk) pk.innerHTML = plateHtml('5', '55555', false); });
 
   /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
   const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
@@ -795,10 +799,11 @@
     if(!grid) return; // homepage has no listing grid
     const empty = document.getElementById('listingsEmpty');
 
-    let items = userListings.filter(i => i.type === PAGE_TYPE);
+    const isBundle = PAGE_TYPE === 'bundle';
+    let items = isBundle ? userListings.filter(i => i.pkgId) : userListings.filter(i => i.type === PAGE_TYPE && !i.pkgId);
     const note = document.getElementById('searchNote');
     if(note) note.style.display = 'none';
-    const crit = searchCriteria();
+    const crit = isBundle ? {} : searchCriteria();
     const active = Object.keys(crit).length > 0;
     if(active){
       const exact = items.filter(i => creditsFor(i, crit).every(x => x >= 1));
@@ -819,7 +824,7 @@
     empty.style.display = 'none';
 
     if(listingsLoadError && note){ note.textContent = translations['listings.loadErr'][currentLang]; note.style.display = 'block'; }
-    grid.innerHTML = sortFeatured(groupPackages(items, userListings.filter(i => i.type === PAGE_TYPE))).map(safeCard).join('');   // featured ads always come before normal ones
+    grid.innerHTML = sortFeatured(groupPackages(items, isBundle ? userListings : userListings.filter(i => i.type === PAGE_TYPE))).map(safeCard).join('');   // featured ads always come before normal ones
   }
 
 
