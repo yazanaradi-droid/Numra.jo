@@ -6,7 +6,7 @@
 <title>My account | Souq Al Arqam</title>
 <meta name="description" content="Manage your Souq Al Arqam account, listings and package.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202611051620">
+<link rel="stylesheet" href="style.css?v=202611051623">
 </head>
 <body>
 
@@ -22,17 +22,21 @@
           <div class="dropdown">
             <a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="nav.plates.all">See Plates (All)</a>
             <a href="#" onclick="goAdd('plate','single',event)" data-i18n="nav.uploadOnCar">Add a new plate</a>
-            <a href="#" onclick="goAdd('plate','multi',event)" data-i18n="nav.uploadMultiPlates">Add new plates (multiple)</a>
           </div>
         </li>
         <li><a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers">Mobile Numbers ▾</a>
           <div class="dropdown">
             <a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers.all">See Mobile Numbers (All)</a>
-            <a href="#" onclick="goAdd('number','multi',event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
             <a href="#" onclick="goAdd('number','single',event)" data-i18n="nav.uploadNumberSingle">Add a new number</a>
           </div>
         </li>
-        <li><a href="bundles.html" onclick="navTo('bundles.html', event)" data-i18n="nav.bundles">Packages</a></li>
+        <li><a href="bundles.html" onclick="navTo('bundles.html', event)" data-i18n="nav.bundles">Packages ▾</a>
+          <div class="dropdown">
+            <a href="bundles.html" onclick="navTo('bundles.html', event)" data-i18n="nav.bundles.all">See Packages (All)</a>
+            <a href="#" onclick="goAdd('plate','multi',event)" data-i18n="nav.uploadMultiPlates">Add new plates (multiple)</a>
+            <a href="#" onclick="goAdd('number','multi',event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
+          </div>
+        </li>
         <li><a href="#" data-i18n="nav.more">More ▾</a>
           <div class="dropdown">
             <a href="#" onclick="openInfo('contact', event)" data-i18n="nav.contact">Contact Us</a>
@@ -288,6 +292,6 @@
 
 <script>const PAGE_TYPE = 'dashboard';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611051620"></script>
+<script src="script.js?v=202611051623"></script>
 </body>
 </html>
