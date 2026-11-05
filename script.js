@@ -601,7 +601,7 @@
     });
   })();
 
-  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('12', '34567', false); });
+  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false); });
 
   /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
   const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
