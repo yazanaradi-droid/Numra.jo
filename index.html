@@ -6,7 +6,7 @@
 <title>Souq Al Arqam | License Plates & Mobile Numbers Marketplace</title>
 <meta name="description" content="Buy and sell license plates and VIP mobile numbers in Jordan.">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-<link rel="stylesheet" href="style.css?v=202611051608">
+<link rel="stylesheet" href="style.css?v=202611051611">
 </head>
 <body>
 
@@ -86,18 +86,21 @@
   <div class="wrap">
     <div class="cat-grid">
       <a class="cat-card" href="plates.html" onclick="navTo('plates.html', event)">
+        <div class="cat-visual cat-visual-plates"><div id="catPlate"></div></div>
         <span class="cat-no">01</span>
         <h3 data-i18n="cat.plates.title">Plates</h3>
         <p data-i18n="cat.plates.desc">Single digits, repeats and rare codes.</p>
         <span class="cta" data-i18n="feature.plates.cta">Browse plates →</span>
       </a>
       <a class="cat-card" href="numbers.html" onclick="navTo('numbers.html', event)">
+        <div class="cat-visual"><div class="cat-phone">079</div><div class="cat-phone">078</div><div class="cat-phone">077</div></div>
         <span class="cat-no">02</span>
         <h3 data-i18n="cat.numbers.title">Numbers</h3>
         <p data-i18n="cat.numbers.desc">VIP mobile numbers on 077, 078 and 079.</p>
         <span class="cta" data-i18n="feature.numbers.cta">Browse numbers →</span>
       </a>
       <a class="cat-card" href="bundles.html" onclick="navTo('bundles.html', event)">
+        <div class="cat-visual"><div id="catPkgPlate"></div><div class="cat-phone cat-phone-sm">079 777 7777</div></div>
         <span class="cat-no">03</span>
         <h3 data-i18n="cat.packages.title">Packages</h3>
         <p data-i18n="cat.packages.desc">Several numbers under one price.</p>
@@ -332,6 +335,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611051608"></script>
+<script src="script.js?v=202611051611"></script>
 </body>
 </html>

@@ -909,3 +909,10 @@ label, .field label, .dash-card .field label, .dash-note, .ar-stat, .hint:not(.e
 
 #catPkgPlate .plate{width:190px;}
 .cat-card{padding-top:44px;}
+
+.cat-card{padding-top:24px;}
+.cat-visual{height:230px; min-height:230px; gap:8px;}
+#catPlate{display:flex; flex-direction:column; gap:6px; align-items:center;}
+#catPlate .plate{width:170px; margin:0 !important;}
+#catPkgPlate .plate{margin:0 !important;}
+.cat-visual .cat-phone:not(.cat-phone-sm){font-size:1.2rem; padding:3px 24px;}

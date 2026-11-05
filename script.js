@@ -605,7 +605,7 @@
     });
   })();
 
-  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false); const pk = document.getElementById('catPkgPlate'); if(pk) pk.innerHTML = plateHtml('5', '55555', false); });
+  document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('catPlate'); if(el) el.innerHTML = plateHtml('1', '00000', false) + plateHtml('1', '0000', false) + plateHtml('1', '000', false); const pk = document.getElementById('catPkgPlate'); if(pk) pk.innerHTML = plateHtml('5', '55555', false); });
 
   /* ============ search panel (nothing is mandatory; exact match first, otherwise the closest results) ============ */
   const normDigits = v => String(v||'').replace(/[٠-٩۰-۹]/g, d=>{ const i='٠١٢٣٤٥٦٧٨٩'.indexOf(d); return i>-1 ? i : '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
