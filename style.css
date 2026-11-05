@@ -929,3 +929,10 @@ label, .field label, .dash-card .field label, .dash-note, .ar-stat, .hint:not(.e
 .pkg-txt-row span{white-space:nowrap;}
 
 #catPlate .plate{width:240px !important;}
+
+/* package cells: price centered under each plate / number; no site mark inside packages */
+.pkg-cell .plate-site, .pkg-card .plate-site{display:none !important;}
+.pkg-cell{display:flex; flex-direction:column; align-items:center; gap:4px;}
+.pkg-cellprice{text-align:center; font-size:.85rem; font-weight:600; color:var(--accent-text); width:100%;}
+.pkg-numcell{flex-direction:column; justify-content:center;}
+.pkg-numtxt{font-family:var(--font-mono); font-weight:700; font-size:1.05rem; letter-spacing:.08em; word-spacing:.2em;}

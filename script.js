@@ -538,7 +538,7 @@
   let userListings = [...seedListings];
 
   function rowToItem(r){
-    return {sold:!!r.sold, id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:(r.pkg_id ? (r.pkg_price==null ? '' : String(r.pkg_price)) : (r.price==null ? '' : String(r.price))), pkgId:r.pkg_id||null, created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
+    return {sold:!!r.sold, id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:(r.pkg_id ? (r.pkg_price==null ? '' : String(r.pkg_price)) : (r.price==null ? '' : String(r.price))), ownPrice:(r.price==null ? '' : String(r.price)), pkgId:r.pkg_id||null, created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
   }
   function itemKey(i){ return i.type === 'plate' ? (i.code + '-' + i.number) : String(i.value||'').replace(/\D/g,''); }
   function dedupeListings(list){ const seen = new Set(); return list.filter(i => { const k = i.type + ':' + itemKey(i); if(seen.has(k)) return false; seen.add(k); return true; }); }
@@ -785,7 +785,9 @@
   function packageCardHtml(item){
     const T = k => translations[k][currentLang];
     const mem = item.members, shown = mem.slice(0, 10), extra = mem.length - shown.length;
-    const cell = m => m.type === 'plate' ? '<div class="pkg-cell">' + plateHtml(m.code, m.number, false) + '</div>' : '<div class="pkg-cell pkg-numcell">' + escapeHtml(fmtMobile(m.value)) + '</div>';
+    const hasTotal = !!(item.price !== '' && item.price != null && !isNaN(parseFloat(item.price)));
+    const cp = m => { const own = (m.ownPrice !== '' && m.ownPrice != null && !isNaN(parseFloat(m.ownPrice))); if(!own && hasTotal) return ''; return '<div class="pkg-cellprice">' + priceText({price: own ? m.ownPrice : ''}) + '</div>'; };
+    const cell = m => m.type === 'plate' ? '<div class="pkg-cell">' + plateHtml(m.code, m.number, false) + cp(m) + '</div>' : '<div class="pkg-cell pkg-numcell"><span class="pkg-numtxt">' + escapeHtml(fmtMobile(m.value)) + '</span>' + cp(m) + '</div>';
     const count = T(item.type === 'plate' ? 'bundle.plates' : 'bundle.numbers').replace('{n}', mem.length);
     const phoneHtml = !item.phoneMasked ? '' : '<span class="card-phone' + (item.featured ? ' card-phone-btn' : '') + '" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span>' + (item.featured ? '<b>' + T('feat.callLabel') + '</b> ' : '') + '<span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>';
     return '<a class="listing-card pkg-card' + (item.featured ? ' is-featured' : '') + (item.sold ? ' is-sold' : '') + '" href="' + listingHref(item) + '">' +
@@ -794,7 +796,7 @@
       '<div class="pkg-frame"><div class="pkg-grid">' + shown.map(cell).join('') + '</div>' +
       (extra > 0 ? '<div class="pkg-more">' + T('bundle.more').replace('{n}', extra) + '</div>' : '') +
       (item.sold ? '<span class="sold-corner"><span class="sold-ribbon">' + T('sold.label') + '</span></span>' : '') + '</div>' +
-      '<div class="pkg-price">' + priceText(item) + '</div><div class="pkg-count">' + count + '</div>' + phoneHtml +
+      (hasTotal ? '<div class="pkg-price">' + priceText(item) + '</div>' : '') + '<div class="pkg-count">' + count + '</div>' + phoneHtml +
       '<div class="meta">' + (item.created ? new Date(item.created).toLocaleDateString('en-GB') : '') + '</div></a>';
   }
   let bundleType = 'plate';

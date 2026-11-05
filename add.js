@@ -34,19 +34,19 @@
   }
 
   function rowHtml(i){
-    const price = multi ? '' : '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '">';
+    const price = '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '">';
     const rm = multi ? '<button type="button" class="btn btn-ghost ar-rm" title="' + T('remove') + '" style="padding:8px 12px">✕</button>' : '';
     const stat = '<div class="ar-stat" style="font-size:.82rem;grid-column:1/-1"></div>';
     if(type === 'plate'){
-      return '<div class="ar-row" data-i="' + i + '" style="direction:ltr;text-align:left;display:grid;grid-template-columns:' + (multi ? '80px 1fr auto' : '80px 1fr 1fr auto') + ';gap:8px;align-items:end;margin-bottom:12px">' +
+      return '<div class="ar-row" data-i="' + i + '" style="direction:ltr;text-align:left;display:grid;grid-template-columns:' + (multi ? '80px 1fr 1fr auto' : '80px 1fr 1fr auto') + ';gap:8px;align-items:end;margin-bottom:12px">' +
         '<div class="field" style="margin:0"><label>' + T('code') + '</label><input class="ar-code" maxlength="2" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
         '<div class="field" style="margin:0"><label>' + T('number') + '</label><input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
-        (multi ? '' : '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>') + '<div>' + rm + '</div>' + stat + '</div>';
+        '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>' + '<div>' + rm + '</div>' + stat + '</div>';
     }
     return '<div class="ar-row" data-i="' + i + '" style="direction:ltr;text-align:left;display:grid;grid-template-columns:' + (multi ? '110px 1fr auto' : '110px 1fr 1fr auto') + ';gap:10px;align-items:end;margin-bottom:12px">' +
       '<div class="field" style="margin:0"><label>' + T('prefix') + '</label><select class="ar-pre" dir="ltr" style="' + IN + '"><option value="079">079</option><option value="078">078</option><option value="077">077</option></select></div>' +
       '<div class="field" style="margin:0"><label>' + T('mobile7') + '</label><input class="ar-mob" inputmode="numeric" maxlength="8" autocomplete="off" dir="ltr" placeholder="123 4567" style="' + IN + '"></div>' +
-      (multi ? '' : '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>') + '<div>' + rm + '</div>' + stat + '</div>';
+      '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>' + '<div>' + rm + '</div>' + stat + '</div>';
   }
 
   function render(){
@@ -127,10 +127,10 @@
       const price = pv === '' || +pv === 0 ? null : Number(pv);
       let res;
       if(todo.length >= 2){
-        const list = todo.map(x => type === 'plate' ? {code:x.d.p_code, number:x.d.p_number} : {value:x.d.p_value});
+        const list = todo.map(x => type === 'plate' ? {code:x.d.p_code, number:x.d.p_number, price:x.d.p_price} : {value:x.d.p_value, price:x.d.p_price});
         res = await sb.rpc('xp_publish_package', {p_type:type, p_items:list, p_price:price});
       } else {
-        res = await sb.rpc('xp_publish_listing', Object.assign({p_plan:null, p_promo:null}, todo[0].d, {p_price:price}));
+        res = await sb.rpc('xp_publish_listing', Object.assign({p_plan:null, p_promo:null}, todo[0].d, {p_price:(todo[0].d.p_price != null ? todo[0].d.p_price : price)}));
       }
       btn.disabled = false;
       if(res.error){
