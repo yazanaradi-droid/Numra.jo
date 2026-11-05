@@ -56,7 +56,7 @@
       const num = '<input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" placeholder="' + escapeHtml(T('number')) + '" style="' + IN + '">';
       cells = isAr() ? [num, code, price] : [code, num, price];
     } else {
-      const pre = '<select class="ar-pre" dir="ltr" style="' + IN + '"><option value="079">079</option><option value="078">078</option><option value="077">077</option></select>';
+      const pre = '<select class="ar-pre" required dir="ltr" style="' + IN + '"><option value="" selected disabled>' + escapeHtml(T('prefix')) + '</option><option value="079">079</option><option value="078">078</option><option value="077">077</option></select>';
       const mob = '<input class="ar-mob" inputmode="text" maxlength="8" autocomplete="off" dir="ltr" placeholder="123 4567" style="' + IN + '">';
       cells = isAr() ? [mob, pre, price] : [pre, mob, price];
     }
@@ -118,7 +118,7 @@
       return {p_type:'plate', p_code:c, p_number:n, p_value:null, p_price:p};
     }
     const rest = r.querySelector('.ar-mob').value.toUpperCase().replace(/[^0-9XYZ]/g, ''), m = r.querySelector('.ar-pre').value + rest;
-    if(!rest && price === '') return {empty:true};
+    if(!rest && !r.querySelector('.ar-pre').value && price === '') return {empty:true};
     if(!/^07[789][0-9XYZ]{7}$/.test(m)) return null;
     return {p_type:'number', p_code:null, p_number:null, p_value:m, p_price:p};
   }

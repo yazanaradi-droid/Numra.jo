@@ -1006,3 +1006,4 @@ html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-
 /* Arabic: text inside the add-form boxes sits on the right */
 html[dir="rtl"] .ar-row input, html[dir="rtl"] .ar-row select, html[dir="rtl"] #pkgPrice{text-align:right !important;}
 html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
+.ar-pre:invalid{color:#8D97AB !important;}
