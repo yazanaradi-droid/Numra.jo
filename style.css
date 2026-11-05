@@ -959,3 +959,6 @@ html[dir="rtl"] .hero-plate-cap{letter-spacing:0;}
 .cat-card{min-width:0;} .cat-visual{overflow:hidden;}
 .pkg-mini-plate{flex:0 1 130px; min-width:0;}
 @media (max-width:480px){.pkg-mini-row .cat-phone-sm{font-size:.85rem; padding:3px 8px;} .pkg-mini-plate .plate{width:100% !important;}}
+
+.hero-home h1 .hl{display:block; white-space:nowrap;}
+html:not([dir="rtl"]) .hero-home h1{font-size:clamp(2.1rem,4.6vw,4.2rem) !important;}

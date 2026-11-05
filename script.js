@@ -3,7 +3,7 @@
   const translations = {
     "nav.brand":{en:"Souq Al Arqam",ar:"Souq Al Arqam"},
     "hero.eyebrowHome":{en:"Jordan's number marketplace",ar:"السوق الأول في الأردن للوحات والأرقام المميزة"},
-    "hero.titleHome":{en:'Your number.<br><span class="accent">Your signature</span><br>on the road.',ar:'نمرتك<br><span class="accent">توقيعك</span> على الطريق'},
+    "hero.titleHome":{en:'<span class="hl">Your number.</span><span class="hl accent">Your signature</span><span class="hl">on the road.</span>',ar:'نمرتك<br><span class="accent">توقيعك</span> على الطريق'},
     "hero.leadHome":{en:"Buy and sell Jordanian license plates and VIP mobile numbers from Zain, Orange and Umniah — safely, negotiating directly with the seller.",ar:"اشترِ وبِع لوحات السيارات الأردنية وأرقام الهواتف المميزة من زين وأورنج وأمنية، بأمان وتفاوض مباشر مع البائع."},
     "hero.browse":{en:"Browse plates",ar:"تصفح اللوحات"},
     "hero.listYours":{en:"List yours",ar:"أضف إعلانك"},
