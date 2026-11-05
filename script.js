@@ -544,7 +544,7 @@
   function rowToItem(r){
     return {sold:!!r.sold, id:r.id, type:r.type, code:r.code, number:r.number, value:r.value, price:(r.pkg_id ? (r.pkg_price==null ? '' : String(r.pkg_price)) : (r.price==null ? '' : String(r.price))), ownPrice:(r.price==null ? '' : String(r.price)), pkgId:r.pkg_id||null, created:r.created_at, phoneMasked:r.phone_masked || null, featured:!!r.featured, featuredPlan:r.featured_plan||null, featuredStatus:r.featured_status||null};
   }
-  function itemKey(i){ return i.type === 'plate' ? (i.code + '-' + i.number) : String(i.value||'').replace(/\D/g,''); }
+  function itemKey(i){ return i.type === 'plate' ? (i.code + '-' + i.number) : String(i.value||'').toUpperCase().replace(/[^0-9XYZ]/g,''); }
   function dedupeListings(list){ const seen = new Set(); return list.filter(i => { const k = i.type + ':' + itemKey(i); if(seen.has(k)) return false; seen.add(k); return true; }); }
   function sortFeatured(list){   // featured first (earliest listed first), then the rest in their existing order
     const f = list.filter(i=>i.featured).sort((a,b)=> new Date(a.created||0) - new Date(b.created||0));
@@ -1182,7 +1182,7 @@
     const p = String(phone||'').replace(/\s+/g,'');
     return p.length > 3 ? p.slice(0, p.length-3) + 'xxx' : p;
   }
-  function fmtMobile(v){ const d = String(v||'').replace(/\D/g,''); return /^07\d{8}$/.test(d) ? d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6) : String(v||''); }
+  function fmtMobile(v){ const d = String(v||'').toUpperCase().replace(/[^0-9XYZ]/g,''); return /^07[0-9XYZ]{8}$/.test(d) ? d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6) : String(v||''); }
   function itemLabel(item){ return item.type === 'plate' ? item.code + ' - ' + item.number : fmtMobile(item.value); }
 
   let detailFeat = null;
