@@ -990,3 +990,9 @@ html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-
 .logo-name{align-items:center !important; text-align:center !important;}
 .logo-name{align-items:flex-end !important; text-align:right !important;} .logo-name .logo-ar{direction:rtl;}
 .logo-name{direction:ltr !important; align-items:flex-end !important; text-align:right !important;}
+
+/* quick links bar under the header (Home / Plates / Numbers) */
+.quickbar{display:flex; gap:8px; padding:10px 16px; background:rgba(10,13,20,.94); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:40;}
+.quickbar a{flex:1; text-align:center; padding:10px 8px; border-radius:999px; border:1.5px solid #2F4390; color:#fff; font-weight:700; font-size:.95rem; text-decoration:none;}
+.quickbar a.active{background:linear-gradient(135deg,#4C6BE6,#2F4BC0); border-color:#4C6BE6;}
+@media (min-width:821px){.quickbar{display:none;}}

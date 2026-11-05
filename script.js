@@ -20,6 +20,7 @@
     "filter.placeholder.number":{en:"Filter by number...",ar:"تصفية بالرقم..."},
     "listings.emptyFiltered":{en:"No listings match your search.",ar:"لا توجد إعلانات مطابقة لبحثك."},
     "nav.home":{en:"Home",ar:"الرئيسية"},
+    "qb.home":{en:"Home",ar:"الرئيسية"}, "qb.plates":{en:"Plates",ar:"اللوحات"}, "qb.numbers":{en:"Numbers",ar:"الأرقام"},
     "nav.plates":{en:"License Plates ▾",ar:"لوحات السيارات ▾"},
     "nav.plates.all":{en:"See Plates (All)",ar:"عرض كل اللوحات"},
     "nav.numbers":{en:"Mobile Numbers ▾",ar:"أرقام الموبايل ▾"},
@@ -1676,3 +1677,8 @@
     if(document.getElementById('listingDetail')) initListingPage();
     else loadRemoteListings().then(()=>{ renderListings(); renderHomeListings(); });
   });
+
+document.addEventListener('DOMContentLoaded', function(){
+  var p = (location.pathname.split('/').pop() || 'index.html'); if(p === '') p = 'index.html';
+  document.querySelectorAll('.quickbar a').forEach(function(a){ if(a.getAttribute('data-qb') === p) a.classList.add('active'); });
+});
