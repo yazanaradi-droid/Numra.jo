@@ -70,9 +70,29 @@
     if(multi) h += '<button type="button" class="btn btn-ghost" id="addRowBtn" style="margin-bottom:16px">' + T('addRow') + '</button>' +
       '<div class="field" style="max-width:320px;margin-bottom:16px"><label>' + T('pkgPrice') + '</label><input id="pkgPrice" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '"><div class="hint" style="margin-top:6px">' + T('pkgHint') + '</div></div>';
     h += '<button type="submit" class="btn btn-gold" id="addSubmit">' + T('submit') + '</button></form><div id="addDone"></div>';
-    card().innerHTML = h;
+    card().innerHTML = '<div class="add-layout"><div class="add-main">' + h + '</div><aside class="add-preview" aria-label="Preview"><div class="add-prev-box" id="addPrev"></div></aside></div>';
     const n = Math.max(multi ? START_ROWS : 1, keep.length);
     for(let i = 0; i < n; i++) addRow(keep[i]);
+    activeRow = document.querySelector('.ar-row'); updatePreview();
+  }
+  let activeRow = null;
+  function updatePreview(){
+    const box = document.getElementById('addPrev'); if(!box) return;
+    const r = (activeRow && document.body.contains(activeRow)) ? activeRow : document.querySelector('.ar-row'); if(!r) return;
+    const val = c => { const e = r.querySelector('.' + c); return e ? e.value : ''; };
+    const pr = val('ar-price');
+    const priceTxt = pr ? Number(pr).toLocaleString('en-US') + ' ' + (isAr() ? 'دينار' : 'JOD') : (isAr() ? 'تواصل للسعر' : 'Contact for price');
+    let body;
+    if(type === 'plate'){
+      const c = val('ar-code'), n = val('ar-num');
+      body = '<div class="' + (c || n ? '' : 'prev-empty') + '">' + plateHtml(c || '1', n || '00000', true) + '</div>';
+    } else {
+      const pre = val('ar-pre'), m = val('ar-mob').replace(/\s/g, '');
+      const txt = (pre || '07X') + ' ' + (m ? (m.slice(0,3) + ' ' + m.slice(3)).trim() : '000 0000');
+      body = '<div class="prev-phone ' + (pre || m ? '' : 'prev-empty') + '" dir="ltr">' + escapeHtml(txt) + '</div>';
+    }
+    box.innerHTML = '<div class="prev-label">' + (isAr() ? 'معاينة مباشرة' : 'Live preview') + '</div>' + body + '<div class="prev-price">' + escapeHtml(priceTxt) + '</div>';
+    if(typeof fitPlates === 'function') fitPlates();
   }
   function syncAddBtn(){ const b = document.getElementById('addRowBtn'), bx = document.getElementById('addRows'); if(b && bx) b.style.display = bx.children.length >= MAXROWS ? 'none' : ''; }
   function addRow(v){
@@ -100,6 +120,9 @@
       t.value = d.length > 3 ? d.slice(0,3) + ' ' + d.slice(3) : d;
     } else if(t.classList.contains('ar-price') || t.id === 'pkgPrice') t.value = latin(t.value).replace(/[,٬،\s]/g, '').replace(/٫/g, '.').replace(/[^0-9.]/g, '');
   });
+  document.addEventListener('focusin', function(e){ const r = e.target.closest && e.target.closest('.ar-row'); if(r){ activeRow = r; updatePreview(); } });
+  document.addEventListener('input', function(e){ if(e.target.closest && e.target.closest('.ar-row')){ activeRow = e.target.closest('.ar-row'); setTimeout(updatePreview, 0); } });
+  document.addEventListener('change', function(e){ if(e.target.closest && e.target.closest('.ar-row')) updatePreview(); });
   document.addEventListener('click', function(e){
     const t = e.target.closest && e.target.closest('#addRowBtn, .ar-rm'); if(!t) return;
     if(t.id === 'addRowBtn'){ addRow(); }

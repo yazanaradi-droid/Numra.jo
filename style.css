@@ -1007,3 +1007,15 @@ html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-
 html[dir="rtl"] .ar-row input, html[dir="rtl"] .ar-row select, html[dir="rtl"] #pkgPrice{text-align:right !important;}
 html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 .ar-pre:invalid{color:#8D97AB !important;}
+
+/* add page: live preview beside the form */
+.add-layout{display:flex; gap:28px; align-items:flex-start;}
+.add-main{flex:1 1 auto; min-width:0;}
+.add-preview{flex:0 0 340px; position:sticky; top:90px; align-self:flex-start;}
+.add-prev-box{border:1.5px dashed #2F4390; border-radius:16px; padding:16px; background:rgba(17,26,54,.45); text-align:center;}
+.prev-label{font-size:.8rem; font-weight:700; color:var(--accent-text); margin-bottom:12px;}
+.add-prev-box .plate{max-width:100%; margin:0 auto;}
+.prev-empty{opacity:.4;}
+.prev-phone{font-family:var(--font-display); font-weight:800; font-size:2.1rem; letter-spacing:.04em; color:#fff; padding:22px 8px; border-radius:12px; background:#0A0D14; border:1px solid #222838;}
+.prev-price{margin-top:12px; font-weight:800; font-size:1.15rem; color:#FF4D5E;}
+@media (max-width:900px){ .add-layout{flex-direction:column-reverse;} .add-preview{flex:none; width:100%; position:static;} }
