@@ -963,3 +963,10 @@ html[dir="rtl"] .hero-plate-cap{letter-spacing:0;}
 .hero-home h1 .hl{display:block; white-space:nowrap;}
 html:not([dir="rtl"]) .hero-home h1{font-size:clamp(2.1rem,4.6vw,4.2rem) !important;}
 html[dir="rtl"] .hero-home h1{font-size:clamp(2.4rem,5vw,4rem) !important; line-height:1.25;}
+
+/* prices in red */
+.listing-card .price, .listing-card.is-featured .price, .pkg-price, .pkg-cellprice, .detail-price, .price{color:#FF4D5E !important;}
+/* featured ads: gold square */
+.listing-card.is-featured, a.listing-card.is-featured{background:linear-gradient(160deg,#2B2410,#15110A) !important; border:2px solid #D4AF37 !important; box-shadow:0 0 0 1px rgba(212,175,55,.35), 0 10px 34px rgba(212,175,55,.22);}
+.listing-card.is-featured:hover{border-color:#F0CE5A !important; box-shadow:0 0 0 1px #F0CE5A, 0 16px 44px rgba(212,175,55,.32);}
+.listing-card.is-featured .pkg-frame{border-color:#D4AF37;}
