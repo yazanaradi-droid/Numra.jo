@@ -33,26 +33,39 @@
     document.getElementById('addTitle').textContent = t; document.getElementById('addCrumb').textContent = t; document.title = t + ' | Souq Al Arqam';
   }
 
+  const isAr = () => currentLang === 'ar';
+  function cols(){
+    if(type === 'plate') return isAr() ? ['170px','80px','170px'] : ['80px','170px','170px'];
+    return ['110px','190px','170px'];
+  }
+  function gridStyle(){
+    return 'direction:' + (isAr() ? 'rtl' : 'ltr') + ';text-align:' + (isAr() ? 'right' : 'left') + ';display:grid;grid-template-columns:' + cols().join(' ') + ' auto;justify-content:start;gap:10px;align-items:center;';
+  }
+  function headHtml(){
+    const names = type === 'plate' ? (isAr() ? [T('number'), T('code'), T('price')] : [T('code'), T('number'), T('price')]) : [T('prefix'), T('mobile7'), T('price')];
+    return '<div class="ar-head" style="' + gridStyle() + 'padding:0 0 10px;margin-bottom:12px;border-bottom:2px solid var(--line);font-weight:700;font-size:.9rem;color:#fff">' +
+      names.map(n => '<div>' + n + '</div>').join('') + '<div></div></div>';
+  }
   function rowHtml(i){
-    const price = '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '">';
-    const rm = multi ? '<button type="button" class="btn btn-ghost ar-rm" title="' + T('remove') + '" style="padding:8px 12px">✕</button>' : '';
+    const rm = multi ? '<button type="button" class="btn btn-ghost ar-rm" title="' + T('remove') + '" style="padding:6px 12px">✕</button>' : '<span></span>';
     const stat = '<div class="ar-stat" style="font-size:.82rem;grid-column:1/-1"></div>';
+    const price = '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('price')) + '" style="' + IN + '">';
+    let cells;
     if(type === 'plate'){
-      return '<div class="ar-row" data-i="' + i + '" style="direction:' + (currentLang === 'ar' ? 'rtl' : 'ltr') + ';text-align:' + (currentLang === 'ar' ? 'right' : 'left') + ';display:grid;grid-template-columns:80px 170px 170px auto;justify-content:start;gap:8px;align-items:end;margin-bottom:12px">' +
-        '<div class="field" style="margin:0"><label>' + T('code') + '</label><input class="ar-code" maxlength="2" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
-        '<div class="field" style="margin:0"><label>' + T('number') + '</label><input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" style="' + IN + '"></div>' +
-        '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>' + '<div>' + rm + '</div>' + stat + '</div>';
+      const code = '<input class="ar-code" maxlength="2" autocomplete="off" dir="ltr" placeholder="' + escapeHtml(T('code')) + '" style="' + IN + '">';
+      const num = '<input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" placeholder="' + escapeHtml(T('number')) + '" style="' + IN + '">';
+      cells = isAr() ? [num, code, price] : [code, num, price];
+    } else {
+      cells = ['<select class="ar-pre" dir="ltr" style="' + IN + '"><option value="079">079</option><option value="078">078</option><option value="077">077</option></select>',
+        '<input class="ar-mob" inputmode="numeric" maxlength="8" autocomplete="off" dir="ltr" placeholder="123 4567" style="' + IN + '">', price];
     }
-    return '<div class="ar-row" data-i="' + i + '" style="direction:' + (currentLang === 'ar' ? 'rtl' : 'ltr') + ';text-align:' + (currentLang === 'ar' ? 'right' : 'left') + ';display:grid;grid-template-columns:110px 190px 170px auto;justify-content:start;gap:10px;align-items:end;margin-bottom:12px">' +
-      '<div class="field" style="margin:0"><label>' + T('prefix') + '</label><select class="ar-pre" dir="ltr" style="' + IN + '"><option value="079">079</option><option value="078">078</option><option value="077">077</option></select></div>' +
-      '<div class="field" style="margin:0"><label>' + T('mobile7') + '</label><input class="ar-mob" inputmode="numeric" maxlength="8" autocomplete="off" dir="ltr" placeholder="123 4567" style="' + IN + '"></div>' +
-      '<div class="field" style="margin:0"><label>' + T('price') + '</label>' + price + '</div>' + '<div>' + rm + '</div>' + stat + '</div>';
+    return '<div class="ar-row" data-i="' + i + '" style="' + gridStyle() + 'margin-bottom:10px">' + cells.join('') + rm + stat + '</div>';
   }
 
   function render(){
     setTitles();
     const keep = collect(true);
-    let h = '<p class="dash-note" style="margin-bottom:16px">' + (type === 'plate' ? T('note') : '') + '</p><form id="addForm" novalidate><div id="addRows"></div>';
+    let h = '<p class="dash-note" style="margin-bottom:16px">' + (type === 'plate' ? T('note') : '') + '</p><form id="addForm" novalidate>' + headHtml() + '<div id="addRows"></div>';
     if(multi) h += '<button type="button" class="btn btn-ghost" id="addRowBtn" style="margin-bottom:16px">' + T('addRow') + '</button>' +
       '<div class="field" style="max-width:320px;margin-bottom:16px"><label>' + T('pkgPrice') + '</label><input id="pkgPrice" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('pricePh')) + '" style="' + IN + '"><div class="hint" style="margin-top:6px">' + T('pkgHint') + '</div></div>';
     h += '<button type="submit" class="btn btn-gold" id="addSubmit">' + T('submit') + '</button></form><div id="addDone"></div>';
