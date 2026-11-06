@@ -392,7 +392,7 @@
     document.documentElement.setAttribute('lang', lang);
     document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
     const langBtn = document.getElementById('langToggle');
-    if(langBtn) langBtn.textContent = lang === 'ar' ? 'AR' : 'EN';
+    if(langBtn) langBtn.textContent = lang === 'ar' ? 'EN' : 'AR';
 
     const infoBody = document.getElementById('infoBody');
     if(infoBody){
