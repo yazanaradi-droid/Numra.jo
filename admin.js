@@ -2,6 +2,11 @@
 (function(){
   const L = {
     en: {
+      alerts:'Alerts', a_title:'Alerts & reminders', a_ok:'Everything looks fine. No action needed right now.',
+      a_pending:'Featured requests waiting for approval', a_reported:'Reported ads need review', a_hidden:'Hidden ads', a_review:'Review', a_dismiss:'Remind me in 30 days',
+      a_scale_hi:'Scaling: the site reached {n} listings. Ask Claude to add pagination, and consider Supabase Pro.', a_scale_mid:'Scaling soon: {n} listings. Pagination is needed around 2,000-3,000 listings.',
+      a_stats:'Listings: {l} · Users: {u}',
+      a_r_backup:'Monthly: export a backup of your data (Supabase → Table Editor → Export).', a_r_gsc:'Weekly: check Google Search Console for indexing problems.', a_r_pause:'The free Supabase project pauses after ~1 week of no activity. The GitHub keep-alive job prevents this; check Actions → "Keep Supabase awake" is green.', a_r_pro:'When traffic grows: upgrade Supabase to Pro (no auto-pause, daily backups).',
       listings:'Ads', users:'Users', settings:'Settings', back:'Back to site',
       denied:'This page is for administrators only.', login:'Please log in with the admin account.', loading:'Loading…', err:'Something went wrong. Try again.',
       f_all:'All', f_reported:'Reported', f_hidden:'Hidden', f_pending:'Featured requests', f_featured:'Featured',
@@ -14,6 +19,11 @@
       s_note:'Anti-bot tip: set the same limits in Supabase → Authentication → Rate Limits, and enable CAPTCHA there (see README).'
     },
     ar: {
+      alerts:'التنبيهات', a_title:'التنبيهات والتذكيرات', a_ok:'كل شيء سليم. لا يلزم أي إجراء الآن.',
+      a_pending:'طلبات تمييز بانتظار الموافقة', a_reported:'إعلانات مبلّغ عنها تحتاج مراجعة', a_hidden:'إعلانات مخفية', a_review:'مراجعة', a_dismiss:'ذكّرني بعد 30 يوماً',
+      a_scale_hi:'توسّع: وصل الموقع إلى {n} إعلان. اطلب من Claude إضافة ترقيم الصفحات، وفكّر في Supabase Pro.', a_scale_mid:'اقتراب التوسّع: {n} إعلان. يلزم ترقيم الصفحات عند 2,000 إلى 3,000 إعلان تقريباً.',
+      a_stats:'الإعلانات: {l} · المستخدمون: {u}',
+      a_r_backup:'شهرياً: صدّر نسخة احتياطية من بياناتك (Supabase ← Table Editor ← Export).', a_r_gsc:'أسبوعياً: راجع Google Search Console لأي مشاكل في الفهرسة.', a_r_pause:'مشروع Supabase المجاني يتوقف بعد نحو أسبوع بلا نشاط. مهمة GitHub (keep-alive) تمنع ذلك، فتأكد أن Actions ← "Keep Supabase awake" خضراء.', a_r_pro:'عند نمو الزوار: رقّ Supabase إلى Pro (بدون إيقاف تلقائي ومع نسخ احتياطية يومية).',
       listings:'الإعلانات', users:'المستخدمون', settings:'الإعدادات', back:'العودة للموقع',
       denied:'هذه الصفحة للمشرفين فقط.', login:'سجّل الدخول بحساب المشرف.', loading:'جارٍ التحميل…', err:'حدث خطأ، حاول مجدداً.',
       f_all:'الكل', f_reported:'المبلّغ عنها', f_hidden:'المخفية', f_pending:'طلبات التمييز', f_featured:'المميزة',
@@ -29,14 +39,14 @@
   const T = k => (L[currentLang] || L.en)[k] || k;
   const E = s => escapeHtml(s == null ? '' : s);
   const FILTERS = ['all','reported','hidden','pending','featured'];
-  let tab = 'listings', filter = 'all', rows = [], users = [], q = '', isAdmin = false, seq = 0;
+  let alertCount = 0, tab = 'alerts', filter = 'all', rows = [], users = [], q = '', isAdmin = false, seq = 0;
 
   const nav = () => document.getElementById('admNav');
   const panel = () => document.getElementById('admPanel');
 
   function renderNav(){
-    nav().innerHTML = ['listings','users','settings'].map(t =>
-      '<button class="dash-tab' + (t === tab ? ' active' : '') + '" data-tab="' + t + '">' + T(t) + '</button>').join('') +
+    nav().innerHTML = ['alerts','listings','users','settings'].map(t =>
+      '<button class="dash-tab' + (t === tab ? ' active' : '') + '" data-tab="' + t + '">' + T(t) + (t === 'alerts' && alertCount ? ' <span class="adm-tag adm-red" style="margin-inline-start:6px">' + alertCount + '</span>' : '') + '</button>').join('') +
       '<button class="dash-tab dash-logout" style="color:var(--text)" data-tab="__back">' + T('back') + '</button>';
   }
   function msg(text){ panel().innerHTML = '<div class="dash-card"><p style="color:var(--muted)">' + E(text) + '</p></div>'; }
@@ -65,6 +75,36 @@
       '<span class="adm-sub">' + (r.type === 'plate' ? '🚗' : '📱') + ' ' + price + ' · ' + T('seller') + ': @' + E(r.username) + ' <bdi dir="ltr">' + E(r.phone) + '</bdi> · <bdi dir="ltr">' + E(new Date(r.created_at).toLocaleString('en-GB')) + '</bdi></span>' +
       (r.hidden_reason ? '<span class="adm-sub">' + E(r.hidden_reason) + '</span>' : '') +
       '<div class="adm-tags">' + st + '</div></div><div class="adm-acts">' + act + '</div></div>';
+  }
+
+  const REMINDERS = ['a_r_backup','a_r_gsc','a_r_pause','a_r_pro'];
+  const snoozed = k => { try{ return +localStorage.getItem('adm_snooze_' + k) > Date.now(); }catch(e){ return false; } };
+  async function loadAlerts(){
+    const [l, u] = await Promise.all([sb.rpc('xp_admin_listings', {p_filter:'all'}), sb.rpc('xp_admin_users')]);
+    const ls = (l && l.data) || [], us = (u && u.data) || [];
+    const items = [];
+    const pend = ls.filter(r => r.featured_status === 'pending' || r.featured_request).length;
+    const rep = ls.filter(r => r.reports > 0 && !r.hidden).length;
+    const hid = ls.filter(r => r.hidden).length;
+    if(pend) items.push({lvl:'blue', text:T('a_pending') + ': ' + pend, go:'pending'});
+    if(rep) items.push({lvl:'amber', text:T('a_reported') + ': ' + rep, go:'reported'});
+    if(ls.length >= 2000) items.push({lvl:'red', text:T('a_scale_hi').replace('{n}', ls.length)});
+    else if(ls.length >= 1500) items.push({lvl:'amber', text:T('a_scale_mid').replace('{n}', ls.length)});
+    return {items, hid, listings:ls.length, users:us.length};
+  }
+  async function showAlerts(){
+    const my = ++seq;
+    panel().innerHTML = '<div class="dash-card"><h2>' + T('a_title') + '</h2><div id="admList"><p style="color:var(--muted)">' + T('loading') + '</p></div></div>';
+    let a; try{ a = await loadAlerts(); }catch(e){ a = null; }
+    if(my !== seq) return;
+    const box = document.getElementById('admList');
+    if(!a){ box.innerHTML = '<p style="color:var(--danger)">' + T('err') + '</p>'; return; }
+    alertCount = a.items.length; renderNav();
+    let h = '<p class="adm-sub" style="margin-bottom:14px">' + T('a_stats').replace('{l}', a.listings).replace('{u}', a.users) + (a.hid ? ' · ' + T('a_hidden') + ': ' + a.hid : '') + '</p>';
+    h += a.items.length ? a.items.map(i => '<div class="adm-row"><div class="adm-main"><span class="adm-tag adm-' + i.lvl + '">' + E(i.text) + '</span></div>' + (i.go ? '<div class="adm-acts"><button class="btn btn-gold" style="padding:7px 12px;font-size:.8rem" data-gof="' + i.go + '">' + T('a_review') + '</button></div>' : '') + '</div>').join('') : '<p style="color:var(--muted)">' + T('a_ok') + '</p>';
+    h += '<h3 style="margin:22px 0 10px;font-size:1rem">' + (currentLang === 'ar' ? 'تذكيرات' : 'Reminders') + '</h3>';
+    h += REMINDERS.filter(k => !snoozed(k)).map(k => '<div class="adm-row"><div class="adm-main"><span class="adm-sub" style="color:var(--text)">' + T(k) + '</span></div><div class="adm-acts"><button class="btn btn-ghost" style="padding:7px 12px;font-size:.8rem" data-snooze="' + k + '">' + T('a_dismiss') + '</button></div></div>').join('');
+    box.innerHTML = h;
   }
 
   async function showListings(){
@@ -130,7 +170,7 @@
 
   function show(){
     renderNav();
-    if(tab === 'listings') showListings(); else if(tab === 'users') showUsers(); else showSettings();
+    if(tab === 'alerts') showAlerts(); else if(tab === 'listings') showListings(); else if(tab === 'users') showUsers(); else showSettings();
   }
 
   async function act(a, id){
@@ -148,6 +188,12 @@
   }
 
   document.addEventListener('click', function(e){
+    const g = e.target.closest && e.target.closest('[data-gof],[data-snooze]');
+    if(g && isAdmin){
+      if(g.dataset.gof){ tab = 'listings'; filter = g.dataset.gof; show(); }
+      else { try{ localStorage.setItem('adm_snooze_' + g.dataset.snooze, String(Date.now() + 30*864e5)); }catch(err){} showAlerts(); }
+      return;
+    }
     const t = e.target.closest && e.target.closest('[data-tab],[data-filter],[data-act]');
     if(!t || !isAdmin) return;
     if(t.dataset.tab){
@@ -172,5 +218,6 @@
     }catch(e){ isAdmin = false; }
     if(!isAdmin){ msg(T('denied')); return; }
     show();
+    loadAlerts().then(a => { alertCount = a.items.length; renderNav(); }).catch(()=>{});
   });
 })();
