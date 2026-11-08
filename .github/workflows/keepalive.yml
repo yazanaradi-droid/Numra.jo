@@ -1,14 +1,25 @@
-name: Keep Supabase awake
+name: Keep Supabase awake + scaling alert
 on:
   schedule:
     - cron: '17 6 */2 * *'   # every 2 days
   workflow_dispatch:
+permissions:
+  issues: write
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Query the database so the free project never pauses
+      - name: Query the database (keeps the free project awake) and count listings
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          curl -fsS "https://xfkahevdccmogaxboffy.supabase.co/rest/v1/xp_listings?select=id&limit=1" \
-            -H "apikey: sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx" \
-            -H "Authorization: Bearer sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx"
+          KEY="sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx"
+          URL="https://xfkahevdccmogaxboffy.supabase.co/rest/v1/xp_listings?select=id&limit=1"
+          HDR=$(curl -fsS -D - -o /dev/null "$URL" -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Prefer: count=exact")
+          COUNT=$(echo "$HDR" | tr -d '\r' | grep -i '^content-range' | sed 's/.*\///')
+          echo "Visible listings: $COUNT"
+          if [ -n "$COUNT" ] && [ "$COUNT" -ge 2000 ]; then
+            if [ -z "$(gh issue list --state open --search 'Scaling reminder in:title' --json number -q '.[0].number' -R "$GITHUB_REPOSITORY")" ]; then
+              gh issue create -R "$GITHUB_REPOSITORY" --title "Scaling reminder: $COUNT listings" --body "The site now has $COUNT listings. Time to add pagination to the listings feed (script.js loads every listing at once) and consider Supabase Pro (no auto-pause, daily backups). Ask Claude: 'add pagination'."
+            fi
+          fi

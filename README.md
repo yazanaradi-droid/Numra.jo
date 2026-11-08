@@ -60,3 +60,9 @@ What it enforces (server side, in the database):
 - Seller phone only for logged-in visitors (toggle in Settings), max 40 phone views/hour per user.
 - Honeypot + minimum-fill-time on registration. Optional Cloudflare Turnstile: put the site key in `TURNSTILE_SITE_KEY` (script.js) and enable CAPTCHA in Supabase > Authentication > Attack Protection.
 - Also in Supabase > Authentication: turn off "Confirm email", keep Rate Limits on, set minimum password length 8.
+
+## Scaling notes
+- The listings feed (`xp_listings_feed`) loads every listing on page open. Fine up to ~2,000-3,000 listings; beyond that add pagination (50 per page).
+- Free Supabase limits (approx.): 500 MB database, 5 GB egress/month, ~50k monthly active users, project pauses after ~1 week of inactivity.
+- `.github/workflows/keepalive.yml` pings the database every 2 days and opens a GitHub issue ("Scaling reminder") once the site reaches 2,000 listings.
+- Next step when traffic grows: Supabase Pro (~$25/mo).
