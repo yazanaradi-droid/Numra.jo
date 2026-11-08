@@ -7,6 +7,9 @@
       a_scale_hi:'Scaling: the site reached {n} listings. Ask Claude to add pagination, and consider Supabase Pro.', a_scale_mid:'Scaling soon: {n} listings. Pagination is needed around 2,000-3,000 listings.',
       a_stats:'Listings: {l} · Users: {u}',
       a_r_backup:'Monthly: export a backup of your data (Supabase → Table Editor → Export).', a_r_gsc:'Weekly: check Google Search Console for indexing problems.', a_r_pause:'The free Supabase project pauses after ~1 week of no activity. The GitHub keep-alive job prevents this; check Actions → "Keep Supabase awake" is green.', a_r_pro:'When traffic grows: upgrade Supabase to Pro (no auto-pause, daily backups).',
+      stats:'Statistics', st_title:'Site statistics', st_ads:'Ads', st_users:'Users', st_v_today:'Visitors today', st_v_7:'Visitors (7 days)', st_v_30:'Visitors (30 days)', st_pv:'Page views (30 days)',
+      st_since:'Visitor counting started on', st_none:'Visitor counting starts now; numbers will grow as people visit.', st_daily:'Daily', st_day:'Day', st_vis:'Visitors', st_pgs:'Pages', st_nu:'New users', st_na:'New ads', st_days:'days',
+      u_ads:'View ads', u_back:'Back to users', u_adsOf:'Ads posted by', u_none:'This user has not posted any ads.', u_cap:'Showing the latest 500 ads on the site.',
       listings:'Ads', users:'Users', settings:'Settings', back:'Back to site',
       denied:'This page is for administrators only.', login:'Please log in with the admin account.', loading:'Loading…', err:'Something went wrong. Try again.',
       f_all:'All', f_reported:'Reported', f_hidden:'Hidden', f_pending:'Featured requests', f_featured:'Featured',
@@ -24,6 +27,9 @@
       a_scale_hi:'توسّع: وصل الموقع إلى {n} إعلان. اطلب من Claude إضافة ترقيم الصفحات، وفكّر في Supabase Pro.', a_scale_mid:'اقتراب التوسّع: {n} إعلان. يلزم ترقيم الصفحات عند 2,000 إلى 3,000 إعلان تقريباً.',
       a_stats:'الإعلانات: {l} · المستخدمون: {u}',
       a_r_backup:'شهرياً: صدّر نسخة احتياطية من بياناتك (Supabase ← Table Editor ← Export).', a_r_gsc:'أسبوعياً: راجع Google Search Console لأي مشاكل في الفهرسة.', a_r_pause:'مشروع Supabase المجاني يتوقف بعد نحو أسبوع بلا نشاط. مهمة GitHub (keep-alive) تمنع ذلك، فتأكد أن Actions ← "Keep Supabase awake" خضراء.', a_r_pro:'عند نمو الزوار: رقّ Supabase إلى Pro (بدون إيقاف تلقائي ومع نسخ احتياطية يومية).',
+      stats:'الإحصاءات', st_title:'إحصاءات الموقع', st_ads:'الإعلانات', st_users:'المستخدمون', st_v_today:'زوار اليوم', st_v_7:'الزوار (7 أيام)', st_v_30:'الزوار (30 يوماً)', st_pv:'مشاهدات الصفحات (30 يوماً)',
+      st_since:'بدأ عدّ الزوار بتاريخ', st_none:'بدأ عدّ الزوار الآن، وستزداد الأرقام مع دخول الناس.', st_daily:'يومياً', st_day:'اليوم', st_vis:'الزوار', st_pgs:'الصفحات', st_nu:'مستخدمون جدد', st_na:'إعلانات جديدة', st_days:'يوماً',
+      u_ads:'عرض إعلاناته', u_back:'العودة للمستخدمين', u_adsOf:'إعلانات المستخدم', u_none:'لم ينشر هذا المستخدم أي إعلان.', u_cap:'يعرض آخر 500 إعلان في الموقع.',
       listings:'الإعلانات', users:'المستخدمون', settings:'الإعدادات', back:'العودة للموقع',
       denied:'هذه الصفحة للمشرفين فقط.', login:'سجّل الدخول بحساب المشرف.', loading:'جارٍ التحميل…', err:'حدث خطأ، حاول مجدداً.',
       f_all:'الكل', f_reported:'المبلّغ عنها', f_hidden:'المخفية', f_pending:'طلبات التمييز', f_featured:'المميزة',
@@ -39,13 +45,13 @@
   const T = k => (L[currentLang] || L.en)[k] || k;
   const E = s => escapeHtml(s == null ? '' : s);
   const FILTERS = ['all','reported','hidden','pending','featured'];
-  let alertCount = 0, tab = 'alerts', filter = 'all', rows = [], users = [], q = '', isAdmin = false, seq = 0;
+  let alertCount = 0, statDays = 30, viewUser = null, tab = 'alerts', filter = 'all', rows = [], users = [], q = '', isAdmin = false, seq = 0;
 
   const nav = () => document.getElementById('admNav');
   const panel = () => document.getElementById('admPanel');
 
   function renderNav(){
-    nav().innerHTML = ['alerts','listings','users','settings'].map(t =>
+    nav().innerHTML = ['alerts','stats','listings','users','settings'].map(t =>
       '<button class="dash-tab' + (t === tab ? ' active' : '') + '" data-tab="' + t + '">' + T(t) + (t === 'alerts' && alertCount ? ' <span class="adm-tag adm-red" style="margin-inline-start:6px">' + alertCount + '</span>' : '') + '</button>').join('') +
       '<button class="dash-tab dash-logout" style="color:var(--text)" data-tab="__back">' + T('back') + '</button>';
   }
@@ -107,6 +113,37 @@
     box.innerHTML = h;
   }
 
+  async function showStats(){
+    const my = ++seq;
+    panel().innerHTML = '<div class="dash-card"><h2>' + T('st_title') + '</h2><div id="admList"><p style="color:var(--muted)">' + T('loading') + '</p></div></div>';
+    const {data, error} = await sb.rpc('xp_admin_stats', {p_days: statDays});
+    if(my !== seq) return;
+    const box = document.getElementById('admList');
+    if(error || !data){ box.innerHTML = '<p style="color:var(--danger)">' + T('err') + '</p>'; return; }
+    const n = v => Number(v || 0).toLocaleString('en-US');
+    const card = (lab, val) => '<div class="adm-stat"><b>' + n(val) + '</b><span>' + lab + '</span></div>';
+    const ser = data.series || [], max = Math.max(1, ...ser.map(r => r.visitors));
+    let h = '<div class="adm-stats">' + card(T('st_ads'), data.listings) + card(T('st_users'), data.users) + card(T('st_v_today'), data.visitors_today) + card(T('st_v_7'), data.visitors_7d) + card(T('st_v_30'), data.visitors_30d) + card(T('st_pv'), data.pageviews_30d) + '</div>';
+    h += '<p class="adm-sub" style="margin:10px 0 16px">' + (data.tracking_since ? T('st_since') + ' <bdi dir="ltr">' + E(data.tracking_since) + '</bdi>' : T('st_none')) + '</p>';
+    h += '<div class="adm-filters">' + [7,30,90].map(d => '<button class="dash-tab' + (d === statDays ? ' active' : '') + '" data-days="' + d + '">' + d + ' ' + T('st_days') + '</button>').join('') + '</div>';
+    h += '<div style="overflow-x:auto"><table class="adm-table"><thead><tr><th>' + T('st_day') + '</th><th>' + T('st_vis') + '</th><th></th><th>' + T('st_pgs') + '</th><th>' + T('st_nu') + '</th><th>' + T('st_na') + '</th></tr></thead><tbody>' +
+      ser.slice().reverse().map(r => '<tr><td dir="ltr">' + E(r.day) + '</td><td>' + n(r.visitors) + '</td><td style="width:34%"><span class="adm-bar" style="width:' + Math.round(r.visitors / max * 100) + '%"></span></td><td>' + n(r.pageviews) + '</td><td>' + n(r.users) + '</td><td>' + n(r.listings) + '</td></tr>').join('') +
+      '</tbody></table></div>';
+    box.innerHTML = h;
+  }
+  async function showUserAds(){
+    const my = ++seq;
+    const u = users.find(x => x.id === viewUser) || {};
+    panel().innerHTML = '<div class="dash-card"><button class="btn btn-ghost" style="padding:7px 12px;font-size:.8rem;margin-bottom:12px" data-uback="1">← ' + T('u_back') + '</button><h2>' + T('u_adsOf') + ' @' + E(u.username || '') + '</h2><div id="admList"><p style="color:var(--muted)">' + T('loading') + '</p></div></div>';
+    const {data, error} = await sb.rpc('xp_admin_listings', {p_filter:'all'});
+    if(my !== seq) return;
+    const box = document.getElementById('admList');
+    if(error){ box.innerHTML = '<p style="color:var(--danger)">' + T('err') + '</p>'; return; }
+    const mine = (data || []).filter(r => r.user_id === viewUser);
+    rows = mine;
+    box.innerHTML = (mine.length ? mine.map(listingRow).join('') : '<p style="color:var(--muted)">' + T('u_none') + '</p>') + ((data || []).length >= 500 ? '<p class="adm-sub" style="margin-top:10px">' + T('u_cap') + '</p>' : '');
+  }
+
   async function showListings(){
     const my = ++seq;
     panel().innerHTML = '<div class="dash-card"><h2>' + T('listings') + '</h2><div class="adm-filters">' +
@@ -125,7 +162,7 @@
     if(u.banned) tags += '<span class="adm-tag adm-red">' + T('banned') + (u.ban_reason ? ' · ' + E(u.ban_reason) : '') + '</span>';
     if(u.is_admin) tags += '<span class="adm-tag adm-blue">' + T('admin') + '</span>';
     if(u.reports) tags += '<span class="adm-tag adm-amber">' + u.reports + ' ' + T('reports') + '</span>';
-    const act = u.is_admin ? '' : (u.banned ? btn('unban', u.id, T('unban'), 'btn-gold') : btn('ban', u.id, T('ban')));
+    const act = btn('uads', u.id, T('u_ads') + ' (' + u.ads + ')', 'btn-ghost') + (u.is_admin ? '' : (u.banned ? btn('unban', u.id, T('unban'), 'btn-gold') : btn('ban', u.id, T('ban'))));
     return '<div class="adm-row"><div class="adm-main"><span class="adm-title">@' + E(u.username) + ' <span style="font-weight:400;color:var(--muted)">' + E(u.first_name) + ' ' + E(u.last_name) + '</span></span>' +
       '<span class="adm-sub"><bdi dir="ltr">' + E(u.phone) + '</bdi> · ' + u.ads + ' ' + T('ads') + ' · ' + T('joined') + ' <bdi dir="ltr">' + E(new Date(u.created_at).toLocaleDateString('en-GB')) + '</bdi></span>' +
       '<div class="adm-tags">' + tags + '</div></div><div class="adm-acts">' + act + '</div></div>';
@@ -170,11 +207,12 @@
 
   function show(){
     renderNav();
-    if(tab === 'alerts') showAlerts(); else if(tab === 'listings') showListings(); else if(tab === 'users') showUsers(); else showSettings();
+    if(tab === 'alerts') showAlerts(); else if(tab === 'listings') showListings(); else if(tab === 'stats') showStats(); else if(tab === 'users') viewUser ? showUserAds() : showUsers(); else showSettings();
   }
 
   async function act(a, id){
     let r;
+    if(a === 'uads'){ viewUser = id; await showUserAds(); return; }
     if(a === 'hide'){ const why = prompt(T('reasonHide')); if(why === null) return; r = await sb.rpc('xp_admin_set_hidden', {lid:id, p_hidden:true, p_reason:why || null}); }
     else if(a === 'unhide') r = await sb.rpc('xp_admin_set_hidden', {lid:id, p_hidden:false});
     else if(a === 'del'){ if(!confirm(T('confirmDel'))) return; r = await sb.rpc('xp_admin_delete_listing', {lid:id}); }
@@ -188,8 +226,10 @@
   }
 
   document.addEventListener('click', function(e){
-    const g = e.target.closest && e.target.closest('[data-gof],[data-snooze]');
+    const g = e.target.closest && e.target.closest('[data-gof],[data-snooze],[data-days],[data-uback]');
     if(g && isAdmin){
+      if(g.dataset.uback){ viewUser = null; showUsers(); return; }
+      if(g.dataset.days){ statDays = +g.dataset.days; showStats(); return; }
       if(g.dataset.gof){ tab = 'listings'; filter = g.dataset.gof; show(); }
       else { try{ localStorage.setItem('adm_snooze_' + g.dataset.snooze, String(Date.now() + 30*864e5)); }catch(err){} showAlerts(); }
       return;
@@ -198,7 +238,7 @@
     if(!t || !isAdmin) return;
     if(t.dataset.tab){
       if(t.dataset.tab === '__back'){ navTo('index.html', e); return; }
-      tab = t.dataset.tab; show();
+      tab = t.dataset.tab; viewUser = null; show();
     } else if(t.dataset.filter){ filter = t.dataset.filter; showListings(); }
     else if(t.dataset.act){ t.disabled = true; act(t.dataset.act, t.dataset.id); }
   });

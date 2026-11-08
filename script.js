@@ -1682,3 +1682,13 @@ document.addEventListener('DOMContentLoaded', function(){
   var p = (location.pathname.split('/').pop() || 'index.html'); if(p === '') p = 'index.html';
   document.querySelectorAll('.quickbar a').forEach(function(a){ if(a.getAttribute('data-qb') === p) a.classList.add('active'); });
 });
+
+/* privacy-friendly visitor counter: a random id kept in this browser, no personal data */
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    if(!sb || /admin\.html$/.test(location.pathname)) return;
+    let v = localStorage.getItem('xp_vid');
+    if(!v){ const a = new Uint8Array(12); crypto.getRandomValues(a); v = Array.from(a, b => b.toString(16).padStart(2,'0')).join(''); localStorage.setItem('xp_vid', v); }
+    sb.rpc('xp_track_visit', {p_vid: v}).then(function(){}, function(){});
+  }catch(e){}
+});

@@ -1019,3 +1019,13 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 .prev-phone{font-family:var(--font-display); font-weight:800; font-size:2.1rem; letter-spacing:.04em; color:#fff; padding:22px 8px; border-radius:12px; background:#0A0D14; border:1px solid #222838;}
 .prev-price{margin-top:12px; font-weight:800; font-size:1.15rem; color:#FF4D5E;}
 @media (max-width:900px){ .add-layout{flex-direction:column-reverse;} .add-preview{flex:none; width:100%; position:static;} }
+
+/* admin statistics */
+.adm-stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px;}
+.adm-stat{border:1px solid var(--line); border-radius:14px; padding:14px; background:rgba(17,26,54,.45);}
+.adm-stat b{display:block; font-size:1.7rem; font-weight:800; color:#fff;}
+.adm-stat span{font-size:.82rem; color:var(--muted);}
+.adm-table{width:100%; border-collapse:collapse; font-size:.9rem;}
+.adm-table th,.adm-table td{padding:8px 10px; text-align:start; border-bottom:1px solid var(--line);}
+.adm-table th{color:var(--accent-text); font-weight:700; font-size:.8rem;}
+.adm-bar{display:block; height:10px; border-radius:6px; background:linear-gradient(90deg,#4C6BE6,#2F4BC0); min-width:2px;}
