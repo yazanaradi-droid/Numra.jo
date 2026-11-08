@@ -1029,3 +1029,15 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 .adm-table th,.adm-table td{padding:8px 10px; text-align:start; border-bottom:1px solid var(--line);}
 .adm-table th{color:var(--accent-text); font-weight:700; font-size:.8rem;}
 .adm-bar{display:block; height:10px; border-radius:6px; background:linear-gradient(90deg,#4C6BE6,#2F4BC0); min-width:2px;}
+
+/* add page on phones: columns shrink to fit the screen instead of scrolling sideways */
+@media (max-width:600px){
+  .ar-row,.ar-head{grid-template-columns:var(--m) auto !important; gap:8px !important; justify-content:stretch !important;}
+  .ar-row > *,.ar-head > *{min-width:0;}
+  .ar-row input,.ar-row select{width:100% !important; min-width:0 !important; box-sizing:border-box; padding-inline:8px !important; font-size:.9rem;}
+  .ar-head{font-size:.78rem !important;}
+  .ar-head > div{overflow-wrap:anywhere;}
+  .ar-row .ar-rm{padding:6px 9px !important;}
+  .add-main .dash-note{overflow-wrap:anywhere;}
+}
+@media (max-width:600px){ .prev-phone{font-size:1.5rem; padding:18px 6px;} .ar-row select{padding-inline:4px !important;} }

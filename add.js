@@ -34,12 +34,16 @@
   }
 
   const isAr = () => currentLang === 'ar';
+  function colsM(){
+    if(type === 'plate') return isAr() ? '1.5fr .85fr 1.3fr' : '.85fr 1.5fr 1.3fr';
+    return isAr() ? '1.5fr 1.15fr 1.3fr' : '1.15fr 1.5fr 1.3fr';
+  }
   function cols(){
     if(type === 'plate') return isAr() ? ['170px','80px','170px'] : ['80px','170px','170px'];
     return isAr() ? ['190px','110px','170px'] : ['110px','190px','170px'];
   }
   function gridStyle(){
-    return 'direction:' + (isAr() ? 'rtl' : 'ltr') + ';text-align:' + (isAr() ? 'right' : 'left') + ';display:grid;grid-template-columns:' + cols().join(' ') + ' auto;justify-content:start;gap:10px;align-items:center;';
+    return '--m:' + colsM() + ';direction:' + (isAr() ? 'rtl' : 'ltr') + ';text-align:' + (isAr() ? 'right' : 'left') + ';display:grid;grid-template-columns:' + cols().join(' ') + ' auto;justify-content:start;gap:10px;align-items:center;';
   }
   function headHtml(){
     const names = type === 'plate' ? (isAr() ? [T('number'), T('code'), T('price')] : [T('code'), T('number'), T('price')]) : (isAr() ? [T('mobile7'), T('prefix'), T('price')] : [T('prefix'), T('mobile7'), T('price')]);
@@ -49,11 +53,11 @@
   function rowHtml(i){
     const rm = multi ? '<button type="button" class="btn btn-ghost ar-rm" title="' + T('remove') + '" style="padding:6px 12px">✕</button>' : '<span></span>';
     const stat = '<div class="ar-stat" style="font-size:.82rem;grid-column:1/-1"></div>';
-    const price = '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(T('price')) + '" style="' + IN + '">';
+    const price = '<input class="ar-price" inputmode="decimal" dir="ltr" placeholder="' + escapeHtml(isAr() ? 'السعر' : 'Price') + '" style="' + IN + '">';
     let cells;
     if(type === 'plate'){
       const code = '<input class="ar-code" maxlength="2" autocomplete="off" dir="ltr" placeholder="' + escapeHtml(T('code')) + '" style="' + IN + '">';
-      const num = '<input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" placeholder="' + escapeHtml(T('number')) + '" style="' + IN + '">';
+      const num = '<input class="ar-num" maxlength="5" autocomplete="off" dir="ltr" placeholder="' + escapeHtml(isAr() ? T('number') : 'Number') + '" style="' + IN + '">';
       cells = isAr() ? [num, code, price] : [code, num, price];
     } else {
       const pre = '<select class="ar-pre" required dir="ltr" style="' + IN + '"><option value="" selected disabled>' + escapeHtml(T('prefix')) + '</option><option value="079">079</option><option value="078">078</option><option value="077">077</option></select>';
