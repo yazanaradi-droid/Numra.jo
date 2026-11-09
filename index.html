@@ -17,14 +17,14 @@
 <meta name="twitter:image" content="https://souqalarqam.com/images/og-v2.png">
 <meta name="theme-color" content="#0A0D14">
 <link rel="canonical" href="https://souqalarqam.com/">
-<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611091657">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611091704">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="images/icon-180.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="سوق الأرقام">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="stylesheet" href="style.css?v=202611091657">
+<link rel="stylesheet" href="style.css?v=202611091704">
 </head>
 <body>
 
@@ -170,16 +170,53 @@
   </div>
 </section>
 
-<section>
+<section id="about" class="about-sec">
   <div class="wrap">
-    <div class="register-banner">
-      <div>
-        <span class="kicker" data-i18n="register.kicker">Join Souq Al Arqam</span>
-        <h2 data-i18n="register.title">Enjoy our services — register now</h2>
-        <p data-i18n="register.desc">Create a free account to list, buy, sell and negotiate on license plates and phone numbers.</p>
-        <a class="btn btn-gold" href="#" onclick="openRegister(event)" data-i18n="register.cta">Register Now</a>
+    <div class="section-head"><div>
+      <span class="tag" data-i18n="about.tag">About us</span>
+      <h2 data-i18n="about.title">About Souq Al Arqam</h2>
+      <p data-i18n="about.sub">Where distinguished numbers find their owners.</p>
+    </div></div>
+    <div class="about-card">
+      <p data-i18n-html="about.p1"></p>
+      <p data-i18n-html="about.p2"></p>
+    </div>
+  </div>
+</section>
+
+<section id="why" class="why-sec">
+  <div class="wrap">
+    <div class="section-head"><div>
+      <span class="tag" data-i18n="why.tag">Why us</span>
+      <h2 data-i18n="why.title">Why choose Souq Al Arqam?</h2>
+      <p data-i18n="why.sub">Ease of access, trust, and a showcase for your listings.</p>
+    </div></div>
+    <div class="why-grid">
+      <div class="why-item"><div class="why-ico">&#9889;</div><h4 data-i18n="why.1.t">Easy to use</h4><p data-i18n="why.1.d">Browse, filter by code, number or price, and reach the owner in seconds, with no sign-up needed.</p></div>
+      <div class="why-item"><div class="why-ico">&#10003;</div><h4 data-i18n="why.2.t">Trusted sellers</h4><p data-i18n="why.2.d">Verified individuals and dealers carry a badge next to their name, so you know who you are dealing with.</p></div>
+      <div class="why-item"><div class="why-ico">&#9733;</div><h4 data-i18n="why.3.t">Stand-out listings</h4><p data-i18n="why.3.d">Every plate and number is shown as a clear, realistic image, with featured placement for the best offers.</p></div>
+      <div class="why-item"><div class="why-ico">&#128172;</div><h4 data-i18n="why.4.t">Direct contact</h4><p data-i18n="why.4.d">Talk to the seller directly by call or WhatsApp. No middlemen and no commissions.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact-sec">
+  <div class="wrap">
+    <div class="section-head"><div>
+      <span class="tag" data-i18n="cu.tag">Contact</span>
+      <h2 data-i18n="cu.title">Contact us</h2>
+      <p data-i18n="cu.sub">Questions, suggestions or a problem with a listing? Write to us and we will reply as soon as we can.</p>
+    </div></div>
+    <div class="cu-grid">
+      <form class="cu-form" id="cuForm" onsubmit="return sendContactMail(event)">
+        <div class="cu-row"><input id="cuName" required data-i18n-placeholder="cu.name" placeholder="Your name"><input id="cuEmail" type="email" required data-i18n-placeholder="cu.email" placeholder="Email"></div>
+        <textarea id="cuMsg" rows="5" required data-i18n-placeholder="cu.msg" placeholder="Your message"></textarea>
+        <button class="btn btn-gold" type="submit" data-i18n="cu.send">Send</button>
+      </form>
+      <div class="cu-info">
+        <a class="cu-card" href="mailto:info@souqalarqam.com"><span class="cu-ico">&#9993;</span><span><b data-i18n="cu.general">General inquiries</b><bdi dir="ltr">info@souqalarqam.com</bdi></span></a>
+        <a class="cu-card" href="mailto:support@souqalarqam.com"><span class="cu-ico">&#128736;</span><span><b data-i18n="cu.support">Support</b><bdi dir="ltr">support@souqalarqam.com</bdi></span></a>
       </div>
-      <div class="shot" data-i18n="register.preview">website preview</div>
     </div>
   </div>
 </section>
@@ -386,6 +423,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611091657"></script>
+<script src="script.js?v=202611091704"></script>
 </body>
 </html>

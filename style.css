@@ -1105,3 +1105,24 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 .detail-card .important-box{margin:14px 22px 6px;}
 .detail-card .contact-btn{margin:14px 22px 22px;}
 
+
+/* home: about / why / contact */
+.about-card{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:30px 34px; max-width:860px; position:relative;}
+.about-card::before{content:''; position:absolute; inset-block:22px; inset-inline-start:0; width:4px; border-radius:4px; background:linear-gradient(180deg,var(--gold),#1E2E6E);}
+.about-card p{color:var(--text); font-size:1.05rem; line-height:2; margin:0;} .about-card p+p{margin-top:12px; color:var(--muted);} .about-card b{color:var(--accent-text);}
+.why-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+.why-item{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:24px 20px;}
+.why-ico{width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; background:rgba(59,91,219,.16); color:var(--accent-text); margin-bottom:14px;}
+.why-item h4{font-size:1.05rem; margin-bottom:6px;} .why-item p{color:var(--muted); font-size:.9rem; line-height:1.7;}
+.cu-grid{display:grid; grid-template-columns:1.4fr 1fr; gap:20px; align-items:start;}
+.cu-form{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:22px; display:flex; flex-direction:column; gap:12px;}
+.cu-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.cu-form input,.cu-form textarea{width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; color:var(--text); font:inherit; resize:vertical;}
+.cu-form .btn{align-self:flex-start; padding-inline:34px;}
+.cu-info{display:flex; flex-direction:column; gap:12px;}
+.cu-card{display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px;}
+.cu-card b{display:block; font-size:.95rem; margin-bottom:2px;} .cu-card bdi{color:var(--muted); font-size:.88rem;}
+.cu-ico{width:42px; height:42px; border-radius:50%; background:rgba(59,91,219,.16); display:flex; align-items:center; justify-content:center; flex:none;}
+@media(max-width:900px){.why-grid{grid-template-columns:1fr 1fr;} .cu-grid{grid-template-columns:1fr;}}
+@media(max-width:520px){.why-grid{grid-template-columns:1fr;} .cu-row{grid-template-columns:1fr;} .about-card{padding:22px 20px;}}
+html[dir="rtl"] .section-head .tag{letter-spacing:0; font-family:inherit; font-size:.85rem;}

@@ -93,6 +93,31 @@
     "links.snd.desc":{en:"The official portal for e-government services in Jordan.",ar:"البوابة الرسمية للخدمات الحكومية الإلكترونية في الأردن."},
     "links.visit":{en:"Visit the website →",ar:"زيارة الموقع ←"},
 
+    "about.tag":{en:"About us",ar:"من نحن"},
+    "about.title":{en:"About Souq Al Arqam",ar:"عن سوق الأرقام"},
+    "about.sub":{en:"Where distinguished numbers find their owners.",ar:"حيث تجد الأرقام المميزة أصحابها."},
+    "about.p1":{en:"<b>Souq Al Arqam</b> is a Jordanian digital marketplace dedicated to buying and selling distinguished vehicle plates and VIP phone numbers (Zain, Orange and Umniah), built around the needs of the local market.",ar:"<b>سوق الأرقام</b> منصة أردنية رقمية متخصصة في بيع وشراء لوحات المركبات المميزة وأرقام الهواتف المميزة (زين وأورانج وأمنية)، صُمّمت لتلائم احتياجات السوق المحلي."},
+    "about.p2":{en:"We connect sellers and buyers directly, without middlemen: browse thousands of listings, filter precisely, and contact the owner or dealer in a few taps. Our aim is a clear, trustworthy and effortless experience from the first search to the final deal.",ar:"نربط البائع بالمشتري مباشرة ودون وسطاء: تصفّح الإعلانات، وفلتر بدقة، وتواصل مع المالك أو التاجر بلمسات قليلة. هدفنا تجربة واضحة وموثوقة وسهلة من أول بحث حتى إتمام الصفقة."},
+    "why.tag":{en:"Why us",ar:"مميزاتنا"},
+    "why.title":{en:"Why choose Souq Al Arqam?",ar:"لماذا تختار سوق الأرقام؟"},
+    "why.sub":{en:"Ease of access, trust, and a showcase for your listings.",ar:"سهولة الوصول، وضمان الموثوقية، وتمييز إعلاناتك."},
+    "why.1.t":{en:"Easy to use",ar:"سهولة الاستخدام"},
+    "why.1.d":{en:"Browse, filter by code, number or price, and reach the owner in seconds, with no sign-up needed.",ar:"تصفّح وفلتر بالكود أو الرقم أو السعر، وتواصل مع المالك خلال ثوانٍ دون الحاجة إلى تسجيل."},
+    "why.2.t":{en:"Trusted sellers",ar:"بائعون موثوقون"},
+    "why.2.d":{en:"Verified individuals and dealers carry a badge next to their name, so you know who you are dealing with.",ar:"يحمل الأفراد والتجار الموثّقون علامة بجانب أسمائهم لتعرف مع من تتعامل."},
+    "why.3.t":{en:"Stand-out listings",ar:"إعلانات بارزة"},
+    "why.3.d":{en:"Every plate and number is shown as a clear, realistic image, with featured placement for the best offers.",ar:"تُعرض كل لوحة ورقم بصورة واضحة وواقعية، مع ظهور مميز لأفضل العروض."},
+    "why.4.t":{en:"Direct contact",ar:"تواصل مباشر"},
+    "why.4.d":{en:"Talk to the seller directly by call or WhatsApp. No middlemen and no commissions.",ar:"تحدّث مع البائع مباشرة بالاتصال أو واتساب، دون وسطاء ودون عمولات."},
+    "cu.tag":{en:"Contact",ar:"تواصل"},
+    "cu.title":{en:"Contact us",ar:"اتصل بنا"},
+    "cu.sub":{en:"Questions, suggestions or a problem with a listing? Write to us and we will reply as soon as we can.",ar:"لديك سؤال أو اقتراح أو مشكلة في إعلان؟ راسلنا وسنرد عليك بأقرب وقت."},
+    "cu.name":{en:"Your name",ar:"الاسم"},
+    "cu.email":{en:"Email",ar:"البريد الإلكتروني"},
+    "cu.msg":{en:"Your message",ar:"رسالتك"},
+    "cu.send":{en:"Send",ar:"إرسال"},
+    "cu.general":{en:"General inquiries",ar:"الاستفسارات العامة"},
+    "cu.support":{en:"Support",ar:"الدعم"},
     "register.kicker":{en:"Join Souq Al Arqam",ar:"انضم إلى سوق الأرقام"},
     "register.title":{en:"Enjoy our services — register now",ar:"استمتع بخدماتنا — سجّل الآن"},
     "register.desc":{en:"Create a free account to list, buy, sell and negotiate on license plates and phone numbers.",ar:"أنشئ حساباً مجانياً لعرض وشراء وبيع والتفاوض على لوحات السيارات وأرقام الهواتف."},
@@ -2010,3 +2035,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
 /* installable app: register the offline service worker (https only) */
 if('serviceWorker' in navigator && location.protocol === 'https:'){ window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
+
+function sendContactMail(e){
+  e.preventDefault();
+  var n=document.getElementById('cuName').value.trim(), m=document.getElementById('cuEmail').value.trim(), t=document.getElementById('cuMsg').value.trim();
+  location.href='mailto:info@souqalarqam.com?subject='+encodeURIComponent('Souq Al Arqam - '+n)+'&body='+encodeURIComponent(t+'\n\n'+n+' ('+m+')');
+  return false;
+}
