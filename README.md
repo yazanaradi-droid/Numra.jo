@@ -44,7 +44,7 @@ Register: username, first name, last name, phone, password. Login: username + pa
 Accounts and listings are stored in Supabase. One-time setup:
 1. Supabase -> SQL Editor -> paste and run `supabase-setup.sql`.
 2. Authentication -> Providers -> Email -> turn OFF "Confirm email".
-Usernames map to an internal email (`username@users.souqalarqam.com`), so visitors never type an email.
+Login is by email or phone number only (a server function finds the email that belongs to the phone).
 
 ## Admin panel, security & anti-spam
 

@@ -16,7 +16,7 @@
 <meta name="twitter:image" content="https://souqalarqam.com/images/og-v2.png">
 <meta name="theme-color" content="#0A0D14">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=3">
-<link rel="stylesheet" href="style.css?v=202611091325">
+<link rel="stylesheet" href="style.css?v=202611091420">
 </head>
 <body>
 
@@ -207,10 +207,10 @@
       <p class="sub" data-i18n="login.subtitle">Enter your email and password.</p>
       <div class="hint" id="loginNote" style="display:none; color:var(--text); margin-bottom:10px;" data-i18n="login.needed">Please log in (or register) to list a plate or number.</div>
       <form onsubmit="return submitLogin(event)" novalidate>
-        <div class="upload-error-banner" id="loginErr" data-i18n="login.err">Incorrect username or password.</div>
+        <div class="upload-error-banner" id="loginErr" data-i18n="login.err">Incorrect email, phone or password.</div>
         <div class="field">
-          <label for="loginUsername" data-i18n="modal.email">Email</label>
-          <input id="loginUsername" type="text" dir="ltr" autocomplete="email" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.emailPlaceholder" placeholder="name@example.com">
+          <label for="loginUsername" data-i18n="login.id">Email or phone</label>
+          <input id="loginUsername" type="text" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="login.idPlaceholder" placeholder="name@example.com / 07XXXXXXXX">
         </div>
         <div class="field">
           <label for="loginPassword" data-i18n="modal.password">Password</label>
@@ -322,7 +322,7 @@
 
 <script>const PAGE_TYPE = 'admin';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611091325"></script>
-<script src="admin.js?v=202611091325"></script>
+<script src="script.js?v=202611091420"></script>
+<script src="admin.js?v=202611091420"></script>
 </body>
 </html>

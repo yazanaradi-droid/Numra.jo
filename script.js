@@ -169,10 +169,12 @@
     "modal.successDesc":{en:"Welcome — your account is ready and you are now signed in.",
                           ar:"أهلاً بك — تم إنشاء حسابك وتسجيل دخولك."},
     "login.title":{en:"Log in",ar:"تسجيل الدخول"},
-    "login.subtitle":{en:"Enter your email and password.",ar:"أدخل بريدك الإلكتروني وكلمة المرور."},
+    "login.subtitle":{en:"Enter your email or phone number and your password.",ar:"أدخل بريدك الإلكتروني أو رقم هاتفك وكلمة المرور."},
+    "login.id":{en:"Email or phone number",ar:"البريد الإلكتروني أو رقم الهاتف"},
+    "login.idPlaceholder":{en:"name@example.com or 07XXXXXXXX",ar:"name@example.com أو 07XXXXXXXX"},
     "login.passwordPlaceholder":{en:"Your password",ar:"كلمة المرور"},
     "login.submit":{en:"Log in",ar:"دخول"},
-    "login.err":{en:"Incorrect email or password.",ar:"البريد الإلكتروني أو كلمة المرور غير صحيحة."},
+    "login.err":{en:"Incorrect email, phone number or password.",ar:"البريد الإلكتروني أو رقم الهاتف أو كلمة المرور غير صحيحة."},
     "detail.title.plate":{en:"License plate {x} for sale",ar:"لوحة سيارة {x} للبيع"},
     "detail.title.number":{en:"Phone number {x} for sale",ar:"رقم هاتف {x} للبيع"},
     "nav.plates.crumb":{en:"License Plates",ar:"لوحات السيارات"},
@@ -562,7 +564,6 @@
   const SUPABASE_URL = 'https://xfkahevdccmogaxboffy.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx';   // public (publishable) key, safe in the browser
   const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-  const USER_EMAIL_DOMAIN = 'users.souqalarqam.com';   // usernames are mapped to an internal email for Supabase Auth
   let currentUser = null;
   let userListings = [...seedListings];
 
@@ -1025,8 +1026,6 @@
   }
 
   /* ============ accounts (Supabase Auth; username -> internal email) ============ */
-  const normUser = s => (s||'').trim().toLowerCase();
-  const toEmail = u => normUser(u) + '@' + USER_EMAIL_DOMAIN;
   const USER_RE = /^[A-Za-z0-9_.]{3,20}$/;
   const PHONE_RE = /^[0-9+\s-]{7,15}$/;
 
@@ -1273,16 +1272,31 @@
     if(!sb){ showBanner('loginErr','auth.offline'); return false; }
     const id=document.getElementById('loginUsername').value.trim(), pw=document.getElementById('loginPassword').value;
     if(!id || !pw){ showBanner('loginErr','login.err'); return false; }
-    const email = id.includes('@') ? id.toLowerCase() : toEmail(id);   // accounts made before email sign-up still log in with their old username
+    const isEmail = id.includes('@');
+    if(!isEmail && !/^[0-9+ \-]{7,15}$/.test(id)){ showBanner('loginErr','login.err'); return false; }   // login is by email or phone only
     const btn=document.querySelector('#loginForm .modal-submit'); btn.disabled=true;
     try{
-      const {data, error} = await sb.auth.signInWithPassword({ email, password: pw, options:{ captchaToken: captchaToken('login') } });
+      let data, error;
+      if(isEmail){
+        ({data, error} = await sb.auth.signInWithPassword({ email: id.toLowerCase(), password: pw, options:{ captchaToken: captchaToken('login') } }));
+      }else{
+        /* phone: a server function finds the email that belongs to the number and returns a session */
+        const r = await fetch(SUPABASE_URL + '/functions/v1/phone-login', { method:'POST', headers:{ 'Content-Type':'application/json', 'apikey': SUPABASE_KEY }, body: JSON.stringify({ phone: id, password: pw }) });
+        const j = await r.json().catch(()=>({}));
+        if(r.ok && j.access_token){
+          const s2 = await sb.auth.setSession({ access_token: j.access_token, refresh_token: j.refresh_token });
+          data = s2.data; error = s2.error;
+        }else{
+          error = { status: r.status, message: j.error === 'banned' ? 'banned' : (j.error === 'rate' ? 'rate limit' : 'invalid credentials') };
+          data = {};
+        }
+      }
       if(error || !data.session){
         const msg = String((error && error.message) || ''), st = error && error.status;
         console.warn('login failed:', error);
         if(/banned|suspend/i.test(msg)) showBanner('loginErr','auth.bannedErr');
         else if(/confirm/i.test(msg)) showBanner('loginErr','login.err');
-        else if(!error || /invalid|credentials/i.test(msg) || st === 400) showBanner('loginErr','login.err');
+        else if(!error || /invalid|credentials/i.test(msg) || st === 400 || st === 401) showBanner('loginErr','login.err');
         else if(st === 429 || /rate|too many/i.test(msg)) showBanner('loginErr','auth.rate');
         else showBanner('loginErr','auth.offline');
         return false;
@@ -1595,7 +1609,7 @@
     const p = await fetchMyProfile();
     if(!p) return '<div class="dash-card">' + T('auth.genericErr') + '</div>';
     const e = escapeHtml;
-    const em = (currentUser && currentUser.email) || '', realEmail = em && !em.endsWith('@' + USER_EMAIL_DOMAIN) ? em : '';
+    const realEmail = (currentUser && currentUser.email) || '';
     return '<div class="dash-card"><h2>' + T('dash.profile') + '</h2>' +
       '<form onsubmit="return submitProfile(event)" novalidate>' +
         (realEmail ? '<div class="field"><label>' + T('modal.email') + '</label><input type="text" value="' + e(realEmail) + '" readonly class="ro" dir="ltr"></div>' : '') +
