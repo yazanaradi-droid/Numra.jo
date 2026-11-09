@@ -182,7 +182,7 @@
     "detail.by":{en:"By",ar:"بواسطة"},
     "detail.listed":{en:"Listed",ar:"أُضيف في"},
     "detail.sample":{en:"Listed recently",ar:"أُضيف حديثاً"},
-    "detail.showContact":{en:"Show contact number",ar:"عرض رقم التواصل"},
+    "detail.showContact":{en:"Show contact number",ar:"عرض الرقم للتواصل"},
     "detail.noContact":{en:"No contact number for this listing",ar:"لا يوجد رقم تواصل لهذا الإعلان"},
     "detail.waMessage":{en:"Hello, I'm interested in {x} listed on Souq Al Arqam",ar:"مرحباً، أنا مهتم بـ {x} المعروض في سوق الأرقام"},
     "detail.important":{en:"Important information",ar:"معلومات مهمة"},
@@ -689,6 +689,13 @@
   function priceText(it){
     if(it.price === '' || it.price == null || isNaN(parseFloat(it.price))) return translations['price.contact'][currentLang];
     return escapeHtml(it.price) + ' ' + (currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD');
+  }
+  /* detail page price: thousands separators, decimals only when needed: "JOD 10,100.12" / "JOD 10,000" / "د.ا. 114,000" */
+  function detailPriceText(it){
+    const n = parseFloat(it.price);
+    if(it.price === '' || it.price == null || isNaN(n)) return translations['price.contact'][currentLang];
+    const num = n.toLocaleString('en-US', {minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2});
+    return currentLang === 'ar' ? 'د.ا. <bdi dir="ltr">' + num + '</bdi>' : 'JOD ' + num;
   }
   function creditsFor(item, c){
     const num = String(item.type === 'plate' ? item.number : item.value).toUpperCase().replace(/[^0-9XYZ]/g,'');
@@ -1422,7 +1429,6 @@
       '<button type="button" class="btn btn-ghost" onclick="plateImage(\'share\', this)">\u2197 ' + T('img.share') + '</button></div>';
 
     const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'Souq Al Arqam';
-    document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
     const snEl = document.getElementById('sellerName');
     snEl.textContent = sellerName;
     snEl.classList.add('seller-link'); snEl.setAttribute('role','button'); snEl.setAttribute('tabindex','0'); snEl.onclick = openSellerPage;   // the name itself opens the seller's page
@@ -1432,12 +1438,11 @@
       snEl.insertAdjacentHTML('beforeend', ' <span class="vbadge ' + (dl ? 'vb-green' : 'vb-blue') + '" title="' + escapeHtml(T(dl ? 'badge.dealer' : 'badge.verified')) + '" aria-label="' + escapeHtml(T(dl ? 'badge.dealer' : 'badge.verified')) + '"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
     }
     const dateStr = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
-    document.getElementById('sellerDate').textContent = it.seed || !dateStr ? T('detail.sample') : T('detail.listed') + ' ' + dateStr;
     let pk = document.getElementById('detailPkg');
     if(!pk){ pk = document.createElement('div'); pk.id = 'detailPkg'; document.getElementById('detailPrice').insertAdjacentElement('afterend', pk); }
     const mem = it.pkgId ? userListings.filter(x => x.pkgId === it.pkgId && x.type === it.type) : [];
     pk.innerHTML = mem.length > 1 ? '<div class="pkg-title" style="margin:10px 0 6px">' + T('bundle.inThis') + ' (' + mem.length + ')</div><div class="pkg-grid">' + mem.map(m => m.type === 'plate' ? '<a class="pkg-cell" href="' + listingHref(m) + '">' + plateHtml(m.code, m.number, false) + '</a>' : '<a class="pkg-cell pkg-numcell" href="' + listingHref(m) + '">' + escapeHtml(fmtMobile(m.value)) + '</a>').join('') + '</div>' : '';
-    document.getElementById('detailPrice').innerHTML = priceText(it) + (it.sold ? ' <span class="sold-badge">' + T('sold.label') + '</span>' : '');
+    document.getElementById('detailPrice').innerHTML = detailPriceText(it) + (it.sold ? ' <span class="sold-badge">' + T('sold.label') + '</span>' : '');
 
     wireShare();
     const sl = document.getElementById('sellerAdsLink');

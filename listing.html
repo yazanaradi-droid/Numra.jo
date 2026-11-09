@@ -22,7 +22,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="سوق الأرقام">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="stylesheet" href="style.css?v=202611091830">
+<link rel="stylesheet" href="style.css?v=202611091910">
 </head>
 <body>
 
@@ -104,26 +104,24 @@
       <div class="detail-card">
         <div id="detailVisual" class="detail-visual"></div>
         <div class="seller-row">
-          <div class="avatar" id="sellerAvatar"></div>
           <div>
-            <div><span class="by" data-i18n="detail.by">By</span> <strong id="sellerName"></strong></div>
+            <div class="seller-name-line"><strong id="sellerName"></strong></div>
             <a href="#" class="seller-ads-link" id="sellerAdsLink" target="_blank" rel="noopener" data-i18n="seller.viewAds">View seller's ads</a>
-            <div class="time" id="sellerDate"></div>
           </div>
         </div>
         <div class="detail-price" id="detailPrice"></div>
+        <div class="detail-actions">
+          <button type="button" class="rep-btn" id="reportBtn" style="display:none" data-i18n="report.btn">Report this ad</button>
+        </div>
+        <div class="important-box">
+          <h3>⚠ <span data-i18n="detail.important">Important information</span></h3>
+          <ul>
+            <li data-i18n="detail.tip1">Do not transfer money directly.</li>
+            <li data-i18n="detail.tip2">Meet the seller in person.</li>
+            <li data-i18n="detail.tip3">Verify ownership and transfer procedures before paying.</li>
+          </ul>
+        </div>
         <button type="button" class="contact-btn" id="contactBtn" disabled></button>
-        <button type="button" class="share-btn" id="shareBtn" data-i18n="share.btn">Share this ad</button>
-        <button type="button" class="rep-btn" id="reportBtn" style="display:none" data-i18n="report.btn">Report this ad</button>
-      </div>
-
-      <div class="important-box">
-        <h3>⚠ <span data-i18n="detail.important">Important information</span></h3>
-        <ul>
-          <li data-i18n="detail.tip1">Do not transfer money directly.</li>
-          <li data-i18n="detail.tip2">Meet the seller in person.</li>
-          <li data-i18n="detail.tip3">Verify ownership and transfer procedures before paying.</li>
-        </ul>
       </div>
 
       <div id="similarWrap" style="display:none;">
@@ -359,6 +357,6 @@
 
 <script>const PAGE_TYPE = 'listing';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611091830"></script>
+<script src="script.js?v=202611091910"></script>
 </body>
 </html>
