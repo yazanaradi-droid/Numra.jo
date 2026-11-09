@@ -274,9 +274,12 @@
     "dash.deleteBad":{en:"Enter your current password to confirm.",ar:"أدخل كلمة مرورك الحالية للتأكيد."},
     "dash.deleteAdmin":{en:"An administrator account cannot be deleted here.",ar:"لا يمكن حذف حساب المشرف من هنا."},
     "seller.viewAds":{en:"View seller's ads",ar:"عرض لوحات البائع"},
-    "seller.adsOf":{en:"Ads by",ar:"إعلانات"},
-    "seller.plates":{en:"License plates",ar:"لوحات السيارات"},
-    "seller.numbers":{en:"Phone numbers",ar:"أرقام الهواتف"},
+    "seller.platesTitle":{en:"License plates for sale",ar:"لوحات سيارات للبيع"},
+    "seller.numbersTitle":{en:"Phone numbers for sale",ar:"أرقام هواتف للبيع"},
+    "seller.whatsapp":{en:"WhatsApp",ar:"واتساب"},
+    "seller.call":{en:"Call",ar:"اتصال"},
+    "seller.since":{en:"Member since",ar:"عضو منذ"},
+    "seller.missing":{en:"This seller was not found.",ar:"لم يتم العثور على هذا البائع."},
     "seller.none":{en:"No ads in this section.",ar:"لا توجد إعلانات في هذا القسم."},
     "seller.loading":{en:"Loading...",ar:"جارٍ التحميل..."},
     "badge.dealer":{en:"Verified dealer",ar:"تاجر موثّق"},
@@ -1373,7 +1376,7 @@
         const r = Array.isArray(data) ? data[0] : data;
         if(r){
           detailItem = rowToItem(r);
-          detailSeller = {first:r.first_name, last:r.last_name, username:r.username, phone:r.phone, locked:r.phone_locked||null, verified:!!r.verified, dealer:!!r.dealer};
+          detailSeller = {first:r.first_name, last:r.last_name, username:r.username, phone:r.phone, locked:r.phone_locked||null, verified:!!r.verified, dealer:!!r.dealer, sellerId:r.seller_id||null};
           detailState = 'ok';
         } else detailState = 'missing';
       }catch(err){ console.warn(err); detailState = 'error'; }
@@ -1422,8 +1425,8 @@
     document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
     const snEl = document.getElementById('sellerName');
     snEl.textContent = sellerName;
-    snEl.classList.add('seller-link'); snEl.setAttribute('role','button'); snEl.setAttribute('tabindex','0'); snEl.onclick = openSellerAds;   // the name itself opens the seller's ads
-    snEl.onkeydown = ev => { if(ev.key === 'Enter' || ev.key === ' ') openSellerAds(ev); };
+    snEl.classList.add('seller-link'); snEl.setAttribute('role','button'); snEl.setAttribute('tabindex','0'); snEl.onclick = openSellerPage;   // the name itself opens the seller's page
+    snEl.onkeydown = ev => { if(ev.key === 'Enter' || ev.key === ' ') openSellerPage(ev); };
     if(detailSeller && (detailSeller.dealer || detailSeller.verified)){   // green = dealer, blue = verified person (set by the admin)
       const dl = !!detailSeller.dealer;
       snEl.insertAdjacentHTML('beforeend', ' <span class="vbadge ' + (dl ? 'vb-green' : 'vb-blue') + '" title="' + escapeHtml(T(dl ? 'badge.dealer' : 'badge.verified')) + '" aria-label="' + escapeHtml(T(dl ? 'badge.dealer' : 'badge.verified')) + '"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
@@ -1437,6 +1440,8 @@
     document.getElementById('detailPrice').innerHTML = priceText(it) + (it.sold ? ' <span class="sold-badge">' + T('sold.label') + '</span>' : '');
 
     wireShare();
+    const sl = document.getElementById('sellerAdsLink');
+    if(sl){ const ok = !!(detailSeller && detailSeller.sellerId); sl.style.display = ok ? '' : 'none'; if(ok) sl.href = sellerUrl(detailSeller.sellerId); sl.onclick = ok ? null : (e => e.preventDefault()); }
     const btn = document.getElementById('contactBtn');
     if(detailSeller && detailSeller.phone){
       btn.disabled = false;
@@ -1518,38 +1523,60 @@
     location.reload();
   }
 
-  /* ===== all ads of the seller, grouped by section, in a pop-up window ===== */
-  function ensureSellerOverlay(){
-    let ov = document.getElementById('sellerOverlay');
-    if(ov) return ov;
-    ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.id = 'sellerOverlay';
-    ov.innerHTML = '<div class="modal seller-modal"><button class="modal-close" type="button" onclick="closeSellerAds()">\u2715</button><h3 id="sellerAdsTitle"></h3><div id="sellerAdsBody"></div></div>';
-    ov.addEventListener('click', e => { if(e.target === ov) closeSellerAds(); });
-    document.body.appendChild(ov);
-    return ov;
-  }
-  function closeSellerAds(){ const ov = document.getElementById('sellerOverlay'); if(ov) ov.classList.remove('open'); }
-  async function openSellerAds(e){
-    if(e) e.preventDefault();
-    if(!sb || !detailItem) return false;
-    const T = k => translations[k][currentLang];
-    const ov = ensureSellerOverlay(), body = document.getElementById('sellerAdsBody'), title = document.getElementById('sellerAdsTitle');
-    const name = document.getElementById('sellerName') ? document.getElementById('sellerName').innerHTML : '';
-    title.innerHTML = T('seller.adsOf') + ' ' + name;
-    body.innerHTML = '<p class="listing-empty" style="display:block">' + T('seller.loading') + '</p>';
-    ov.classList.add('open');
-    try{
-      const {data, error} = await sb.rpc('xp_seller_listings', {lid: detailItem.id});
-      if(error) throw error;
-      const items = (data || []).map(rowToItem);
-      const sec = (type, key) => {
-        const list = sortFeatured(items.filter(i => i.type === type));
-        return '<h4 class="seller-sec">' + T(key) + ' (' + list.length + ')</h4>' +
-          (list.length ? '<div class="listings-grid">' + list.map(safeCard).join('') + '</div>' : '<p class="seller-none">' + T('seller.none') + '</p>');
-      };
-      body.innerHTML = sec('plate', 'seller.plates') + sec('number', 'seller.numbers');
-    }catch(err){ console.warn(err); body.innerHTML = '<p class="seller-none">' + T('auth.genericErr') + '</p>'; }
+  /* ===== the seller's own page (opens in a new tab) ===== */
+  function sellerUrl(id){ return 'seller.html?id=' + encodeURIComponent(id) + (currentLang === 'ar' ? '&lang=ar' : ''); }
+  function openSellerPage(e){
+    if(e && e.preventDefault) e.preventDefault();
+    if(detailSeller && detailSeller.sellerId) window.open(sellerUrl(detailSeller.sellerId), '_blank', 'noopener');
     return false;
+  }
+  async function initSellerPage(){
+    const root = document.getElementById('sellerPage'); if(!root) return;
+    const sid = new URLSearchParams(window.location.search).get('id') || '';
+    sellerPage = {state:'loading', info:null, items:[]};
+    if(sb && /^[0-9a-f-]{36}$/i.test(sid)){
+      try{
+        const [i, l] = await Promise.all([sb.rpc('xp_seller_info', {sid}), sb.rpc('xp_seller_listings', {sid})]);
+        if(i.error) throw i.error; if(l.error) throw l.error;
+        const info = Array.isArray(i.data) ? i.data[0] : i.data;
+        if(info){ sellerPage = {state:'ok', info, items:(l.data || []).map(rowToItem)}; } else sellerPage.state = 'missing';
+      }catch(err){ console.warn(err); sellerPage.state = 'error'; }
+    } else sellerPage.state = 'missing';
+    window.onLangChange = renderSellerPage;
+    renderSellerPage();
+  }
+  let sellerPage = {state:'loading', info:null, items:[]};
+  function renderSellerPage(){
+    const T = k => translations[k][currentLang];
+    const msg = document.getElementById('sellerMsg'), body = document.getElementById('sellerBody');
+    if(!msg || !body) return;
+    if(sellerPage.state !== 'ok'){
+      body.style.display = 'none'; msg.style.display = 'block';
+      msg.textContent = T(sellerPage.state === 'loading' ? 'detail.loading' : (sellerPage.state === 'error' ? 'auth.genericErr' : 'seller.missing'));
+      return;
+    }
+    const inf = sellerPage.info, name = ((inf.first_name || '') + ' ' + (inf.last_name || '')).trim();
+    msg.style.display = 'none'; body.style.display = 'block';
+    document.title = name + ' | Souq Al Arqam';
+    document.getElementById('sellerCrumb').textContent = name;
+    document.getElementById('spAvatar').textContent = (name.charAt(0) || '?').toUpperCase();
+    const badge = inf.dealer || inf.verified
+      ? ' <span class="vbadge ' + (inf.dealer ? 'vb-green' : 'vb-blue') + '" title="' + escapeHtml(T(inf.dealer ? 'badge.dealer' : 'badge.verified')) + '"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' : '';
+    document.getElementById('spName').innerHTML = escapeHtml(name) + badge;
+    const since = inf.created_at ? T('seller.since') + ' ' + new Date(inf.created_at).toLocaleDateString('en-GB') : '';
+    document.getElementById('spSub').textContent = (inf.dealer ? T('badge.dealer') + ' · ' : (inf.verified ? T('badge.verified') + ' · ' : '')) + since;
+    const act = document.getElementById('spActions');
+    ['spWa','spCall'].forEach(id => { const b = document.getElementById(id); b.style.display = inf.anchor_id ? '' : 'none'; b.onclick = () => showContactForItem(inf.anchor_id); });
+    document.getElementById('spShare').onclick = async () => {
+      const url = location.href;
+      try{ if(navigator.share){ await navigator.share({title: document.title, url}); return; } await navigator.clipboard.writeText(url); const sp = document.getElementById('spShare'); sp.classList.add('done'); setTimeout(()=>sp.classList.remove('done'), 1500); }catch(e){}
+    };
+    const sec = (type, key) => {
+      const list = sortFeatured(sellerPage.items.filter(i => i.type === type));
+      return list.length ? '<h2 class="seller-sec">' + T(key) + ' (' + list.length + ')</h2><div class="listings-grid">' + list.map(safeCard).join('') + '</div>' : '';
+    };
+    const html = sec('plate', 'seller.platesTitle') + sec('number', 'seller.numbersTitle');
+    document.getElementById('spSections').innerHTML = html || '<p class="seller-none">' + T('seller.none') + '</p>';
   }
 
   function wireShare(){
@@ -1932,6 +1959,7 @@
     authReady = initAuth();
     if(document.getElementById('dashRoot')) authReady.then(initDashboard);
     if(document.getElementById('listingDetail')) initListingPage();
+    else if(document.getElementById('sellerPage')) initSellerPage();
     else loadRemoteListings().then(()=>{ renderListings(); renderHomeListings(); });
   });
 

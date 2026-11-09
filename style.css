@@ -1077,3 +1077,22 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 .seller-link{color:var(--accent-text); cursor:pointer;}
 .seller-link:hover{text-decoration:underline;}
 .seller-ads-link{display:block; margin:2px 0 4px;}
+
+/* seller page */
+.seller-head{display:flex; align-items:center; gap:20px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius,14px); padding:22px 24px; margin-bottom:8px;}
+.seller-avatar{width:84px; height:84px; border-radius:50%; background:var(--surface-2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:2.1rem; font-weight:800; color:var(--accent-text); flex:none;}
+.seller-head-info{flex:1 1 220px; min-width:0;}
+.seller-head-info h1{font-size:1.6rem; line-height:1.3; margin:0; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.seller-sub{color:var(--muted); font-size:.9rem; margin-top:6px;}
+.seller-head-actions{display:flex; gap:10px; align-items:center; flex:none;}
+.sp-btn{display:inline-flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--line); color:var(--text); font:inherit; font-weight:600; padding:11px 18px; border-radius:11px; cursor:pointer;}
+.sp-btn:hover{border-color:var(--gold);}
+.sp-wa{background:#25D366; border-color:#25D366; color:#052e16;}
+.sp-wa:hover{border-color:#25D366; filter:brightness(1.05);}
+.sp-icon{padding:11px 13px;} .sp-icon.done{border-color:#22C55E; color:#22C55E;}
+.seller-head .vbadge svg{width:22px; height:22px;}
+#spSections .seller-sec{margin:28px 0 14px; font-size:1.15rem;}
+@media (max-width:640px){ .seller-head{padding:18px; gap:14px;} .seller-avatar{width:64px; height:64px; font-size:1.6rem;} .seller-head-info h1{font-size:1.3rem;} .seller-head-actions{width:100%;} .sp-btn{flex:1; justify-content:center; padding:11px 10px;} .sp-icon{flex:0 0 auto;} }
+#sellerPage .detail-wrap{max-width:1180px;}
+#spSections .listings-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px;}
+#spSections .listing-card{min-width:0;}

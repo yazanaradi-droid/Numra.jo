@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Seller | Souq Al Arqam</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="License plate or mobile number listing on Souq Al Arqam.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Souq Al Arqam | سوق الأرقام">
+<meta property="og:title" content="Souq Al Arqam | سوق الأرقام">
+<meta property="og:description" content="لوحات السيارات وأرقام الهواتف المميزة في الأردن — License plates &amp; VIP phone numbers in Jordan.">
+<meta property="og:image" content="https://souqalarqam.com/images/og-v2.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://souqalarqam.com/images/og-v2.png">
+<meta name="theme-color" content="#0A0D14">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=3">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="images/icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="سوق الأرقام">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="style.css?v=202611091830">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a class="logo" href="index.html"><span class="logo-mark">SA</span><span class="logo-name"><b class="logo-en">Souq Al Arqam</b><small class="logo-ar">سوق الأرقام</small></span></a>
+    <nav class="primary">
+      <ul>
+        <li><a href="index.html" onclick="navTo('index.html', event)" data-i18n="nav.home">Home</a></li>
+        <li><a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="nav.plates">License Plates ▾</a>
+          <div class="dropdown">
+            <a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="nav.plates.all">See Car Plates (All)</a>
+            <a href="#" onclick="goAdd('plate','single',event)" data-i18n="nav.uploadOnCar">Add a new plate</a>
+          </div>
+        </li>
+        <li><a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers">Phone Numbers ▾</a>
+          <div class="dropdown">
+            <a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="nav.numbers.all">See Phone Numbers (All)</a>
+            <a href="#" onclick="goAdd('number','single',event)" data-i18n="nav.uploadNumberSingle">Add a new number</a>
+          </div>
+        </li>
+        <li><a href="bundles.html" onclick="navTo('bundles.html', event)" data-i18n="nav.bundles">Packages ▾</a>
+          <div class="dropdown">
+            <a href="bundles.html" onclick="navTo('bundles.html', event)" data-i18n="nav.bundles.all">See Packages (All)</a>
+            <a href="#" onclick="goAdd('plate','multi',event)" data-i18n="nav.uploadMultiPlates">Add new plates (multiple)</a>
+            <a href="#" onclick="goAdd('number','multi',event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
+          </div>
+        </li>
+        <li><a href="#" data-i18n="nav.more">More ▾</a>
+          <div class="dropdown">
+            <a href="#" onclick="openInfo('contact', event)" data-i18n="nav.contact">Contact Us</a>
+            <a href="#" onclick="openInfo('about', event)" data-i18n="nav.about">About Us</a>
+            <a href="#" onclick="openInfo('privacy', event)" data-i18n="nav.privacy">Privacy Policy</a>
+            <a href="#" onclick="openInfo('terms', event)" data-i18n="nav.terms">Terms</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" title="Favorites" onclick="goDash('favorites',event)">♡</button>
+      <button class="icon-btn" id="langToggle" title="Language" onclick="toggleLang()">EN</button>
+      <span class="auth-guest" id="authGuest">
+        <a class="btn btn-ghost" href="#" onclick="openAuth('login',event)" data-i18n="nav.login">Login</a>
+        <a class="btn btn-ghost" href="#" onclick="openAuth('register',event)" data-i18n="nav.register">Register</a>
+      </span>
+      <span class="auth-user" id="authUser" style="display:none;">
+        <div class="user-menu" id="userMenu">
+          <button type="button" class="user-chip" id="userChip" onclick="toggleUserMenu(event)" aria-haspopup="true"></button>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="#" onclick="goDash('profile',event)" data-i18n="dash.profile">My profile</a>
+            <a href="#" onclick="goDash('membership',event)" data-i18n="dash.membership">Membership management</a>
+            <a href="#" onclick="goDash('plates',event)" data-i18n="dash.plates">My plates</a>
+            <a href="#" onclick="goDash('numbers',event)" data-i18n="dash.numbers">My numbers</a>
+            <a href="#" onclick="goDash('favorites',event)" data-i18n="dash.favorites">Favorites</a>
+            <a href="#" onclick="goDash('package',event)" data-i18n="dash.package">My package</a>
+            <a href="admin.html" id="adminLink" style="display:none" data-i18n="nav.admin">Admin panel</a>
+            <a href="#" class="logout-link" onclick="logout(event)" data-i18n="nav.logout">Logout</a>
+          </div>
+        </div>
+      </span>
+      <button class="icon-btn menu-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="toggleMobileNav(event)">☰</button>
+    </div>
+  </div>
+</header>
+<nav class="quickbar" aria-label="Quick links"><a href="index.html" data-qb="index.html" data-i18n="qb.home">Home</a><a href="plates.html" data-qb="plates.html" onclick="navTo('plates.html', event)" data-i18n="qb.plates">Plates</a><a href="numbers.html" data-qb="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="qb.numbers">Numbers</a></nav>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html" onclick="navTo('index.html', event)" data-i18n="nav.home">Home</a> / <span id="sellerCrumb"></span></div>
+  </div>
+</section>
+
+<section id="sellerPage">
+  <div class="wrap detail-wrap">
+    <div id="sellerMsg" class="listing-empty" style="display:block;" data-i18n="detail.loading">Loading...</div>
+    <div id="sellerBody" style="display:none;">
+      <div class="seller-head">
+        <div class="seller-avatar" id="spAvatar"></div>
+        <div class="seller-head-info">
+          <h1 id="spName"></h1>
+          <div class="seller-sub" id="spSub"></div>
+        </div>
+        <div class="seller-head-actions" id="spActions">
+          <button type="button" class="sp-btn sp-wa" id="spWa"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.8 2.1 1.2 1 2.2 1.4 2.5 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg><span data-i18n="seller.whatsapp">WhatsApp</span></button>
+          <button type="button" class="sp-btn" id="spCall"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span data-i18n="seller.call">Call</span></button>
+          <button type="button" class="sp-btn sp-icon" id="spShare" aria-label="Share"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v14"/></svg></button>
+        </div>
+      </div>
+      <div id="spSections"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><span class="logo-mark">SA</span><span class="logo-name"><b class="logo-en">Souq Al Arqam</b><small class="logo-ar">سوق الأرقام</small></span></a>
+        <p style="color:var(--muted); font-size:.85rem; margin-top:14px; max-width:260px;" data-i18n="footer.tagline">The biggest marketplace for license plates and phone numbers.</p>
+      </div>
+      <div>
+        <h5 data-i18n="footer.marketplace">Marketplace</h5>
+        <ul>
+          <li><a href="plates.html" onclick="navTo('plates.html', event)" data-i18n="stats.plates">License Plates</a></li>
+          <li><a href="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="stats.numbers">Phone Numbers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 data-i18n="footer.company">Company</h5>
+        <ul>
+          <li><a href="#" onclick="openInfo('about', event)" data-i18n="nav.about">About Us</a></li>
+          <li><a href="#" onclick="openInfo('contact', event)" data-i18n="nav.contact">Contact Us</a></li>
+          <li><a href="mailto:info@souqalarqam.com" dir="ltr">info@souqalarqam.com</a></li>
+          <li><a href="mailto:support@souqalarqam.com" dir="ltr">support@souqalarqam.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 data-i18n="footer.legal">Legal</h5>
+        <ul>
+          <li><a href="#" onclick="openInfo('privacy', event)" data-i18n="nav.privacy">Privacy Policy</a></li>
+          <li><a href="#" onclick="openInfo('terms', event)" data-i18n="nav.terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="footer.copyright">© 2026 Souq Al Arqam Commercial Broker</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="contactOverlay">
+  <div class="modal contact-modal">
+    <div class="contact-head">
+      <h3 data-i18n="contact.title">Important before contacting</h3>
+      <button class="modal-close" onclick="closeContact()" aria-label="Close">✕</button>
+    </div>
+    <div class="contact-banner">
+      <svg viewBox="0 0 64 64" width="72" height="72" aria-hidden="true"><path d="M32 6 60 56H4Z" fill="#E4572E" stroke="#fff" stroke-width="4" stroke-linejoin="round"/><rect x="29" y="22" width="6" height="18" rx="3" fill="#fff"/><circle cx="32" cy="47" r="3.5" fill="#fff"/></svg>
+      <div class="contact-banner-text"><span>BE CAREFUL</span><b data-i18n="contact.careful">Be careful</b></div>
+    </div>
+    <p class="contact-safety">⚠ <b data-i18n="contact.safety">For your safety:</b></p>
+    <ul class="contact-list">
+      <li data-i18n="contact.b1">Do not transfer any money directly to the seller's bank account.</li>
+      <li data-i18n="contact.b2">Scammers may pose as trusted sellers.</li>
+      <li data-i18n="contact.b3">Meet the seller in person.</li>
+      <li><b data-i18n="contact.disclaimerLabel">Disclaimer:</b> <span data-i18n="contact.disclaimer">our platform is not responsible for any financial loss or fraud resulting from direct dealings.</span></li>
+    </ul>
+    <div class="contact-actions">
+      <button type="button" class="contact-close" onclick="closeContact()" data-i18n="contact.close">Close</button>
+      <a class="contact-wa" id="contactWa" href="#" target="_blank" rel="noopener"><span data-i18n="contact.whatsapp">WhatsApp</span></a>
+      <a class="contact-call" id="contactCall" href="#">📞 <span id="contactCallNum"></span></a>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="registerOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeRegister()">✕</button>
+
+    <div id="registerForm">
+      <h3 data-i18n="modal.title">Create your account</h3>
+      <p class="sub" data-i18n="modal.subtitle">Register with your email to list, buy and negotiate plates and numbers.</p>
+      <form onsubmit="return submitRegister(event)" novalidate autocomplete="off">
+        <div class="upload-error-banner" id="regGlobalErr"></div>
+        <div class="hp-field" aria-hidden="true"><label for="regWebsite">Website</label><input id="regWebsite" type="text" tabindex="-1" autocomplete="off"></div>
+        <div class="field">
+          <label for="regEmail" data-i18n="modal.email">Email</label>
+          <input id="regEmail" type="email" dir="ltr" autocomplete="email" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.emailPlaceholder" placeholder="name@example.com">
+          <div class="hint error" id="regEmailErr"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="regFirst" data-i18n="modal.first">First name</label>
+            <input id="regFirst" type="text" autocomplete="given-name" data-i18n-placeholder="modal.firstPlaceholder" placeholder="Ahmad">
+            <div class="hint error" id="regFirstErr"></div>
+          </div>
+          <div class="field">
+            <label for="regLast" data-i18n="modal.last">Last name</label>
+            <input id="regLast" type="text" autocomplete="family-name" data-i18n-placeholder="modal.lastPlaceholder" placeholder="Khalil">
+            <div class="hint error" id="regLastErr"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="regPhone" data-i18n="modal.phone">Phone number</label>
+          <div class="phone-row"><select id="regCountry" dir="ltr" aria-label="Country code"></select><input id="regPhone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="16" dir="ltr" data-i18n-placeholder="modal.phonePlaceholder" placeholder="79 123 4567"></div>
+          <div class="hint error" id="regPhoneErr"></div>
+        </div>
+        <div class="field">
+          <label for="regPassword" data-i18n="modal.password">Password</label>
+          <input id="regPassword" type="password" autocomplete="new-password" data-i18n-placeholder="modal.passwordPlaceholder" placeholder="At least 6 characters">
+          <div class="hint error" id="regPasswordErr"></div>
+        </div>
+        <div id="regCaptcha"></div>
+        <button class="modal-submit" type="submit" data-i18n="modal.submit">Create Account</button>
+        <p class="auth-switch"><span data-i18n="modal.haveAccount">Already have an account?</span> <a href="#" onclick="openAuth('login',event)" data-i18n="modal.goLogin">Log in</a></p>
+      </form>
+    </div>
+
+    <div id="loginForm" style="display:none;">
+      <h3 data-i18n="login.title">Log in</h3>
+      <p class="sub" data-i18n="login.subtitle">Enter your email and password.</p>
+      <div class="hint" id="loginNote" style="display:none; color:var(--text); margin-bottom:10px;" data-i18n="login.needed">Please log in (or register) to list a plate or number.</div>
+      <form onsubmit="return submitLogin(event)" novalidate>
+        <div class="upload-error-banner" id="loginErr" data-i18n="login.err">Incorrect email, phone or password.</div>
+        <div class="field">
+          <label for="loginUsername" data-i18n="login.id">Email or phone</label>
+          <input id="loginUsername" type="text" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="login.idPlaceholder" placeholder="name@example.com / +9627XXXXXXXX">
+        </div>
+        <div class="field">
+          <label for="loginPassword" data-i18n="modal.password">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" data-i18n-placeholder="login.passwordPlaceholder" placeholder="Your password">
+        </div>
+        <div id="loginCaptcha"></div>
+        <p class="auth-switch" style="margin:0 0 10px"><a href="#" onclick="openForgot(event)" data-i18n="login.forgot">Forgot password?</a></p>
+        <button class="modal-submit" type="submit" data-i18n="login.submit">Log in</button>
+        <p class="auth-switch"><span data-i18n="modal.noAccount">New here?</span> <a href="#" onclick="openAuth('register',event)" data-i18n="modal.goRegister">Create an account</a></p>
+      </form>
+    </div>
+
+    <div id="forgotForm" style="display:none;">
+      <h3 data-i18n="forgot.title">Reset your password</h3>
+      <p class="sub" data-i18n="forgot.subtitle">Enter your email and we will send you a verification code.</p>
+      <form onsubmit="return submitForgot(event)" novalidate>
+        <div class="upload-error-banner" id="forgotErr"></div>
+        <div class="field">
+          <label for="forgotEmail" data-i18n="modal.email">Email</label>
+          <input id="forgotEmail" type="email" dir="ltr" autocomplete="email" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.emailPlaceholder" placeholder="name@example.com">
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="forgot.send">Send code</button>
+        <p class="auth-switch"><a href="#" onclick="openAuth('login',event)" data-i18n="forgot.back">Back to log in</a></p>
+      </form>
+    </div>
+
+    <div id="otpForm" style="display:none;">
+      <h3 data-i18n="otp.title">Enter the code</h3>
+      <p class="sub"><span data-i18n="otp.sent">We sent a verification code to</span> <bdi dir="ltr" id="otpEmailShow"></bdi></p>
+      <form onsubmit="return submitOtp(event)" novalidate autocomplete="off">
+        <div class="upload-error-banner" id="otpErr"></div>
+        <div class="field">
+          <label for="otpCode" data-i18n="otp.code">Verification code</label>
+          <input id="otpCode" type="text" dir="ltr" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456">
+        </div>
+        <div class="field" id="otpPwField" style="display:none;">
+          <label for="otpNewPw" data-i18n="otp.newPw">New password</label>
+          <input id="otpNewPw" type="password" autocomplete="new-password" data-i18n-placeholder="modal.passwordPlaceholder" placeholder="At least 6 characters">
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="otp.verify">Verify</button>
+        <p class="auth-switch"><a href="#" id="otpResend" onclick="resendOtp(event)" data-i18n="otp.resend">Resend code</a></p>
+      </form>
+    </div>
+
+    <div id="registerSuccess" class="modal-success">
+      <div class="check">✓</div>
+      <h3 data-i18n="modal.successTitle">Account created!</h3>
+      <p data-i18n="modal.successDesc">Welcome — you are now signed in. This is a demo: your account is stored only in this browser.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="uploadOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeUpload()">✕</button>
+    <div id="uploadForm">
+      <h3 id="uploadTitle" data-i18n="upload.title.plate">List a license plate</h3>
+      <p class="sub" id="uploadSubtitle" data-i18n="upload.subtitle">Fill in the details below — buyers will see this listing.</p>
+      <div class="upload-error-banner" id="uploadErrorBanner" data-i18n="upload.errorBanner">Please check the highlighted fields.</div>
+      <form onsubmit="return submitUpload(event)" novalidate>
+        <div class="field" id="plateFields">
+          <label data-i18n="upload.plateValue">Plate number</label>
+          <div class="field-row">
+            <input id="upCode" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" maxlength="2" oninput="this.value=this.value.toUpperCase().replace(/[^0-9XYZ]/g,'')" placeholder="23" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
+            <input id="upNumber" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" maxlength="5" oninput="this.value=this.value.toUpperCase().replace(/[^0-9XYZ]/g,'')" placeholder="45678" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:11px 13px; color:var(--text); font-size:.9rem;">
+          </div>
+          <div class="hint" data-i18n="upload.codeHint">Code (1–99) and number, shown as code-number.</div>
+        </div>
+        <div class="field" id="numberFieldWrap" style="display:none;">
+          <label for="upValue" data-i18n="upload.numberValue">Mobile number</label>
+          <input id="upValue" type="text" inputmode="numeric" maxlength="12" dir="ltr" autocomplete="off" placeholder="078 000 1111" oninput="var d=this.value.replace(/[\u0660-\u0669]/g,c=>c.charCodeAt(0)-1632).replace(/[\u06F0-\u06F9]/g,c=>c.charCodeAt(0)-1776).replace(/\D/g,'').slice(0,10);this.value=d.length>6?d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6):d.length>3?d.slice(0,3)+' '+d.slice(3):d" style="text-align:left">d.charCodeAt(0)-1632).replace(/[\u06F0-\u06F9]/g,d=>d.charCodeAt(0)-1776).replace(/\D/g,'').slice(0,10)" style="text-align:left">
+        </div>
+        <div class="field">
+          <label for="upPrice"><span data-i18n="upload.price">Price (JOD)</span> <small style="color:var(--muted)" data-i18n="upload.priceOptional">(optional)</small></label>
+          <input id="upPrice" type="text" inputmode="decimal" placeholder="1500">
+        </div>
+        <div class="feat-box">
+          <label class="feat-toggle"><input type="checkbox" id="upFeatured" onchange="toggleFeatured()"><span class="feat-tick">✓</span><span><b data-i18n="feat.title">Featured ad</b> <small data-i18n="feat.optional">(optional)</small><br><em data-i18n="feat.desc">Shown first and highlighted so more buyers see it.</em></span></label>
+          <div id="featOptions" class="feat-options" style="display:none;">
+            <h4 data-i18n="feat.pricesTitle">Ad prices</h4>
+            <label class="feat-opt"><input type="radio" name="featPlan" value="2w" onchange="updateFeatTotal()" checked><span class="feat-name" data-i18n="feat.2w">Two weeks</span><span class="feat-price">7 <span data-i18n="pkg.jod">JOD</span></span></label>
+            <label class="feat-opt"><input type="radio" name="featPlan" value="1m" onchange="updateFeatTotal()"><span class="feat-name" data-i18n="feat.1m">One month</span><span class="feat-price">10 <span data-i18n="pkg.jod">JOD</span></span></label>
+            <label class="feat-opt"><input type="radio" name="featPlan" value="forever" onchange="updateFeatTotal()"><span class="feat-name" data-i18n="feat.forever">Unlimited</span><span class="feat-price">15 <span data-i18n="pkg.jod">JOD</span></span></label>
+            <div class="feat-promo"><label for="upPromo" data-i18n="feat.promoLabel">Activation code (if you have one)</label><input id="upPromo" type="text" autocomplete="off" dir="ltr" placeholder="CODE"></div>
+            <p class="feat-total"><span data-i18n="feat.total">Fee to pay:</span> <b id="featTotal">7</b> <span data-i18n="pkg.jod">JOD</span></p>
+            <p class="feat-note" data-i18n="feat.note">Your ad is published now. It becomes featured after payment is confirmed.</p>
+          </div>
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="upload.submit">Submit Listing</button>
+      </form>
+    </div>
+    <div id="uploadSuccess" class="modal-success">
+      <div class="check">✓</div>
+      <h3 data-i18n="upload.successTitle">Listing ready!</h3>
+      <p data-i18n="upload.successDesc">This is a local demo form, so nothing was actually published — but every field you typed passed validation.</p>
+      <div id="featPayBox" class="feat-pay" style="display:none;"></div>
+      <a id="uploadViewLink" href="#" class="btn btn-gold" style="display:none; margin-top:14px;" data-i18n="upload.viewListing">View listings</a>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="infoOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeInfo()">✕</button>
+    <h3 id="infoTitle" data-i18n="nav.contact">Contact Us</h3>
+    <div class="modal-info-body" id="infoBody" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<script>const PAGE_TYPE = 'seller';</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="script.js?v=202611091830"></script>
+</body>
+</html>
