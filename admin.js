@@ -10,7 +10,7 @@
       stats:'Statistics', st_title:'Site statistics', st_ads:'Ads', st_users:'Users', st_v_today:'Visitors today', st_v_7:'Visitors (7 days)', st_v_30:'Visitors (30 days)', st_pv:'Page views (30 days)',
       st_since:'Visitor counting started on', st_none:'Visitor counting starts now; numbers will grow as people visit.', st_daily:'Daily', st_day:'Day', st_vis:'Visitors', st_pgs:'Pages', st_nu:'New users', st_na:'New ads', st_days:'days',
       u_ads:'View ads', u_back:'Back to users', u_adsOf:'Ads posted by', u_none:'This user has not posted any ads.', u_cap:'Showing the latest 500 ads on the site.',
-      listings:'Ads', users:'Users', settings:'Settings', back:'Back to site',
+      listings:'Ads', users:'Users', settings:'Settings', messages:'Messages', m_none:'No messages yet.', m_done:'Mark handled', m_undo:'Mark unhandled', m_reply:'Reply', m_mail_ok:'email sent', m_mail_no:'email not sent', back:'Back to site',
       denied:'This page is for administrators only.', login:'Please log in with the admin account.', loading:'Loading…', err:'Something went wrong. Try again.',
       f_all:'All', f_reported:'Reported', f_hidden:'Hidden', f_pending:'Featured requests', f_featured:'Featured',
       hide:'Hide', unhide:'Show again', del:'Delete', ban:'Ban seller', unban:'Unban', activate:'Activate featured', reject:'Reject request', unfeature:'Remove featured', mkfeat:'Make featured', dealer:'Dealer (green)', undealer:'Remove dealer', verify:'Verified (blue)', unverify:'Remove verified', tagDealer:'Dealer', tagVerified:'Verified', email:'Email',
@@ -30,7 +30,7 @@
       stats:'الإحصاءات', st_title:'إحصاءات الموقع', st_ads:'الإعلانات', st_users:'المستخدمون', st_v_today:'زوار اليوم', st_v_7:'الزوار (7 أيام)', st_v_30:'الزوار (30 يوماً)', st_pv:'مشاهدات الصفحات (30 يوماً)',
       st_since:'بدأ عدّ الزوار بتاريخ', st_none:'بدأ عدّ الزوار الآن، وستزداد الأرقام مع دخول الناس.', st_daily:'يومياً', st_day:'اليوم', st_vis:'الزوار', st_pgs:'الصفحات', st_nu:'مستخدمون جدد', st_na:'إعلانات جديدة', st_days:'يوماً',
       u_ads:'عرض إعلاناته', u_back:'العودة للمستخدمين', u_adsOf:'إعلانات المستخدم', u_none:'لم ينشر هذا المستخدم أي إعلان.', u_cap:'يعرض آخر 500 إعلان في الموقع.',
-      listings:'الإعلانات', users:'المستخدمون', settings:'الإعدادات', back:'العودة للموقع',
+      listings:'الإعلانات', users:'المستخدمون', settings:'الإعدادات', messages:'الرسائل', m_none:'لا توجد رسائل بعد.', m_done:'تمت المعالجة', m_undo:'إعادة كغير معالجة', m_reply:'رد', m_mail_ok:'أُرسل البريد', m_mail_no:'لم يُرسل البريد', back:'العودة للموقع',
       denied:'هذه الصفحة للمشرفين فقط.', login:'سجّل الدخول بحساب المشرف.', loading:'جارٍ التحميل…', err:'حدث خطأ، حاول مجدداً.',
       f_all:'الكل', f_reported:'المبلّغ عنها', f_hidden:'المخفية', f_pending:'طلبات التمييز', f_featured:'المميزة',
       hide:'إخفاء', unhide:'إظهار', del:'حذف', ban:'حظر البائع', unban:'فك الحظر', activate:'تفعيل التمييز', reject:'رفض الطلب', unfeature:'إلغاء التمييز', mkfeat:'اجعله مميزاً', dealer:'تاجر (أخضر)', undealer:'إلغاء التاجر', verify:'موثّق (أزرق)', unverify:'إلغاء التوثيق', tagDealer:'تاجر', tagVerified:'موثّق', email:'الإيميل',
@@ -51,7 +51,7 @@
   const panel = () => document.getElementById('admPanel');
 
   function renderNav(){
-    nav().innerHTML = ['alerts','stats','listings','users','settings'].map(t =>
+    nav().innerHTML = ['alerts','stats','listings','users','messages','settings'].map(t =>
       '<button class="dash-tab' + (t === tab ? ' active' : '') + '" data-tab="' + t + '">' + T(t) + (t === 'alerts' && alertCount ? ' <span class="adm-tag adm-red" style="margin-inline-start:6px">' + alertCount + '</span>' : '') + '</button>').join('') +
       '<button class="dash-tab dash-logout" style="color:var(--text)" data-tab="__back">' + T('back') + '</button>';
   }
@@ -189,6 +189,22 @@
     document.getElementById('admQ').addEventListener('input', e => { q = e.target.value; paintUsers(); });
   }
 
+  async function showMessages(){
+    const my = ++seq;
+    msg(T('loading'));
+    const {data, error} = await sb.rpc('xp_admin_messages');
+    if(my !== seq) return;
+    if(error){ msg(T('err')); return; }
+    const ms = data || [];
+    if(!ms.length){ msg(T('m_none')); return; }
+    panel().innerHTML = '<div class="dash-card"><h2>' + T('messages') + '</h2>' + ms.map(m =>
+      '<div class="adm-row" style="padding:14px 0;border-top:1px solid var(--line);' + (m.handled ? 'opacity:.55' : '') + '">' +
+      '<div><b>' + E(m.name) + '</b> <bdi dir="ltr" style="color:var(--muted)">' + E(m.email) + '</bdi> <span style="color:var(--muted);font-size:.8rem">' + new Date(m.created_at).toLocaleString('en-GB') + ' · ' + T(m.email_sent ? 'm_mail_ok' : 'm_mail_no') + '</span></div>' +
+      '<p style="white-space:pre-wrap;margin:8px 0">' + E(m.message) + '</p>' +
+      '<a class="btn btn-ghost" href="mailto:' + E(m.email) + '">' + T('m_reply') + '</a> ' +
+      '<button class="btn btn-ghost" data-act="msgdone" data-id="' + E(m.id) + '" data-on="' + (m.handled ? '0' : '1') + '">' + T(m.handled ? 'm_undo' : 'm_done') + '</button></div>').join('') + '</div>';
+  }
+
   async function showSettings(){
     const my = ++seq;
     msg(T('loading'));
@@ -214,7 +230,7 @@
 
   function show(){
     renderNav();
-    if(tab === 'alerts') showAlerts(); else if(tab === 'listings') showListings(); else if(tab === 'stats') showStats(); else if(tab === 'users') viewUser ? showUserAds() : showUsers(); else showSettings();
+    if(tab === 'alerts') showAlerts(); else if(tab === 'listings') showListings(); else if(tab === 'stats') showStats(); else if(tab === 'messages') showMessages(); else if(tab === 'users') viewUser ? showUserAds() : showUsers(); else showSettings();
   }
 
   async function act(a, id){
@@ -227,6 +243,7 @@
     else if(a === 'mkfeat'){ const sel = document.querySelector('select[data-planfor="' + id + '"]'); r = await sb.rpc('xp_admin_set_featured', {lid:id, p_action:'activate', p_plan: sel ? sel.value : '2w'}); }
     else if(a === 'reject') r = await sb.rpc('xp_admin_set_featured', {lid:id, p_action:'reject'});
     else if(a === 'unfeature') r = await sb.rpc('xp_admin_set_featured', {lid:id, p_action:'remove'});
+    else if(a === 'msgdone'){ r = await sb.rpc('xp_admin_message_set', {mid:id, p_handled: !!(document.querySelector('[data-act="msgdone"][data-id="' + id + '"]') || {dataset:{}}).dataset.on && document.querySelector('[data-act="msgdone"][data-id="' + id + '"]').dataset.on === '1'}); }
     else if(a === 'ban'){ const why = prompt(T('reasonBan')); if(why === null) return; r = await sb.rpc('xp_admin_set_banned', {uid:id, p_banned:true, p_reason:why || null}); }
     else if(a === 'unban') r = await sb.rpc('xp_admin_set_banned', {uid:id, p_banned:false});
     else if(a === 'dealer' || a === 'undealer') r = await sb.rpc('xp_admin_set_badge', {uid:id, p_kind:'dealer', p_on: a === 'dealer'});

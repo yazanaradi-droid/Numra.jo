@@ -1126,3 +1126,6 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 @media(max-width:900px){.why-grid{grid-template-columns:1fr 1fr;} .cu-grid{grid-template-columns:1fr;}}
 @media(max-width:520px){.why-grid{grid-template-columns:1fr;} .cu-row{grid-template-columns:1fr;} .about-card{padding:22px 20px;}}
 html[dir="rtl"] .section-head .tag{letter-spacing:0; font-family:inherit; font-size:.85rem;}
+
+.cu-status{font-size:.92rem; min-height:1.2em;} .cu-status.ok{color:#3DDC97;} .cu-status.bad{color:#FF6B7A;}
+.cu-form{position:relative;}

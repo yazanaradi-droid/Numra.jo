@@ -17,14 +17,14 @@
 <meta name="twitter:image" content="https://souqalarqam.com/images/og-v2.png">
 <meta name="theme-color" content="#0A0D14">
 <link rel="canonical" href="https://souqalarqam.com/">
-<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611091704">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611091712">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="images/icon-180.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="سوق الأرقام">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="stylesheet" href="style.css?v=202611091704">
+<link rel="stylesheet" href="style.css?v=202611091712">
 </head>
 <body>
 
@@ -211,7 +211,9 @@
       <form class="cu-form" id="cuForm" onsubmit="return sendContactMail(event)">
         <div class="cu-row"><input id="cuName" required data-i18n-placeholder="cu.name" placeholder="Your name"><input id="cuEmail" type="email" required data-i18n-placeholder="cu.email" placeholder="Email"></div>
         <textarea id="cuMsg" rows="5" required data-i18n-placeholder="cu.msg" placeholder="Your message"></textarea>
+        <input id="cuWeb" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
         <button class="btn btn-gold" type="submit" data-i18n="cu.send">Send</button>
+        <div id="cuStatus" class="cu-status" role="status"></div>
       </form>
       <div class="cu-info">
         <a class="cu-card" href="mailto:info@souqalarqam.com"><span class="cu-ico">&#9993;</span><span><b data-i18n="cu.general">General inquiries</b><bdi dir="ltr">info@souqalarqam.com</bdi></span></a>
@@ -423,6 +425,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611091704"></script>
+<script src="script.js?v=202611091712"></script>
 </body>
 </html>

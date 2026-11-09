@@ -2036,9 +2036,23 @@ document.addEventListener('DOMContentLoaded', function(){
 /* installable app: register the offline service worker (https only) */
 if('serviceWorker' in navigator && location.protocol === 'https:'){ window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
 
-function sendContactMail(e){
+async function sendContactMail(e){
   e.preventDefault();
-  var n=document.getElementById('cuName').value.trim(), m=document.getElementById('cuEmail').value.trim(), t=document.getElementById('cuMsg').value.trim();
-  location.href='mailto:info@souqalarqam.com?subject='+encodeURIComponent('Souq Al Arqam - '+n)+'&body='+encodeURIComponent(t+'\n\n'+n+' ('+m+')');
-  return false;
+  var f=document.getElementById('cuForm'), btn=f.querySelector('button[type=submit]'), st=document.getElementById('cuStatus');
+  var L=(typeof currentLang!=='undefined'&&currentLang==='en')?'en':'ar';
+  var M={ok:{ar:'تم الإرسال. سيتم التواصل معك بأسرع وقت.',en:'Sent. We will get back to you as soon as possible.'},
+    bad:{ar:'تحقق من الاسم والبريد الإلكتروني والرسالة.',en:'Please check your name, email and message.'},
+    rate:{ar:'أرسلت عدة رسائل مؤخراً. حاول لاحقاً.',en:'You sent several messages recently. Please try later.'},
+    err:{ar:'تعذّر الإرسال. حاول مرة أخرى.',en:'Could not send. Please try again.'}};
+  var show=function(k,good){st.textContent=M[k][L];st.className='cu-status '+(good?'ok':'bad');};
+  btn.disabled=true;
+  try{
+    var r=await fetch('https://xfkahevdccmogaxboffy.supabase.co/functions/v1/contact',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:document.getElementById('cuName').value,email:document.getElementById('cuEmail').value,message:document.getElementById('cuMsg').value,website:document.getElementById('cuWeb').value,lang:L})});
+    if(r.ok){ show('ok',true); f.reset(); }
+    else if(r.status===429) show('rate',false);
+    else if(r.status===400) show('bad',false);
+    else show('err',false);
+  }catch(err){ show('err',false); }
+  btn.disabled=false; return false;
 }
