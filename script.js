@@ -488,7 +488,7 @@
   }
   async function buildPlateCanvas(it){
     await loadPlateFonts();
-    const W = 1200, H = 400, SC = 2, c = document.createElement('canvas'); c.width = W * SC; c.height = H * SC;
+    const W = 1200, H = 350, SC = 2, c = document.createElement('canvas'); c.width = W * SC; c.height = H * SC;
     const g = c.getContext('2d'); g.scale(SC, SC); g.imageSmoothingQuality = 'high';
     g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
     const rr = (x, y, w, h, r) => { g.beginPath(); g.moveTo(x+r, y); g.arcTo(x+w, y, x+w, y+h, r); g.arcTo(x+w, y+h, x, y+h, r); g.arcTo(x, y+h, x, y, r); g.arcTo(x, y, x+w, y, r); g.closePath(); };
@@ -546,8 +546,9 @@
     } else {
       emboss(fmtMobile(it.value), W / 2 + 90, py + 195, '700 170px "SAP Barlow", "Arial Narrow", Arial', pw - 420, 'center', py + 40, py + 215, sx);
     }
-    /* site mark: bottom-right corner, under the plate */
-    g.fillStyle = '#2B2E35'; g.textAlign = 'right'; g.font = '800 34px "SAP Inter", Arial'; g.fillText(SITE_MARK, px + pw - 14, py + ph + 50);
+    /* site mark: inside the plate, bottom-right corner */
+    g.save(); g.textAlign = 'right'; g.font = '800 27px "SAP Inter", Arial'; g.fillStyle = 'rgba(255,255,255,.8)'; g.fillText(SITE_MARK, px + pw - 52, py + ph - 28 + 1.2);
+    g.fillStyle = 'rgba(43,46,53,.85)'; g.fillText(SITE_MARK, px + pw - 52, py + ph - 28); g.restore();
     return c;
   }
   async function plateImage(mode, btn){
