@@ -471,7 +471,20 @@
     g.save(); g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
     rr(px, py, pw, ph, 30); const gr = g.createLinearGradient(0, py, 0, py + ph); gr.addColorStop(0, '#E9ECF1'); gr.addColorStop(.5, '#DDE1E8'); gr.addColorStop(1, '#D1D6DF'); g.fillStyle = gr; g.fill(); g.restore();
     rr(px + 20, py + 20, pw - 40, ph - 40, 16); g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 3; g.stroke();
+    /* surface of the sheet: fine grain, reflective sheen, darker corners */
+    g.save(); rr(px + 7, py + 7, pw - 14, ph - 14, 26); g.clip();
+    const nc = document.createElement('canvas'); nc.width = 256; nc.height = 128; const nq = nc.getContext('2d'), nd = nq.createImageData(256, 128);
+    for(let i = 0; i < nd.data.length; i += 4){ const v = Math.random() * 255; nd.data[i] = nd.data[i+1] = nd.data[i+2] = v; nd.data[i+3] = 255; }
+    nq.putImageData(nd, 0, 0); g.globalAlpha = .05; g.globalCompositeOperation = 'multiply'; g.fillStyle = g.createPattern(nc, 'repeat'); g.fillRect(px, py, pw, ph);
+    g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+    const sh = g.createLinearGradient(px, py, px + pw * .75, py + ph * 1.6); sh.addColorStop(0, 'rgba(255,255,255,0)'); sh.addColorStop(.28, 'rgba(255,255,255,.34)'); sh.addColorStop(.42, 'rgba(255,255,255,0)'); sh.addColorStop(.7, 'rgba(255,255,255,.12)'); sh.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = sh; g.fillRect(px, py, pw, ph);
+    const vg = g.createRadialGradient(px + pw / 2, py + ph / 2, ph * .5, px + pw / 2, py + ph / 2, pw * .62); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.11)');
+    g.fillStyle = vg; g.fillRect(px, py, pw, ph);
+    g.restore();
     rr(px + 7, py + 7, pw - 14, ph - 14, 26); g.strokeStyle = '#0B0B0B'; g.lineWidth = 14; g.stroke();
+    g.save(); rr(px + 14.5, py + 14.5, pw - 29, ph - 29, 20); g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = 1.5; g.stroke(); g.restore();
+    g.save(); rr(px + 1, py + 1, pw - 2, ph - 2, 29); g.strokeStyle = 'rgba(255,255,255,.22)'; g.lineWidth = 2; g.stroke(); g.restore();
     const condOk = plateFontsOk;
     /* raised, stamped characters: white halo + soft drop shadow + black body + light rim on the top-left edge */
     const emboss = (txt, x, y, font, maxW, align, _a, _b, sx) => {
@@ -480,8 +493,9 @@
       const dir = g.direction;
       const layer = () => { const o = document.createElement('canvas'); o.width = W; o.height = H; const q = o.getContext('2d'); q.font = font; q.textAlign = align; q.direction = dir; q.textBaseline = 'alphabetic'; return [o, q]; };
       const put = (q, dx, dy, mode) => { q.save(); q.translate(x + dx, y + dy); q.scale(k, 1); mode === 'stroke' ? q.strokeText(txt, 0, 0) : q.fillText(txt, 0, 0); q.restore(); };
-      // 1) white halo
-      g.save(); g.lineJoin = 'round'; g.lineWidth = 5; g.strokeStyle = 'rgba(255,255,255,.9)'; g.shadowColor = 'rgba(0,0,0,.3)'; g.shadowBlur = 6; g.shadowOffsetX = 2; g.shadowOffsetY = 4; put(g, 0, 0, 'stroke'); g.restore();
+      // 1) cast shadow on the sheet (bottom-right) and a thin bright rim on the top-left edge of the raised metal
+      g.save(); g.translate(x, y); g.scale(k, 1); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 8; g.shadowOffsetX = 3; g.shadowOffsetY = 6; g.fillStyle = '#000'; g.fillText(txt, 0, 0); g.restore();
+      g.save(); g.translate(x - 1.6, y - 1.6); g.scale(k, 1); g.fillStyle = 'rgba(255,255,255,.95)'; g.fillText(txt, 0, 0); g.restore();
       // 2) black body
       const fs = parseInt(font.match(/(\d+)px/)[1], 10);
       g.save(); g.translate(x, y); g.scale(k, 1); const lg = g.createLinearGradient(0, -fs * .75, 0, fs * .02); lg.addColorStop(0, '#2B2D33'); lg.addColorStop(.35, '#0D0E10'); lg.addColorStop(1, '#000'); g.fillStyle = lg; g.fillText(txt, 0, 0); g.restore();
