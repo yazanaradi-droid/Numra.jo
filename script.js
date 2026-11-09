@@ -492,15 +492,15 @@
       g.drawImage(ob, 0, 0);
     };
     g.textBaseline = 'alphabetic';
-    const cx = px + 70, T = 300;
+    const cx = px + .056 * pw, T = .16 * pw;   /* same proportions as the plate on the page */
     g.direction = 'rtl'; g.font = '800 82px "SAP Cairo", Arial'; const wAr = g.measureText('الاردن').width;
-    emboss('الاردن', cx, py + 122, '800 82px "SAP Cairo", Arial', T, 'left', py + 60, py + 140, T / wAr);
+    emboss('الاردن', cx, py + 122, '800 82px "SAP Cairo", Arial', T, 'left', 0, 0, T / wAr);
     g.direction = 'ltr'; g.font = '800 60px Arial'; const wEn = g.measureText('JORDAN').width;
-    emboss('JORDAN', cx, py + 212, '800 60px Arial', T, 'left', py + 165, py + 220, T / wEn);
-    const fd = '700 235px "SAP Barlow", "Arial Narrow", Arial', sx = condOk ? 1 : .72;
+    emboss('JORDAN', cx, py + 212, '800 60px Arial', T, 'left', 0, 0, T / wEn);
+    const fd = '700 235px "SAP Barlow", "Arial Narrow", Arial', sx = condOk ? .84 : .62;
     if(it.type === 'plate'){
-      g.font = fd; const gap = 36, wc = g.measureText(String(it.code)).width * sx, wd = g.measureText('-').width * sx, wn = g.measureText(String(it.number)).width * sx;
-      const tot = wc + wd + wn + gap * 2, avail = 590, kk = Math.min(1, avail / tot), x0 = 790 - tot * kk / 2, S = sx * kk;
+      g.font = fd; const gap = 30, wc = g.measureText(String(it.code)).width * sx, wd = g.measureText('-').width * sx, wn = g.measureText(String(it.number)).width * sx;
+      const tot = wc + wd + wn + gap * 2, avail = .70 * pw, kk = Math.min(1, avail / tot), x0 = px + .6 * pw - tot * kk / 2, S = sx * kk;
       emboss(String(it.code), x0, py + 205, fd, 9999, 'left', 0, 0, S);
       emboss('-', x0 + (wc + gap) * kk, py + 205, fd, 9999, 'left', 0, 0, S);
       emboss(String(it.number), x0 + (wc + wd + gap * 2) * kk, py + 205, fd, 9999, 'left', 0, 0, S);
