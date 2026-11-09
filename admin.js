@@ -13,7 +13,7 @@
       listings:'Ads', users:'Users', settings:'Settings', back:'Back to site',
       denied:'This page is for administrators only.', login:'Please log in with the admin account.', loading:'Loading…', err:'Something went wrong. Try again.',
       f_all:'All', f_reported:'Reported', f_hidden:'Hidden', f_pending:'Featured requests', f_featured:'Featured',
-      hide:'Hide', unhide:'Show again', del:'Delete', ban:'Ban seller', unban:'Unban', activate:'Activate featured', reject:'Reject request', unfeature:'Remove featured',
+      hide:'Hide', unhide:'Show again', del:'Delete', ban:'Ban seller', unban:'Unban', activate:'Activate featured', reject:'Reject request', unfeature:'Remove featured', mkfeat:'Make featured',
       plan_2w:'2 weeks', plan_1m:'1 month', plan_forever:'Forever',
       reports:'reports', seller:'Seller', none:'Nothing here.', price:'Price', contact:'Contact for price',
       hiddenBy:'Hidden', reasonHide:'Reason for hiding (optional):', reasonBan:'Reason for ban (optional):', confirmDel:'Delete this ad permanently?',
@@ -33,7 +33,7 @@
       listings:'الإعلانات', users:'المستخدمون', settings:'الإعدادات', back:'العودة للموقع',
       denied:'هذه الصفحة للمشرفين فقط.', login:'سجّل الدخول بحساب المشرف.', loading:'جارٍ التحميل…', err:'حدث خطأ، حاول مجدداً.',
       f_all:'الكل', f_reported:'المبلّغ عنها', f_hidden:'المخفية', f_pending:'طلبات التمييز', f_featured:'المميزة',
-      hide:'إخفاء', unhide:'إظهار', del:'حذف', ban:'حظر البائع', unban:'فك الحظر', activate:'تفعيل التمييز', reject:'رفض الطلب', unfeature:'إلغاء التمييز',
+      hide:'إخفاء', unhide:'إظهار', del:'حذف', ban:'حظر البائع', unban:'فك الحظر', activate:'تفعيل التمييز', reject:'رفض الطلب', unfeature:'إلغاء التمييز', mkfeat:'اجعله مميزاً',
       plan_2w:'أسبوعان', plan_1m:'شهر', plan_forever:'دائم',
       reports:'بلاغات', seller:'البائع', none:'لا يوجد شيء هنا.', price:'السعر', contact:'تواصل للسعر',
       hiddenBy:'مخفي', reasonHide:'سبب الإخفاء (اختياري):', reasonBan:'سبب الحظر (اختياري):', confirmDel:'حذف هذا الإعلان نهائياً؟',
@@ -74,6 +74,11 @@
     const price = r.price != null ? E(r.price) + ' JOD' : T('contact');
     let act = r.hidden ? btn('unhide', r.id, T('unhide'), 'btn-gold') : btn('hide', r.id, T('hide'));
     if(pend) act += btn('activate', r.id, T('activate') + ' (' + planName(reqPlan) + ')', 'btn-gold') + btn('reject', r.id, T('reject'));
+    if(!featNow && !pend){
+      act += '<select data-planfor="' + E(r.id) + '" style="padding:6px 8px;font-size:.8rem;border-radius:8px;border:1px solid var(--line,#ccc);background:var(--bg,#fff);color:inherit">' +
+        ['2w','1m','forever'].map(p => '<option value="' + p + '">' + planName(p) + '</option>').join('') + '</select>' +
+        btn('mkfeat', r.id, '★ ' + T('mkfeat'), 'btn-gold');
+    }
     if(featNow) act += btn('unfeature', r.id, T('unfeature'));
     act += btn('del', r.id, T('del')) + (r.banned ? '' : btn('ban', r.user_id, T('ban')));
     return '<div class="adm-row"><div class="adm-main">' +
@@ -217,6 +222,7 @@
     else if(a === 'unhide') r = await sb.rpc('xp_admin_set_hidden', {lid:id, p_hidden:false});
     else if(a === 'del'){ if(!confirm(T('confirmDel'))) return; r = await sb.rpc('xp_admin_delete_listing', {lid:id}); }
     else if(a === 'activate') r = await sb.rpc('xp_admin_set_featured', {lid:id, p_action:'activate'});
+    else if(a === 'mkfeat'){ const sel = document.querySelector('select[data-planfor="' + id + '"]'); r = await sb.rpc('xp_admin_set_featured', {lid:id, p_action:'activate', p_plan: sel ? sel.value : '2w'}); }
     else if(a === 'reject') r = await sb.rpc('xp_admin_set_featured', {lid:id, p_action:'reject'});
     else if(a === 'unfeature') r = await sb.rpc('xp_admin_set_featured', {lid:id, p_action:'remove'});
     else if(a === 'ban'){ const why = prompt(T('reasonBan')); if(why === null) return; r = await sb.rpc('xp_admin_set_banned', {uid:id, p_banned:true, p_reason:why || null}); }
