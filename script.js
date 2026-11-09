@@ -562,7 +562,7 @@
   const SUPABASE_URL = 'https://xfkahevdccmogaxboffy.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx';   // public (publishable) key, safe in the browser
   const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-  const USER_EMAIL_DOMAIN = 'users.xplate.jo';   // usernames are mapped to an internal email for Supabase Auth
+  const USER_EMAIL_DOMAIN = 'users.souqalarqam.com';   // usernames are mapped to an internal email for Supabase Auth
   let currentUser = null;
   let userListings = [...seedListings];
 
