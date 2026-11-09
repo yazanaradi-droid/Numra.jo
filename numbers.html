@@ -18,7 +18,7 @@
 <meta name="theme-color" content="#0A0D14">
 <link rel="canonical" href="https://souqalarqam.com/numbers.html">
 <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=3">
-<link rel="stylesheet" href="style.css?v=202611091420">
+<link rel="stylesheet" href="style.css?v=202611091500">
 </head>
 <body>
 
@@ -196,7 +196,7 @@
         </div>
         <div class="field">
           <label for="regPhone" data-i18n="modal.phone">Phone number</label>
-          <input id="regPhone" type="tel" autocomplete="tel" data-i18n-placeholder="modal.phonePlaceholder" placeholder="079 123 4567">
+          <div class="phone-row"><select id="regCountry" dir="ltr" aria-label="Country code"></select><input id="regPhone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="16" dir="ltr" data-i18n-placeholder="modal.phonePlaceholder" placeholder="79 123 4567"></div>
           <div class="hint error" id="regPhoneErr"></div>
         </div>
         <div class="field">
@@ -218,7 +218,7 @@
         <div class="upload-error-banner" id="loginErr" data-i18n="login.err">Incorrect email, phone or password.</div>
         <div class="field">
           <label for="loginUsername" data-i18n="login.id">Email or phone</label>
-          <input id="loginUsername" type="text" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="login.idPlaceholder" placeholder="name@example.com / 07XXXXXXXX">
+          <input id="loginUsername" type="text" dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="login.idPlaceholder" placeholder="name@example.com / +9627XXXXXXXX">
         </div>
         <div class="field">
           <label for="loginPassword" data-i18n="modal.password">Password</label>
@@ -252,7 +252,7 @@
         <div class="upload-error-banner" id="otpErr"></div>
         <div class="field">
           <label for="otpCode" data-i18n="otp.code">Verification code</label>
-          <input id="otpCode" type="text" dir="ltr" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456">
+          <input id="otpCode" type="text" dir="ltr" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456">
         </div>
         <div class="field" id="otpPwField" style="display:none;">
           <label for="otpNewPw" data-i18n="otp.newPw">New password</label>
@@ -330,6 +330,6 @@
 
 <script>const PAGE_TYPE = 'number';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611091420"></script>
+<script src="script.js?v=202611091500"></script>
 </body>
 </html>
