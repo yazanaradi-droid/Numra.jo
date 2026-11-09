@@ -173,15 +173,14 @@
 
     <div id="registerForm">
       <h3 data-i18n="modal.title">Create your account</h3>
-      <p class="sub" data-i18n="modal.subtitle">Register with a username to list, buy and negotiate plates and numbers.</p>
+      <p class="sub" data-i18n="modal.subtitle">Register with your email to list, buy and negotiate plates and numbers.</p>
       <form onsubmit="return submitRegister(event)" novalidate autocomplete="off">
         <div class="upload-error-banner" id="regGlobalErr"></div>
         <div class="hp-field" aria-hidden="true"><label for="regWebsite">Website</label><input id="regWebsite" type="text" tabindex="-1" autocomplete="off"></div>
         <div class="field">
-          <label for="regUsername" data-i18n="modal.username">Username</label>
-          <input id="regUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.usernamePlaceholder" placeholder="e.g. ahmad_k">
-          <div class="hint" id="regUsernameHint" data-i18n="modal.usernameHint">3–20 characters: letters, numbers, . or _</div>
-          <div class="hint error" id="regUsernameErr"></div>
+          <label for="regEmail" data-i18n="modal.email">Email</label>
+          <input id="regEmail" type="email" dir="ltr" autocomplete="email" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.emailPlaceholder" placeholder="name@example.com">
+          <div class="hint error" id="regEmailErr"></div>
         </div>
         <div class="field-row">
           <div class="field">
@@ -213,21 +212,54 @@
 
     <div id="loginForm" style="display:none;">
       <h3 data-i18n="login.title">Log in</h3>
-      <p class="sub" data-i18n="login.subtitle">Enter your username and password.</p>
+      <p class="sub" data-i18n="login.subtitle">Enter your email and password.</p>
       <div class="hint" id="loginNote" style="display:none; color:var(--text); margin-bottom:10px;" data-i18n="login.needed">Please log in (or register) to list a plate or number.</div>
       <form onsubmit="return submitLogin(event)" novalidate>
         <div class="upload-error-banner" id="loginErr" data-i18n="login.err">Incorrect username or password.</div>
         <div class="field">
-          <label for="loginUsername" data-i18n="modal.username">Username</label>
-          <input id="loginUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.usernamePlaceholder" placeholder="e.g. ahmad_k">
+          <label for="loginUsername" data-i18n="modal.email">Email</label>
+          <input id="loginUsername" type="text" dir="ltr" autocomplete="email" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.emailPlaceholder" placeholder="name@example.com">
         </div>
         <div class="field">
           <label for="loginPassword" data-i18n="modal.password">Password</label>
           <input id="loginPassword" type="password" autocomplete="current-password" data-i18n-placeholder="login.passwordPlaceholder" placeholder="Your password">
         </div>
         <div id="loginCaptcha"></div>
+        <p class="auth-switch" style="margin:0 0 10px"><a href="#" onclick="openForgot(event)" data-i18n="login.forgot">Forgot password?</a></p>
         <button class="modal-submit" type="submit" data-i18n="login.submit">Log in</button>
         <p class="auth-switch"><span data-i18n="modal.noAccount">New here?</span> <a href="#" onclick="openAuth('register',event)" data-i18n="modal.goRegister">Create an account</a></p>
+      </form>
+    </div>
+
+    <div id="forgotForm" style="display:none;">
+      <h3 data-i18n="forgot.title">Reset your password</h3>
+      <p class="sub" data-i18n="forgot.subtitle">Enter your email and we will send you a verification code.</p>
+      <form onsubmit="return submitForgot(event)" novalidate>
+        <div class="upload-error-banner" id="forgotErr"></div>
+        <div class="field">
+          <label for="forgotEmail" data-i18n="modal.email">Email</label>
+          <input id="forgotEmail" type="email" dir="ltr" autocomplete="email" autocapitalize="none" spellcheck="false" data-i18n-placeholder="modal.emailPlaceholder" placeholder="name@example.com">
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="forgot.send">Send code</button>
+        <p class="auth-switch"><a href="#" onclick="openAuth('login',event)" data-i18n="forgot.back">Back to log in</a></p>
+      </form>
+    </div>
+
+    <div id="otpForm" style="display:none;">
+      <h3 data-i18n="otp.title">Enter the code</h3>
+      <p class="sub"><span data-i18n="otp.sent">We sent a verification code to</span> <bdi dir="ltr" id="otpEmailShow"></bdi></p>
+      <form onsubmit="return submitOtp(event)" novalidate autocomplete="off">
+        <div class="upload-error-banner" id="otpErr"></div>
+        <div class="field">
+          <label for="otpCode" data-i18n="otp.code">Verification code</label>
+          <input id="otpCode" type="text" dir="ltr" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456">
+        </div>
+        <div class="field" id="otpPwField" style="display:none;">
+          <label for="otpNewPw" data-i18n="otp.newPw">New password</label>
+          <input id="otpNewPw" type="password" autocomplete="new-password" data-i18n-placeholder="modal.passwordPlaceholder" placeholder="At least 6 characters">
+        </div>
+        <button class="modal-submit" type="submit" data-i18n="otp.verify">Verify</button>
+        <p class="auth-switch"><a href="#" id="otpResend" onclick="resendOtp(event)" data-i18n="otp.resend">Resend code</a></p>
       </form>
     </div>
 

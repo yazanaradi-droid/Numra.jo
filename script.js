@@ -119,7 +119,7 @@
     "nav.login":{en:"Login",ar:"دخول"},
     "nav.logout":{en:"Logout",ar:"خروج"},
     "modal.title":{en:"Create your account",ar:"أنشئ حسابك"},
-    "modal.subtitle":{en:"Register with a username to list, buy and negotiate plates and numbers.",ar:"سجّل باسم مستخدم لعرض وشراء والتفاوض على اللوحات والأرقام."},
+    "modal.subtitle":{en:"Register with your email to list, buy and negotiate plates and numbers.",ar:"سجّل ببريدك الإلكتروني لعرض وشراء والتفاوض على اللوحات والأرقام."},
     "modal.username":{en:"Username",ar:"اسم المستخدم"},
     "modal.usernamePlaceholder":{en:"e.g. ahmad_k",ar:"مثال: ahmad_k"},
     "modal.usernameHint":{en:"3–20 characters: letters, numbers, . or _",ar:"من 3 إلى 20 حرفاً: أحرف إنجليزية وأرقام و . أو _"},
@@ -137,7 +137,30 @@
     "modal.password":{en:"Password",ar:"كلمة المرور"},
     "modal.passwordPlaceholder":{en:"At least 6 characters",ar:"6 أحرف على الأقل"},
     "modal.passwordErr":{en:"Password must be at least 6 characters.",ar:"كلمة المرور 6 أحرف على الأقل."},
-    "modal.submit":{en:"Create Account",ar:"إنشاء الحساب"},
+    "dash.name":{en:"Name",ar:"الاسم"},
+    "modal.email":{en:"Email",ar:"البريد الإلكتروني"},
+    "modal.emailPlaceholder":{en:"name@example.com",ar:"name@example.com"},
+    "modal.emailErr":{en:"Enter a valid email address.",ar:"أدخل بريدًا إلكترونيًا صحيحًا."},
+    "modal.phoneTaken":{en:"This phone number is already used by another account.",ar:"رقم الهاتف هذا مستخدم في حساب آخر."},
+    "login.forgot":{en:"Forgot password?",ar:"نسيت كلمة المرور؟"},
+    "forgot.title":{en:"Reset your password",ar:"استعادة كلمة المرور"},
+    "forgot.subtitle":{en:"Enter your email and we will send you a verification code.",ar:"أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق."},
+    "forgot.send":{en:"Send code",ar:"إرسال الرمز"},
+    "forgot.back":{en:"Back to log in",ar:"العودة لتسجيل الدخول"},
+    "otp.title":{en:"Enter the code",ar:"أدخل الرمز"},
+    "otp.sent":{en:"We sent a verification code to",ar:"أرسلنا رمز تحقق إلى"},
+    "otp.code":{en:"Verification code",ar:"رمز التحقق"},
+    "otp.newPw":{en:"New password",ar:"كلمة المرور الجديدة"},
+    "otp.verify":{en:"Verify",ar:"تحقق"},
+    "otp.resend":{en:"Resend code",ar:"إعادة إرسال الرمز"},
+    "otp.resendIn":{en:"Resend code in {s}s",ar:"إعادة الإرسال بعد {s} ث"},
+    "otp.bad":{en:"The code is wrong or has expired.",ar:"الرمز غير صحيح أو انتهت صلاحيته."},
+    "otp.sentAgain":{en:"A new code was sent.",ar:"تم إرسال رمز جديد."},
+    "otp.resetDoneTitle":{en:"Password updated",ar:"تم تحديث كلمة المرور"},
+    "otp.resetDoneDesc":{en:"You are now signed in with your new password.",ar:"تم تسجيل دخولك بكلمة المرور الجديدة."},
+    "otp.existsTitle":{en:"Welcome back",ar:"أهلاً بعودتك"},
+    "otp.existsDesc":{en:"This email already has an account and you are signed in. Use \u201cForgot password\u201d if you need a new password.",ar:"هذا البريد لديه حساب بالفعل وتم تسجيل دخولك. استخدم \u201cنسيت كلمة المرور\u201d إن احتجت كلمة مرور جديدة."},
+    "modal.submit":{en:"Continue",ar:"متابعة"},
     "modal.haveAccount":{en:"Already have an account?",ar:"لديك حساب بالفعل؟"},
     "modal.goLogin":{en:"Log in",ar:"تسجيل الدخول"},
     "modal.noAccount":{en:"New here?",ar:"مستخدم جديد؟"},
@@ -146,10 +169,10 @@
     "modal.successDesc":{en:"Welcome — your account is ready and you are now signed in.",
                           ar:"أهلاً بك — تم إنشاء حسابك وتسجيل دخولك."},
     "login.title":{en:"Log in",ar:"تسجيل الدخول"},
-    "login.subtitle":{en:"Enter your username and password.",ar:"أدخل اسم المستخدم وكلمة المرور."},
+    "login.subtitle":{en:"Enter your email and password.",ar:"أدخل بريدك الإلكتروني وكلمة المرور."},
     "login.passwordPlaceholder":{en:"Your password",ar:"كلمة المرور"},
     "login.submit":{en:"Log in",ar:"دخول"},
-    "login.err":{en:"Incorrect username or password.",ar:"اسم المستخدم أو كلمة المرور غير صحيحة."},
+    "login.err":{en:"Incorrect email or password.",ar:"البريد الإلكتروني أو كلمة المرور غير صحيحة."},
     "detail.title.plate":{en:"License plate {x} for sale",ar:"لوحة سيارة {x} للبيع"},
     "detail.title.number":{en:"Phone number {x} for sale",ar:"رقم هاتف {x} للبيع"},
     "nav.plates.crumb":{en:"License Plates",ar:"لوحات السيارات"},
@@ -352,8 +375,8 @@
                          ar:'<p>يسعدنا تواصلك معنا:</p><ul><li>الاستفسارات العامة: <a href="mailto:info@souqalarqam.com">info@souqalarqam.com</a></li><li>الدعم: <a href="mailto:support@souqalarqam.com">support@souqalarqam.com</a></li><li>الموقع: عمان، الأردن</li></ul>'},
     "info.about.body":{en:'<p>Souq Al Arqam is a Jordanian marketplace for buying and selling license plates and VIP phone numbers (Zain, Orange and Umniah).</p><p>Sellers list their plates and numbers for free, and buyers contact them directly to negotiate. Souq Al Arqam brings both sides together; we are not a party to the sale.</p>',
                        ar:'<p>سوق الأرقام منصة أردنية لبيع وشراء لوحات السيارات وأرقام الهواتف المميزة (زين، أورنج وأمنية).</p><p>ينشر البائعون لوحاتهم وأرقامهم، ويتواصل المشترون معهم مباشرة للتفاوض. تجمع المنصة الطرفين، وليست طرفاً في عملية البيع.</p>'},
-    "info.privacy.body":{en:'<p>Privacy policy:</p><ul><li>We collect only what is needed to run your account and listings: username, name and phone number.</li><li>A seller\u2019s phone number is shown only to logged-in users who ask to contact the seller.</li><li>We never sell your personal data to third parties.</li><li>You can ask us to delete your account and data at any time: support@souqalarqam.com</li></ul>',
-                       ar:'<p>سياسة الخصوصية:</p><ul><li>نجمع فقط ما يلزم لتشغيل حسابك وإعلاناتك: اسم المستخدم والاسم ورقم الهاتف.</li><li>لا يظهر رقم هاتف البائع إلا للمستخدمين المسجّلين الذين يطلبون التواصل معه.</li><li>لا نبيع بياناتك الشخصية لأي طرف ثالث.</li><li>يمكنك طلب حذف حسابك وبياناتك في أي وقت: support@souqalarqam.com</li></ul>'},
+    "info.privacy.body":{en:'<p>Privacy policy:</p><ul><li>We collect only what is needed to run your account and listings: email, name and phone number.</li><li>A seller\u2019s phone number is shown only to logged-in users who ask to contact the seller.</li><li>We never sell your personal data to third parties.</li><li>You can ask us to delete your account and data at any time: support@souqalarqam.com</li></ul>',
+                       ar:'<p>سياسة الخصوصية:</p><ul><li>نجمع فقط ما يلزم لتشغيل حسابك وإعلاناتك: البريد الإلكتروني والاسم ورقم الهاتف.</li><li>لا يظهر رقم هاتف البائع إلا للمستخدمين المسجّلين الذين يطلبون التواصل معه.</li><li>لا نبيع بياناتك الشخصية لأي طرف ثالث.</li><li>يمكنك طلب حذف حسابك وبياناتك في أي وقت: support@souqalarqam.com</li></ul>'},
     "info.refund.body":{en:'<p>Refunds:</p><ul><li>Dealings are directly between buyer and seller. Souq Al Arqam does not hold or transfer payments for sales.</li><li>For any fee paid to the platform (such as featured promotion), contact support@souqalarqam.com.</li></ul>',
                        ar:'<p>الاسترجاع:</p><ul><li>التعامل يتم مباشرة بين البائع والمشتري، ولا تستلم المنصة أو تحوّل أي مبالغ مقابل عمليات البيع.</li><li>لأي رسوم تُدفع للمنصة (مثل الإعلان المميز) تواصل معنا على support@souqalarqam.com.</li></ul>'},
     "info.terms.body":{en:'<p>Terms of use:</p><ul><li>Listings must be accurate and the number or plate must be owned by the seller.</li><li>Souq Al Arqam only connects buyers and sellers and is not responsible for dealings between them.</li><li>Do not transfer money before meeting and verifying the seller.</li><li>Misuse, false listings or fraud may result in removing ads and suspending the account.</li></ul>',
@@ -1023,7 +1046,7 @@
     const g=document.getElementById('authGuest'), a=document.getElementById('authUser'), chip=document.getElementById('userChip');
     if(!g||!a) return;
     syncFavorites(); checkAdminLink();
-    if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent=translations['nav.dashboard'][currentLang]+' \u25be'; chip.title='@'+((currentUser.user_metadata||{}).username||''); }
+    if(currentUser){ g.style.display='none'; a.style.display='inline-flex'; chip.textContent=translations['nav.dashboard'][currentLang]+' \u25be'; chip.title=displayName(currentUser); }
     else { g.style.display='inline-flex'; a.style.display='none'; chip.textContent=''; }
   }
   /* admin link: shown only if the server says this account is an admin (the real check is always server-side) */
@@ -1069,34 +1092,45 @@
     regOpenedAt = Date.now(); initCaptcha();
     if(e && e.preventDefault) e.preventDefault();
     document.getElementById('registerOverlay').classList.add('open');
-    document.getElementById('registerSuccess').classList.remove('show');
-    document.getElementById('registerForm').style.display = mode==='register' ? 'block' : 'none';
-    document.getElementById('loginForm').style.display = mode==='login' ? 'block' : 'none';
-    showBanner('loginErr', null); showBanner('regGlobalErr', null);
+    authFlow.mode = null; authFlow.details = null;
+    showAuthPanel(mode==='register' ? 'registerForm' : 'loginForm');
+    showBanner('loginErr', null); showBanner('regGlobalErr', null); showBanner('forgotErr', null); showBanner('otpErr', null);
     const ln=document.getElementById('loginNote'); if(ln) ln.style.display = note ? 'block' : 'none';
-    ['regUsernameErr','regFirstErr','regLastErr','regPhoneErr','regPasswordErr'].forEach(id=>setErr(id,null));
+    ['regEmailErr','regFirstErr','regLastErr','regPhoneErr','regPasswordErr'].forEach(id=>setErr(id,null));
     document.querySelectorAll('#registerOverlay .field-invalid').forEach(i=>i.classList.remove('field-invalid'));
-    setTimeout(()=>{ const f=document.getElementById(mode==='register'?'regUsername':'loginUsername'); if(f) f.focus(); }, 50);
+    setTimeout(()=>{ const f=document.getElementById(mode==='register'?'regEmail':'loginUsername'); if(f) f.focus(); }, 50);
   }
   function openRegister(e){ openAuth('register', e); }
-  function closeRegister(){ document.getElementById('registerOverlay').classList.remove('open'); }
+  function closeRegister(){ document.getElementById('registerOverlay').classList.remove('open'); authFlow.details = null; if(authFlow.timer){ clearInterval(authFlow.timer); authFlow.timer = null; } }
   async function logout(e){ if(e) e.preventDefault(); closeUserMenu(); if(sb){ try{ await sb.auth.signOut(); }catch(err){} } currentUser=null; refreshAuthUI(); if(document.getElementById('dashRoot')) renderDashboard(); }
 
-  let usernameCheckSeq = 0;
-  async function checkUsername(){
-    const seq = ++usernameCheckSeq;
-    const raw = document.getElementById('regUsername').value.trim();
-    if(!USER_RE.test(raw)){ setErr('regUsernameErr','modal.usernameErr'); markInvalid('regUsername',true); return false; }
-    if(!sb){ setErr('regUsernameErr','auth.offline'); return false; }
-    let free = false;
-    try{
-      const {data, error} = await sb.rpc('xp_username_available', {u: raw});
-      if(error) throw error;
-      free = !!data;
-    }catch(err){ if(seq===usernameCheckSeq){ setErr('regUsernameErr','auth.genericErr'); } return false; }
-    if(seq !== usernameCheckSeq) return false;      // a newer keystroke superseded this check
-    if(!free){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); return false; }
-    setErr('regUsernameErr',null); markInvalid('regUsername',false); return true;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const authFlow = {mode:null, email:'', details:null, resendAt:0, timer:null};
+  const AUTH_PANELS = ['registerForm','loginForm','forgotForm','otpForm','registerSuccess'];
+  function showAuthPanel(name){
+    AUTH_PANELS.forEach(id => {
+      const el = document.getElementById(id); if(!el) return;
+      if(id === 'registerSuccess') el.classList.toggle('show', name === id); else el.style.display = id === name ? 'block' : 'none';
+    });
+    if(name !== 'otpForm' && authFlow.timer){ clearInterval(authFlow.timer); authFlow.timer = null; }
+  }
+  function displayName(user, profile){
+    const m = (user && user.user_metadata) || {};
+    const f = (profile && profile.first_name) || m.first_name || '', l = (profile && profile.last_name) || m.last_name || '';
+    return (f + ' ' + l).trim();
+  }
+  function finishAuth(titleKey, descKey){
+    const p = document.getElementById('registerSuccess');
+    const h = p.querySelector('h3'), d = p.querySelector('p');
+    h.setAttribute('data-i18n', titleKey); h.textContent = translations[titleKey][currentLang];
+    d.setAttribute('data-i18n', descKey); d.textContent = translations[descKey][currentLang];
+    showAuthPanel('registerSuccess');
+    authFlow.details = null;
+    if(document.getElementById('dashRoot')) initDashboard();
+  }
+  function backToRegister(errId, errKey, inputId){
+    showAuthPanel('registerForm');
+    if(errId){ setErr(errId, errKey); markInvalid(inputId, true); }
   }
 
   async function submitRegister(e){
@@ -1108,38 +1142,128 @@
       document.getElementById('registerSuccess').classList.add('show');
       return false;
     }
-    const username=document.getElementById('regUsername').value.trim();
+    if(!sb){ showBanner('regGlobalErr','auth.offline'); return false; }
+    const email=document.getElementById('regEmail').value.trim().toLowerCase();
     const first=document.getElementById('regFirst').value.trim();
     const last=document.getElementById('regLast').value.trim();
     const phone=document.getElementById('regPhone').value.trim();
     const pw=document.getElementById('regPassword').value;
     let ok=true;
 
+    if(!EMAIL_RE.test(email)){ setErr('regEmailErr','modal.emailErr'); markInvalid('regEmail',true); ok=false; } else { setErr('regEmailErr',null); markInvalid('regEmail',false); }
     if(first.length<2){ setErr('regFirstErr','modal.nameErr'); markInvalid('regFirst',true); ok=false; } else { setErr('regFirstErr',null); markInvalid('regFirst',false); }
     if(last.length<2){ setErr('regLastErr','modal.nameErr'); markInvalid('regLast',true); ok=false; } else { setErr('regLastErr',null); markInvalid('regLast',false); }
     if(!PHONE_RE.test(phone)){ setErr('regPhoneErr','modal.phoneErr'); markInvalid('regPhone',true); ok=false; } else { setErr('regPhoneErr',null); markInvalid('regPhone',false); }
     if(pw.length<6){ setErr('regPasswordErr','modal.passwordErr'); markInvalid('regPassword',true); ok=false; } else { setErr('regPasswordErr',null); markInvalid('regPassword',false); }
-    if(!(await checkUsername())) ok=false;
     if(!ok) return false;
 
     const btn=document.querySelector('#registerForm .modal-submit'); btn.disabled=true;
     try{
-      const {data, error} = await sb.auth.signUp({
-        email: toEmail(username), password: pw,
-        options:{ data:{ username, first_name:first, last_name:last, phone }, captchaToken: captchaToken('reg') }
-      });
-      if(error){
-        if(/already|registered|exists|database error/i.test(error.message)){ setErr('regUsernameErr','modal.usernameTaken'); markInvalid('regUsername',true); }
-        else showBanner('regGlobalErr','auth.genericErr');
-        return false;
-      }
-      if(!data.session){ showBanner('regGlobalErr','auth.confirmOn'); return false; }
-      currentUser = data.session.user; refreshAuthUI();
-      document.getElementById('registerForm').style.display='none';
-      document.getElementById('registerSuccess').classList.add('show');
-      document.getElementById('regPassword').value='';
-    }catch(err){ showBanner('regGlobalErr','auth.genericErr'); }
+      const ph = await sb.rpc('xp_phone_available', {p: phone});
+      if(ph.error) throw ph.error;
+      if(ph.data === false){ setErr('regPhoneErr','modal.phoneTaken'); markInvalid('regPhone',true); return false; }   // this phone already belongs to another account
+      const details = {first, last, phone, pw};
+      if(currentUser && String(currentUser.email||'').toLowerCase() === email){ await completeSignup(details); return false; }   // email already verified in an earlier attempt
+      const {error} = await sb.auth.signInWithOtp({email, options:{shouldCreateUser:true, captchaToken: captchaToken('reg')}});
+      if(error){ showBanner('regGlobalErr', (error.status === 429 || /rate|too many|seconds/i.test(error.message||'')) ? 'auth.rate' : 'auth.genericErr'); return false; }
+      startOtp('register', email, details);
+    }catch(err){ console.warn(err); showBanner('regGlobalErr','auth.genericErr'); }
     finally{ btn.disabled=false; }
+    return false;
+  }
+
+  function startOtp(mode, email, details){
+    authFlow.mode = mode; authFlow.email = email; authFlow.details = details; authFlow.resendAt = Date.now() + 60000;
+    document.getElementById('otpEmailShow').textContent = email;
+    document.getElementById('otpCode').value = '';
+    document.getElementById('otpNewPw').value = '';
+    document.getElementById('otpPwField').style.display = mode === 'reset' ? 'block' : 'none';
+    showBanner('otpErr', null);
+    showAuthPanel('otpForm');
+    tickResend();
+    authFlow.timer = setInterval(tickResend, 1000);
+    setTimeout(()=>{ const f=document.getElementById('otpCode'); if(f) f.focus(); }, 50);
+  }
+  function tickResend(){
+    const a = document.getElementById('otpResend'); if(!a) return;
+    const left = Math.ceil((authFlow.resendAt - Date.now()) / 1000);
+    if(left > 0){ a.removeAttribute('data-i18n'); a.textContent = translations['otp.resendIn'][currentLang].replace('{s}', left); a.style.opacity = '.5'; }
+    else { a.setAttribute('data-i18n','otp.resend'); a.textContent = translations['otp.resend'][currentLang]; a.style.opacity = ''; }
+  }
+  async function resendOtp(e){
+    if(e && e.preventDefault) e.preventDefault();
+    if(!sb || !authFlow.email || Date.now() < authFlow.resendAt) return;
+    authFlow.resendAt = Date.now() + 60000; tickResend();
+    try{
+      const {error} = await sb.auth.signInWithOtp({email: authFlow.email, options:{shouldCreateUser: authFlow.mode === 'register', captchaToken: captchaToken(authFlow.mode === 'register' ? 'reg' : 'login')}});
+      if(error && (error.status === 429 || /rate|too many/i.test(error.message||''))) showBanner('otpErr','auth.rate');
+      else if(!error){ showBanner('otpErr', null); }
+    }catch(err){ showBanner('otpErr','auth.genericErr'); }
+  }
+
+  async function submitOtp(e){
+    e.preventDefault();
+    showBanner('otpErr', null);
+    if(!sb || !authFlow.email) return false;
+    const code = document.getElementById('otpCode').value.replace(/\s+/g,'');
+    if(!/^[0-9]{6,8}$/.test(code)){ showBanner('otpErr','otp.bad'); return false; }
+    let np = '';
+    if(authFlow.mode === 'reset'){ np = document.getElementById('otpNewPw').value; if(np.length < 6){ showBanner('otpErr','modal.passwordErr'); return false; } }
+    const btn = document.querySelector('#otpForm .modal-submit'); btn.disabled = true;
+    try{
+      const {data, error} = await sb.auth.verifyOtp({email: authFlow.email, token: code, type:'email'});
+      if(error || !data || !data.session){ showBanner('otpErr', (error && error.status === 429) ? 'auth.rate' : 'otp.bad'); return false; }
+      currentUser = data.session.user; refreshAuthUI();
+      if(authFlow.mode === 'reset'){
+        const r = await sb.auth.updateUser({password: np});
+        if(r.error) throw r.error;
+        finishAuth('otp.resetDoneTitle','otp.resetDoneDesc');
+      } else {
+        await completeSignup(authFlow.details);
+      }
+    }catch(err){ console.warn(err); showBanner('otpErr','auth.genericErr'); }
+    finally{ btn.disabled = false; }
+    return false;
+  }
+
+  /* after the email is verified: create the profile (checked again on the server), then set the password */
+  async function completeSignup(d){
+    const {data, error} = await sb.rpc('xp_complete_signup', {p_first:d.first, p_last:d.last, p_phone:d.phone});
+    if(error) throw error;
+    if(data === 'phone_taken'){ backToRegister('regPhoneErr','modal.phoneTaken','regPhone'); return; }
+    if(data === 'invalid' || data === 'unverified'){ backToRegister(); showBanner('regGlobalErr','auth.genericErr'); return; }
+    if(data === 'ok'){
+      const r = await sb.auth.updateUser({password:d.pw, data:{first_name:d.first, last_name:d.last, phone:d.phone}});
+      if(r.error) throw r.error;
+      if(r.data && r.data.user) currentUser = r.data.user;
+      refreshAuthUI();
+      document.getElementById('regPassword').value = '';
+      finishAuth('modal.successTitle','modal.successDesc');
+      return;
+    }
+    finishAuth('otp.existsTitle','otp.existsDesc');   // 'exists': this email already has an account; the password is not touched
+  }
+
+  function openForgot(e){
+    if(e && e.preventDefault) e.preventDefault();
+    showBanner('forgotErr', null);
+    showAuthPanel('forgotForm');
+    setTimeout(()=>{ const f=document.getElementById('forgotEmail'); if(f) f.focus(); }, 50);
+  }
+  async function submitForgot(e){
+    e.preventDefault();
+    showBanner('forgotErr', null);
+    if(!sb){ showBanner('forgotErr','auth.offline'); return false; }
+    const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+    if(!EMAIL_RE.test(email)){ showBanner('forgotErr','modal.emailErr'); return false; }
+    const btn = document.querySelector('#forgotForm .modal-submit'); btn.disabled = true;
+    try{
+      const {error} = await sb.auth.signInWithOtp({email, options:{shouldCreateUser:false, captchaToken: captchaToken('login')}});
+      if(error && (error.status === 429 || /rate|too many|seconds/i.test(error.message||''))){ showBanner('forgotErr','auth.rate'); return false; }
+      /* any other error (for example an unknown email) is hidden on purpose: the next screen looks the same either way */
+      startOtp('reset', email, null);
+    }catch(err){ showBanner('forgotErr','auth.genericErr'); }
+    finally{ btn.disabled = false; }
     return false;
   }
 
@@ -1147,16 +1271,17 @@
     e.preventDefault();
     showBanner('loginErr', null);
     if(!sb){ showBanner('loginErr','auth.offline'); return false; }
-    const uname=document.getElementById('loginUsername').value, pw=document.getElementById('loginPassword').value;
-    if(!uname.trim() || !pw){ showBanner('loginErr','login.err'); return false; }
+    const id=document.getElementById('loginUsername').value.trim(), pw=document.getElementById('loginPassword').value;
+    if(!id || !pw){ showBanner('loginErr','login.err'); return false; }
+    const email = id.includes('@') ? id.toLowerCase() : toEmail(id);   // accounts made before email sign-up still log in with their old username
     const btn=document.querySelector('#loginForm .modal-submit'); btn.disabled=true;
     try{
-      const {data, error} = await sb.auth.signInWithPassword({ email: toEmail(uname), password: pw, options:{ captchaToken: captchaToken('login') } });
+      const {data, error} = await sb.auth.signInWithPassword({ email, password: pw, options:{ captchaToken: captchaToken('login') } });
       if(error || !data.session){
         const msg = String((error && error.message) || ''), st = error && error.status;
         console.warn('login failed:', error);
         if(/banned|suspend/i.test(msg)) showBanner('loginErr','auth.bannedErr');
-        else if(/confirm/i.test(msg)) showBanner('loginErr','auth.confirmOn');
+        else if(/confirm/i.test(msg)) showBanner('loginErr','login.err');
         else if(!error || /invalid|credentials/i.test(msg) || st === 400) showBanner('loginErr','login.err');
         else if(st === 429 || /rate|too many/i.test(msg)) showBanner('loginErr','auth.rate');
         else showBanner('loginErr','auth.offline');
@@ -1470,9 +1595,10 @@
     const p = await fetchMyProfile();
     if(!p) return '<div class="dash-card">' + T('auth.genericErr') + '</div>';
     const e = escapeHtml;
+    const em = (currentUser && currentUser.email) || '', realEmail = em && !em.endsWith('@' + USER_EMAIL_DOMAIN) ? em : '';
     return '<div class="dash-card"><h2>' + T('dash.profile') + '</h2>' +
       '<form onsubmit="return submitProfile(event)" novalidate>' +
-        '<div class="field"><label>' + T('modal.username') + '</label><input type="text" value="' + e(p.username) + '" readonly class="ro" dir="ltr"><div class="hint">' + T('dash.usernameLocked') + '</div></div>' +
+        (realEmail ? '<div class="field"><label>' + T('modal.email') + '</label><input type="text" value="' + e(realEmail) + '" readonly class="ro" dir="ltr"></div>' : '') +
         '<div class="field"><label>' + T('modal.phone') + '</label><input type="text" value="' + e(p.phone) + '" readonly class="ro" dir="ltr"><div class="hint">' + T('dash.phoneLocked') + '</div></div>' +
         '<div class="field-row">' +
           '<div class="field"><label for="pfFirst">' + T('modal.first') + '</label><input id="pfFirst" type="text" value="' + e(p.first_name) + '"></div>' +
@@ -1516,8 +1642,7 @@
     if(nw !== cf){ dashMsg('passwordMsg','dash.passwordMismatch',false); return false; }
     if(!sb) { dashMsg('passwordMsg','auth.offline',false); return false; }
     try{
-      const uname = (currentUser.user_metadata || {}).username || '';
-      const re = await sb.auth.signInWithPassword({email: toEmail(uname), password: cur});
+      const re = await sb.auth.signInWithPassword({email: currentUser.email, password: cur});
       if(re.error){ dashMsg('passwordMsg','dash.currentWrong',false); return false; }
       const {error} = await sb.auth.updateUser({password: nw});
       if(error) throw error;
@@ -1535,7 +1660,7 @@
     const since = p && p.created_at ? new Date(p.created_at).toLocaleDateString('en-GB') : '-';
     const row = (k, v) => '<div class="dash-row"><span>' + T(k) + '</span><b>' + v + '</b></div>';
     return '<div class="dash-card"><h2>' + T('dash.membership') + '</h2>' +
-      row('modal.username', '@' + escapeHtml(p ? p.username : '')) +
+      row('dash.name', escapeHtml(displayName(currentUser, p))) +
       row('dash.memberSince', since) +
       row('dash.membershipType', T('dash.free')) +
       row('dash.status', '<span class="pill ok">' + T('dash.active') + '</span>') +
@@ -1660,8 +1785,6 @@
     });
 
 
-    const ru=document.getElementById('regUsername');
-    if(ru) ru.addEventListener('input', function(){ if(ru.value.trim()){ clearTimeout(ru._t); ru._t=setTimeout(checkUsername,350); } else { setErr('regUsernameErr',null); markInvalid('regUsername',false); } });
     /* plate digits use a condensed font; if it cannot load, CSS squeezes the fallback font instead */
     (function(){
       const mark = ()=>document.documentElement.classList.add('no-cond');
