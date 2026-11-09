@@ -1057,3 +1057,6 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 .dash-danger h2{color:var(--danger);}
 .btn-danger{background:var(--danger); color:#fff; border:0; border-radius:11px; padding:11px 18px; font:inherit; font-weight:700; cursor:pointer;}
 .btn-danger:disabled{opacity:.6; cursor:wait;}
+
+.vbadge{display:inline-flex; vertical-align:-3px; margin-inline-start:2px;}
+.vb-green{color:#22C55E;} .vb-blue{color:#3B82F6;}

@@ -273,6 +273,8 @@
     "dash.deleteArm":{en:"Press again to delete forever",ar:"اضغط مرة أخرى للحذف نهائيًا"},
     "dash.deleteBad":{en:"Enter your current password to confirm.",ar:"أدخل كلمة مرورك الحالية للتأكيد."},
     "dash.deleteAdmin":{en:"An administrator account cannot be deleted here.",ar:"لا يمكن حذف حساب المشرف من هنا."},
+    "badge.dealer":{en:"Verified dealer",ar:"تاجر موثّق"},
+    "badge.verified":{en:"Verified account",ar:"حساب موثّق"},
     "share.btn":{en:"Share this ad",ar:"مشاركة الإعلان"},
     "share.copied":{en:"Link copied",ar:"تم نسخ الرابط"},
     "dash.currentPassword":{en:"Current password",ar:"كلمة المرور الحالية"},
@@ -1365,7 +1367,7 @@
         const r = Array.isArray(data) ? data[0] : data;
         if(r){
           detailItem = rowToItem(r);
-          detailSeller = {first:r.first_name, last:r.last_name, username:r.username, phone:r.phone, locked:r.phone_locked||null};
+          detailSeller = {first:r.first_name, last:r.last_name, username:r.username, phone:r.phone, locked:r.phone_locked||null, verified:!!r.verified, dealer:!!r.dealer};
           detailState = 'ok';
         } else detailState = 'missing';
       }catch(err){ console.warn(err); detailState = 'error'; }
@@ -1412,7 +1414,12 @@
 
     const sellerName = detailSeller ? (detailSeller.first + ' ' + detailSeller.last) : 'Souq Al Arqam';
     document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
-    document.getElementById('sellerName').textContent = sellerName;
+    const snEl = document.getElementById('sellerName');
+    snEl.textContent = sellerName;
+    if(detailSeller && (detailSeller.dealer || detailSeller.verified)){   // green = dealer, blue = verified person (set by the admin)
+      const dl = !!detailSeller.dealer;
+      snEl.insertAdjacentHTML('beforeend', ' <span class="vbadge ' + (dl ? 'vb-green' : 'vb-blue') + '" title="' + escapeHtml(T(dl ? 'badge.dealer' : 'badge.verified')) + '" aria-label="' + escapeHtml(T(dl ? 'badge.dealer' : 'badge.verified')) + '"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
+    }
     const dateStr = it.created ? new Date(it.created).toLocaleDateString('en-GB') : '';
     document.getElementById('sellerDate').textContent = it.seed || !dateStr ? T('detail.sample') : T('detail.listed') + ' ' + dateStr;
     let pk = document.getElementById('detailPkg');

@@ -13,7 +13,7 @@
       listings:'Ads', users:'Users', settings:'Settings', back:'Back to site',
       denied:'This page is for administrators only.', login:'Please log in with the admin account.', loading:'Loading…', err:'Something went wrong. Try again.',
       f_all:'All', f_reported:'Reported', f_hidden:'Hidden', f_pending:'Featured requests', f_featured:'Featured',
-      hide:'Hide', unhide:'Show again', del:'Delete', ban:'Ban seller', unban:'Unban', activate:'Activate featured', reject:'Reject request', unfeature:'Remove featured', mkfeat:'Make featured',
+      hide:'Hide', unhide:'Show again', del:'Delete', ban:'Ban seller', unban:'Unban', activate:'Activate featured', reject:'Reject request', unfeature:'Remove featured', mkfeat:'Make featured', dealer:'Dealer (green)', undealer:'Remove dealer', verify:'Verified (blue)', unverify:'Remove verified', tagDealer:'Dealer', tagVerified:'Verified', email:'Email',
       plan_2w:'2 weeks', plan_1m:'1 month', plan_forever:'Forever',
       reports:'reports', seller:'Seller', none:'Nothing here.', price:'Price', contact:'Contact for price',
       hiddenBy:'Hidden', reasonHide:'Reason for hiding (optional):', reasonBan:'Reason for ban (optional):', confirmDel:'Delete this ad permanently?',
@@ -33,7 +33,7 @@
       listings:'الإعلانات', users:'المستخدمون', settings:'الإعدادات', back:'العودة للموقع',
       denied:'هذه الصفحة للمشرفين فقط.', login:'سجّل الدخول بحساب المشرف.', loading:'جارٍ التحميل…', err:'حدث خطأ، حاول مجدداً.',
       f_all:'الكل', f_reported:'المبلّغ عنها', f_hidden:'المخفية', f_pending:'طلبات التمييز', f_featured:'المميزة',
-      hide:'إخفاء', unhide:'إظهار', del:'حذف', ban:'حظر البائع', unban:'فك الحظر', activate:'تفعيل التمييز', reject:'رفض الطلب', unfeature:'إلغاء التمييز', mkfeat:'اجعله مميزاً',
+      hide:'إخفاء', unhide:'إظهار', del:'حذف', ban:'حظر البائع', unban:'فك الحظر', activate:'تفعيل التمييز', reject:'رفض الطلب', unfeature:'إلغاء التمييز', mkfeat:'اجعله مميزاً', dealer:'تاجر (أخضر)', undealer:'إلغاء التاجر', verify:'موثّق (أزرق)', unverify:'إلغاء التوثيق', tagDealer:'تاجر', tagVerified:'موثّق', email:'الإيميل',
       plan_2w:'أسبوعان', plan_1m:'شهر', plan_forever:'دائم',
       reports:'بلاغات', seller:'البائع', none:'لا يوجد شيء هنا.', price:'السعر', contact:'تواصل للسعر',
       hiddenBy:'مخفي', reasonHide:'سبب الإخفاء (اختياري):', reasonBan:'سبب الحظر (اختياري):', confirmDel:'حذف هذا الإعلان نهائياً؟',
@@ -166,15 +166,17 @@
     let tags = '';
     if(u.banned) tags += '<span class="adm-tag adm-red">' + T('banned') + (u.ban_reason ? ' · ' + E(u.ban_reason) : '') + '</span>';
     if(u.is_admin) tags += '<span class="adm-tag adm-blue">' + T('admin') + '</span>';
+    if(u.dealer) tags += '<span class="adm-tag" style="background:rgba(34,197,94,.15);color:#22C55E">' + T('tagDealer') + ' ✓</span>';
+    if(u.verified) tags += '<span class="adm-tag" style="background:rgba(59,130,246,.15);color:#60A5FA">' + T('tagVerified') + ' ✓</span>';
     if(u.reports) tags += '<span class="adm-tag adm-amber">' + u.reports + ' ' + T('reports') + '</span>';
-    const act = btn('uads', u.id, T('u_ads') + ' (' + u.ads + ')', 'btn-ghost') + (u.is_admin ? '' : (u.banned ? btn('unban', u.id, T('unban'), 'btn-gold') : btn('ban', u.id, T('ban'))));
+    const act = btn('uads', u.id, T('u_ads') + ' (' + u.ads + ')', 'btn-ghost') + btn(u.dealer ? 'undealer' : 'dealer', u.id, T(u.dealer ? 'undealer' : 'dealer'), u.dealer ? 'btn-gold' : 'btn-ghost') + btn(u.verified ? 'unverify' : 'verify', u.id, T(u.verified ? 'unverify' : 'verify'), u.verified ? 'btn-gold' : 'btn-ghost') + (u.is_admin ? '' : (u.banned ? btn('unban', u.id, T('unban'), 'btn-gold') : btn('ban', u.id, T('ban'))));
     return '<div class="adm-row"><div class="adm-main"><span class="adm-title">@' + E(u.username) + ' <span style="font-weight:400;color:var(--muted)">' + E(u.first_name) + ' ' + E(u.last_name) + '</span></span>' +
-      '<span class="adm-sub"><bdi dir="ltr">' + E(u.phone) + '</bdi> · ' + u.ads + ' ' + T('ads') + ' · ' + T('joined') + ' <bdi dir="ltr">' + E(new Date(u.created_at).toLocaleDateString('en-GB')) + '</bdi></span>' +
+      '<span class="adm-sub"><bdi dir="ltr">' + E(u.email || '-') + '</bdi> · <bdi dir="ltr">' + E(u.phone) + '</bdi> · ' + u.ads + ' ' + T('ads') + ' · ' + T('joined') + ' <bdi dir="ltr">' + E(new Date(u.created_at).toLocaleDateString('en-GB')) + '</bdi></span>' +
       '<div class="adm-tags">' + tags + '</div></div><div class="adm-acts">' + act + '</div></div>';
   }
   function paintUsers(){
     const k = q.trim().toLowerCase();
-    const list = users.filter(u => !k || [u.username, u.first_name, u.last_name, u.phone].join(' ').toLowerCase().includes(k));
+    const list = users.filter(u => !k || [u.username, u.first_name, u.last_name, u.phone, u.email].join(' ').toLowerCase().includes(k));
     document.getElementById('admList').innerHTML = list.length ? list.map(userRow).join('') : '<p style="color:var(--muted)">' + T('none') + '</p>';
   }
   async function showUsers(){
@@ -227,6 +229,8 @@
     else if(a === 'unfeature') r = await sb.rpc('xp_admin_set_featured', {lid:id, p_action:'remove'});
     else if(a === 'ban'){ const why = prompt(T('reasonBan')); if(why === null) return; r = await sb.rpc('xp_admin_set_banned', {uid:id, p_banned:true, p_reason:why || null}); }
     else if(a === 'unban') r = await sb.rpc('xp_admin_set_banned', {uid:id, p_banned:false});
+    else if(a === 'dealer' || a === 'undealer') r = await sb.rpc('xp_admin_set_badge', {uid:id, p_kind:'dealer', p_on: a === 'dealer'});
+    else if(a === 'verify' || a === 'unverify') r = await sb.rpc('xp_admin_set_badge', {uid:id, p_kind:'verified', p_on: a === 'verify'});
     if(r && r.error){ alert(T('err') + '\n' + (r.error.message || '')); return; }
     show();
   }
