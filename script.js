@@ -273,6 +273,12 @@
     "dash.deleteArm":{en:"Press again to delete forever",ar:"اضغط مرة أخرى للحذف نهائيًا"},
     "dash.deleteBad":{en:"Enter your current password to confirm.",ar:"أدخل كلمة مرورك الحالية للتأكيد."},
     "dash.deleteAdmin":{en:"An administrator account cannot be deleted here.",ar:"لا يمكن حذف حساب المشرف من هنا."},
+    "seller.viewAds":{en:"View seller's ads",ar:"عرض لوحات البائع"},
+    "seller.adsOf":{en:"Ads by",ar:"إعلانات"},
+    "seller.plates":{en:"License plates",ar:"لوحات السيارات"},
+    "seller.numbers":{en:"Phone numbers",ar:"أرقام الهواتف"},
+    "seller.none":{en:"No ads in this section.",ar:"لا توجد إعلانات في هذا القسم."},
+    "seller.loading":{en:"Loading...",ar:"جارٍ التحميل..."},
     "badge.dealer":{en:"Verified dealer",ar:"تاجر موثّق"},
     "badge.verified":{en:"Verified account",ar:"حساب موثّق"},
     "share.btn":{en:"Share this ad",ar:"مشاركة الإعلان"},
@@ -1416,6 +1422,8 @@
     document.getElementById('sellerAvatar').textContent = sellerName.charAt(0).toUpperCase();
     const snEl = document.getElementById('sellerName');
     snEl.textContent = sellerName;
+    snEl.classList.add('seller-link'); snEl.setAttribute('role','button'); snEl.setAttribute('tabindex','0'); snEl.onclick = openSellerAds;   // the name itself opens the seller's ads
+    snEl.onkeydown = ev => { if(ev.key === 'Enter' || ev.key === ' ') openSellerAds(ev); };
     if(detailSeller && (detailSeller.dealer || detailSeller.verified)){   // green = dealer, blue = verified person (set by the admin)
       const dl = !!detailSeller.dealer;
       snEl.insertAdjacentHTML('beforeend', ' <span class="vbadge ' + (dl ? 'vb-green' : 'vb-blue') + '" title="' + escapeHtml(T(dl ? 'badge.dealer' : 'badge.verified')) + '" aria-label="' + escapeHtml(T(dl ? 'badge.dealer' : 'badge.verified')) + '"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>');
@@ -1508,6 +1516,40 @@
     if(error){ console.warn(error); if(msg) msg.textContent = translations['feat.reqErr'][currentLang]; return; }
     if(data !== true){ if(msg) msg.textContent = translations['feat.promoBad'][currentLang]; return; }
     location.reload();
+  }
+
+  /* ===== all ads of the seller, grouped by section, in a pop-up window ===== */
+  function ensureSellerOverlay(){
+    let ov = document.getElementById('sellerOverlay');
+    if(ov) return ov;
+    ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.id = 'sellerOverlay';
+    ov.innerHTML = '<div class="modal seller-modal"><button class="modal-close" type="button" onclick="closeSellerAds()">\u2715</button><h3 id="sellerAdsTitle"></h3><div id="sellerAdsBody"></div></div>';
+    ov.addEventListener('click', e => { if(e.target === ov) closeSellerAds(); });
+    document.body.appendChild(ov);
+    return ov;
+  }
+  function closeSellerAds(){ const ov = document.getElementById('sellerOverlay'); if(ov) ov.classList.remove('open'); }
+  async function openSellerAds(e){
+    if(e) e.preventDefault();
+    if(!sb || !detailItem) return false;
+    const T = k => translations[k][currentLang];
+    const ov = ensureSellerOverlay(), body = document.getElementById('sellerAdsBody'), title = document.getElementById('sellerAdsTitle');
+    const name = document.getElementById('sellerName') ? document.getElementById('sellerName').innerHTML : '';
+    title.innerHTML = T('seller.adsOf') + ' ' + name;
+    body.innerHTML = '<p class="listing-empty" style="display:block">' + T('seller.loading') + '</p>';
+    ov.classList.add('open');
+    try{
+      const {data, error} = await sb.rpc('xp_seller_listings', {lid: detailItem.id});
+      if(error) throw error;
+      const items = (data || []).map(rowToItem);
+      const sec = (type, key) => {
+        const list = sortFeatured(items.filter(i => i.type === type));
+        return '<h4 class="seller-sec">' + T(key) + ' (' + list.length + ')</h4>' +
+          (list.length ? '<div class="listings-grid">' + list.map(safeCard).join('') + '</div>' : '<p class="seller-none">' + T('seller.none') + '</p>');
+      };
+      body.innerHTML = sec('plate', 'seller.plates') + sec('number', 'seller.numbers');
+    }catch(err){ console.warn(err); body.innerHTML = '<p class="seller-none">' + T('auth.genericErr') + '</p>'; }
+    return false;
   }
 
   function wireShare(){
