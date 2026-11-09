@@ -267,6 +267,14 @@
     "dash.save":{en:"Save changes",ar:"حفظ التعديلات"},
     "dash.saved":{en:"Your changes were saved.",ar:"تم حفظ التعديلات."},
     "dash.changePassword":{en:"Change password",ar:"تغيير كلمة المرور"},
+    "dash.deleteAccount":{en:"Delete my account",ar:"حذف حسابي"},
+    "dash.deleteWarn":{en:"This permanently deletes your account, your ads and your favourites. It cannot be undone.",ar:"سيُحذف حسابك وإعلاناتك ومفضلتك نهائيًا. لا يمكن التراجع عن ذلك."},
+    "dash.deleteBtn":{en:"Delete my account",ar:"حذف حسابي"},
+    "dash.deleteArm":{en:"Press again to delete forever",ar:"اضغط مرة أخرى للحذف نهائيًا"},
+    "dash.deleteBad":{en:"Enter your current password to confirm.",ar:"أدخل كلمة مرورك الحالية للتأكيد."},
+    "dash.deleteAdmin":{en:"An administrator account cannot be deleted here.",ar:"لا يمكن حذف حساب المشرف من هنا."},
+    "share.btn":{en:"Share this ad",ar:"مشاركة الإعلان"},
+    "share.copied":{en:"Link copied",ar:"تم نسخ الرابط"},
     "dash.currentPassword":{en:"Current password",ar:"كلمة المرور الحالية"},
     "dash.newPassword":{en:"New password",ar:"كلمة المرور الجديدة"},
     "dash.confirmPassword":{en:"Confirm new password",ar:"تأكيد كلمة المرور الجديدة"},
@@ -1413,6 +1421,7 @@
     pk.innerHTML = mem.length > 1 ? '<div class="pkg-title" style="margin:10px 0 6px">' + T('bundle.inThis') + ' (' + mem.length + ')</div><div class="pkg-grid">' + mem.map(m => m.type === 'plate' ? '<a class="pkg-cell" href="' + listingHref(m) + '">' + plateHtml(m.code, m.number, false) + '</a>' : '<a class="pkg-cell pkg-numcell" href="' + listingHref(m) + '">' + escapeHtml(fmtMobile(m.value)) + '</a>').join('') + '</div>' : '';
     document.getElementById('detailPrice').innerHTML = priceText(it) + (it.sold ? ' <span class="sold-badge">' + T('sold.label') + '</span>' : '');
 
+    wireShare();
     const btn = document.getElementById('contactBtn');
     if(detailSeller && detailSeller.phone){
       btn.disabled = false;
@@ -1492,6 +1501,19 @@
     if(error){ console.warn(error); if(msg) msg.textContent = translations['feat.reqErr'][currentLang]; return; }
     if(data !== true){ if(msg) msg.textContent = translations['feat.promoBad'][currentLang]; return; }
     location.reload();
+  }
+
+  function wireShare(){
+    const b = document.getElementById('shareBtn'); if(!b) return;
+    b.onclick = async function(){
+      const url = location.href, title = document.title;
+      try{
+        if(navigator.share){ await navigator.share({ title, text: title, url }); return; }
+        await navigator.clipboard.writeText(url);
+        const old = b.textContent; b.textContent = translations['share.copied'][currentLang];
+        setTimeout(()=>{ b.textContent = translations['share.btn'][currentLang]; }, 1800);
+      }catch(err){ /* cancelled */ }
+    };
   }
 
   /* ============ contact popup (safety notice + WhatsApp + call) ============ */
@@ -1644,7 +1666,37 @@
         '</div>' +
         '<div class="dash-msg" id="passwordMsg" style="display:none;"></div>' +
         '<button class="btn btn-gold" type="submit">' + T('dash.updatePassword') + '</button>' +
+      '</form></div>' +
+      '<div class="dash-card dash-danger"><h2>' + T('dash.deleteAccount') + '</h2><p class="hint">' + T('dash.deleteWarn') + '</p>' +
+      '<form onsubmit="return submitDeleteAccount(event)" novalidate autocomplete="off">' +
+        '<div class="field"><label for="delPw">' + T('dash.currentPassword') + '</label><input id="delPw" type="password" autocomplete="current-password"></div>' +
+        '<div class="dash-msg" id="deleteMsg" style="display:none;"></div>' +
+        '<button class="btn btn-danger" id="delBtn" type="submit">' + T('dash.deleteBtn') + '</button>' +
       '</form></div>';
+  }
+
+  async function submitDeleteAccount(e){
+    e.preventDefault();
+    const btn = document.getElementById('delBtn'), pw = document.getElementById('delPw').value;
+    if(!sb || !currentUser) return false;
+    if(!pw){ dashMsg('deleteMsg','dash.deleteBad',false); return false; }
+    if(!btn.dataset.armed){          // first press arms the button, the second one deletes
+      btn.dataset.armed = '1'; btn.textContent = translations['dash.deleteArm'][currentLang]; dashMsg('deleteMsg', null);
+      setTimeout(()=>{ if(btn.isConnected){ delete btn.dataset.armed; btn.textContent = translations['dash.deleteBtn'][currentLang]; } }, 5000);
+      return false;
+    }
+    btn.disabled = true;
+    try{
+      const chk = await sb.auth.signInWithPassword({ email: currentUser.email, password: pw });   // proves it is really the owner
+      if(chk.error || !chk.data.session){ dashMsg('deleteMsg','dash.deleteBad',false); return false; }
+      const r = await fetch(SUPABASE_URL + '/functions/v1/delete-account', { method:'POST', headers:{ 'Content-Type':'application/json', 'apikey': SUPABASE_KEY, 'Authorization':'Bearer ' + chk.data.session.access_token }, body:'{}' });
+      const j = await r.json().catch(()=>({}));
+      if(!r.ok){ dashMsg('deleteMsg', j.error === 'admin' ? 'dash.deleteAdmin' : 'auth.genericErr', false); return false; }
+      try{ await sb.auth.signOut(); }catch(err){}
+      currentUser = null; location.href = 'index.html' + (currentLang === 'ar' ? '?lang=ar' : '');
+    }catch(err){ dashMsg('deleteMsg','auth.genericErr',false); }
+    finally{ btn.disabled = false; delete btn.dataset.armed; if(btn.isConnected) btn.textContent = translations['dash.deleteBtn'][currentLang]; }
+    return false;
   }
 
   async function submitProfile(e){

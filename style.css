@@ -1051,3 +1051,9 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 
 /* featured ads: activation code only for now (no prices / payment shown) */
 .feat-price, .feat-total{display:none !important;}
+
+.share-btn{display:block; width:100%; margin-top:10px; background:transparent; border:1px solid var(--line); color:var(--text); font:inherit; font-weight:600; padding:11px 14px; border-radius:11px; cursor:pointer;}
+.share-btn:hover{border-color:var(--gold);}
+.dash-danger h2{color:var(--danger);}
+.btn-danger{background:var(--danger); color:#fff; border:0; border-radius:11px; padding:11px 18px; font:inherit; font-weight:700; cursor:pointer;}
+.btn-danger:disabled{opacity:.6; cursor:wait;}
