@@ -1,0 +1,25 @@
+name: iOS build
+on:
+  workflow_dispatch:
+  push:
+    paths: ['mobile/**', '.github/workflows/ios.yml']
+jobs:
+  build:
+    runs-on: macos-latest
+    defaults: { run: { working-directory: mobile } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: maxim-lobanov/setup-xcode@v1
+        with: { xcode-version: latest-stable }
+      - run: npm install --no-audit --no-fund
+      - run: node scripts/build-www.js
+      - run: npx cap add ios
+      - run: npx capacitor-assets generate --ios --iconBackgroundColor '#2F4BC0' --splashBackgroundColor '#0A0D14' --splashBackgroundColorDark '#0A0D14'
+      - run: npx cap sync ios
+      - name: Compile for the iOS simulator (no signing needed, proves the project builds)
+        working-directory: mobile/ios/App
+        run: |
+          if [ -d App.xcworkspace ]; then TARGET="-workspace App.xcworkspace"; else TARGET="-project App.xcodeproj"; fi
+          xcodebuild $TARGET -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build | tail -40

@@ -1848,3 +1848,6 @@ document.addEventListener('DOMContentLoaded', function(){
     sb.rpc('xp_track_visit', {p_vid: v}).then(function(){}, function(){});
   }catch(e){}
 });
+
+/* installable app: register the offline service worker (https only) */
+if('serviceWorker' in navigator && location.protocol === 'https:'){ window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }

@@ -1,0 +1,12 @@
+{
+  "appId": "com.souqalarqam.app",
+  "appName": "Souq Al Arqam",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "ios": { "contentInset": "always", "backgroundColor": "#0A0D14" },
+  "android": { "backgroundColor": "#0A0D14" },
+  "plugins": {
+    "SplashScreen": { "launchAutoHide": true, "launchShowDuration": 800, "backgroundColor": "#0A0D14", "showSpinner": false },
+    "StatusBar": { "style": "DARK", "backgroundColor": "#0A0D14" }
+  }
+}

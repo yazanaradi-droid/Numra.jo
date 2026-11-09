@@ -1,0 +1,24 @@
+{
+  "name": "souq-al-arqam-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Souq Al Arqam mobile app (Capacitor wrapper around the website in the repo root)",
+  "scripts": {
+    "build:www": "node scripts/build-www.js",
+    "sync": "node scripts/build-www.js && cap sync",
+    "assets": "capacitor-assets generate --iconBackgroundColor '#2F4BC0' --splashBackgroundColor '#0A0D14' --splashBackgroundColorDark '#0A0D14'"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/ios": "^8.0.0",
+    "@capacitor/share": "^8.0.0",
+    "@capacitor/splash-screen": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
+    "@capacitor/cli": "^8.0.0"
+  }
+}

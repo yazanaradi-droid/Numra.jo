@@ -1,0 +1,41 @@
+name: Android build
+on:
+  workflow_dispatch:
+  push:
+    paths: ['mobile/**', '.github/workflows/android.yml']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: mobile } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - run: npm install --no-audit --no-fund
+      - run: node scripts/build-www.js
+      - run: npx cap add android
+      - run: npx capacitor-assets generate --android --iconBackgroundColor '#2F4BC0' --splashBackgroundColor '#0A0D14' --splashBackgroundColorDark '#0A0D14'
+      - run: npx cap sync android
+      - name: Build debug APK (installable for testing)
+        working-directory: mobile/android
+        run: ./gradlew assembleDebug --no-daemon
+      - name: Build release bundle (.aab for Google Play)
+        working-directory: mobile/android
+        run: ./gradlew bundleRelease --no-daemon
+      - name: Sign the bundle (only when the signing secrets exist)
+        if: ${{ env.KS_B64 != '' }}
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          jarsigner -keystore "$RUNNER_TEMP/release.jks" -storepass "$KS_PASS" android/app/build/outputs/bundle/release/app-release.aab "$KEY_ALIAS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-app
+          path: |
+            mobile/android/app/build/outputs/apk/debug/*.apk
+            mobile/android/app/build/outputs/bundle/release/*.aab
