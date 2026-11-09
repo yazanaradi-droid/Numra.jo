@@ -699,7 +699,7 @@
   /* each credit is between 0 (no match) and 1 (exact match) */
   function priceText(it){
     if(it.price === '' || it.price == null || isNaN(parseFloat(it.price))) return translations['price.contact'][currentLang];
-    return escapeHtml(it.price) + ' ' + (currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD');
+    return detailPriceText(it);
   }
   /* detail page price: thousands separators, decimals only when needed: "JOD 10,100.12" / "JOD 10,000" / "د.ا. 114,000" */
   function detailPriceText(it){
@@ -782,7 +782,7 @@
       ? plateHtml(item.code, item.number, false)
       : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(fmtMobile(item.value)) + '</div></div>';
     const T = k => translations[k][currentLang];
-    const phoneHtml = !item.phoneMasked ? '' : (item.featured
+    const phoneHtml = !item.phoneMasked ? '' : (true
       ? '<span class="card-phone card-phone-btn" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><b>' + T('feat.callLabel') + '</b> <span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>'
       : '<span class="card-phone" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>');
     return '<a class="listing-card' + (item.featured ? ' is-featured' : '') + (item.sold ? ' is-sold' : '') + '" href="' + listingHref(item) + '">' +
