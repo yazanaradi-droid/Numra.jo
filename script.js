@@ -237,6 +237,7 @@
     "dash.package":{en:"My package",ar:"باقتي"},
     "dash.loginNeeded":{en:"Please log in to see your account.",ar:"سجّل الدخول لعرض حسابك."},
     "dash.phoneLocked":{en:"The phone number cannot be changed.",ar:"لا يمكن تغيير رقم الهاتف."},
+    "dash.usernameLocked":{en:"The username cannot be changed.",ar:"لا يمكن تغيير اسم المستخدم."},
     "dash.save":{en:"Save changes",ar:"حفظ التعديلات"},
     "dash.saved":{en:"Your changes were saved.",ar:"تم حفظ التعديلات."},
     "dash.changePassword":{en:"Change password",ar:"تغيير كلمة المرور"},
@@ -1471,7 +1472,7 @@
     const e = escapeHtml;
     return '<div class="dash-card"><h2>' + T('dash.profile') + '</h2>' +
       '<form onsubmit="return submitProfile(event)" novalidate>' +
-        '<div class="field"><label>' + T('modal.username') + '</label><input type="text" value="' + e(p.username) + '" readonly class="ro"></div>' +
+        '<div class="field"><label>' + T('modal.username') + '</label><input type="text" value="' + e(p.username) + '" readonly class="ro" dir="ltr"><div class="hint">' + T('dash.usernameLocked') + '</div></div>' +
         '<div class="field"><label>' + T('modal.phone') + '</label><input type="text" value="' + e(p.phone) + '" readonly class="ro" dir="ltr"><div class="hint">' + T('dash.phoneLocked') + '</div></div>' +
         '<div class="field-row">' +
           '<div class="field"><label for="pfFirst">' + T('modal.first') + '</label><input id="pfFirst" type="text" value="' + e(p.first_name) + '"></div>' +
