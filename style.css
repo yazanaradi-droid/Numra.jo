@@ -1076,3 +1076,4 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 
 .seller-link{color:var(--accent-text); cursor:pointer;}
 .seller-link:hover{text-decoration:underline;}
+.seller-ads-link{display:block; margin:2px 0 4px;}
