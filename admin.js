@@ -51,7 +51,7 @@
   const panel = () => document.getElementById('admPanel');
 
   function renderNav(){
-    nav().innerHTML = ['alerts','stats','listings','users','messages','settings'].map(t =>
+    nav().innerHTML = ['alerts','stats','listings','users','settings'].map(t =>
       '<button class="dash-tab' + (t === tab ? ' active' : '') + '" data-tab="' + t + '">' + T(t) + (t === 'alerts' && alertCount ? ' <span class="adm-tag adm-red" style="margin-inline-start:6px">' + alertCount + '</span>' : '') + '</button>').join('') +
       '<button class="dash-tab dash-logout" style="color:var(--text)" data-tab="__back">' + T('back') + '</button>';
   }
@@ -230,7 +230,7 @@
 
   function show(){
     renderNav();
-    if(tab === 'alerts') showAlerts(); else if(tab === 'listings') showListings(); else if(tab === 'stats') showStats(); else if(tab === 'messages') showMessages(); else if(tab === 'users') viewUser ? showUserAds() : showUsers(); else showSettings();
+    if(tab === 'alerts') showAlerts(); else if(tab === 'listings') showListings(); else if(tab === 'stats') showStats(); else if(tab === 'users') viewUser ? showUserAds() : showUsers(); else showSettings();
   }
 
   async function act(a, id){
