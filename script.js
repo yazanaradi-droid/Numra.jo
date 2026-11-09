@@ -220,13 +220,14 @@
     "feat.title":{en:"Featured ad",ar:"إعلان مميز"},
     "feat.optional":{en:"(optional)",ar:"(اختياري)"},
     "feat.desc":{en:"Shown first and highlighted so more buyers see it.",ar:"يظهر في المقدمة وبشكل مميز ليراه مشترون أكثر."},
-    "feat.pricesTitle":{en:"Ad prices",ar:"أسعار الإعلانات"},
+    "feat.pricesTitle":{en:"Duration",ar:"المدة"},
     "feat.2w":{en:"Two weeks",ar:"أسبوعان"},
     "feat.1m":{en:"One month",ar:"شهر"},
     "feat.forever":{en:"Unlimited",ar:"ما لا نهاية"},
     "feat.total":{en:"Fee to pay:",ar:"الرسوم المطلوبة:"},
-    "feat.note":{en:"Your ad is published now. It becomes featured after payment is confirmed.",ar:"يُنشر إعلانك الآن، ويصبح مميزاً بعد تأكيد الدفع."},
-    "feat.promoLabel":{en:"Activation code (if you have one)",ar:"كود التفعيل (إن وجد)"},
+    "feat.note":{en:"Featured ads are activated with an activation code only for now. No code? Contact us.",ar:"الإعلانات المميزة تُفعَّل حاليًا بكود التفعيل فقط. ليس لديك كود؟ تواصل معنا."},
+    "feat.promoLabel":{en:"Activation code",ar:"كود التفعيل"},
+    "feat.codeNeeded":{en:"Enter your activation code to make the ad featured.",ar:"أدخل كود التفعيل لجعل الإعلان مميزاً."},
     "feat.promoOk":{en:"Code accepted - your ad is featured now.",ar:"تم قبول الكود - إعلانك مميز الآن."},
     "feat.promoBad":{en:"The code is not valid.",ar:"الكود غير صالح."},
     "feat.badge":{en:"Featured",ar:"مميز"},
@@ -242,7 +243,7 @@
     "feat.activeNow":{en:"Your ad is featured",ar:"إعلانك مميز"},
     "feat.until":{en:"until",ar:"حتى"},
     "feat.reqSent":{en:"Request received. It is activated once the payment is confirmed.",ar:"تم استلام طلبك، ويتم التفعيل بعد تأكيد الدفع."},
-    "feat.reqErr":{en:"Could not send the request. Run the featured SQL update first.",ar:"تعذّر إرسال الطلب. شغّل ملف SQL الخاص بالإعلانات المميزة أولاً."},
+    "feat.reqErr":{en:"Could not send the request. Please try again.",ar:"تعذّر إرسال الطلب. حاول مرة أخرى."},
     "feat.homeTitle":{en:"Latest listings",ar:"أحدث الإعلانات"},
     "feat.homeSub":{en:"Featured ads first, then the newest listings.",ar:"الإعلانات المميزة أولاً ثم أحدث الإعلانات."},
     "feat.homeMore":{en:"Browse all →",ar:"تصفح الكل ←"},
@@ -955,6 +956,7 @@
       : { type:'number', value:document.getElementById('upValue').value, price };
     const featOn = document.getElementById('upFeatured').checked;
     const featPlan = featOn ? document.querySelector('input[name=featPlan]:checked').value : null;
+    if(featOn && !(document.getElementById('upPromo').value||'').trim()){ showBanner('uploadErrorBanner','feat.codeNeeded'); return false; }   // featured = activation code only (for now)
     if(featPlan) row.featured_plan = featPlan;
     let newItem = null, featuredSkipped = false, wasUpdated = false, promoOk = false;
     const submitBtn = document.querySelector('#uploadForm .modal-submit'); submitBtn.disabled = true;
@@ -995,12 +997,7 @@
         payBox.innerHTML = '<h4>★ ' + translations['feat.promoOk'][currentLang] + '</h4>';
         payBox.style.display = 'block';
       } else if(featPlan && !featuredSkipped){
-        const amt = FEATURED_PRICES[featPlan];
-        const alias = CLIQ_ALIAS ? (currentLang==='ar' ? ' إلى: ' : ' to: ') + CLIQ_ALIAS : '';
-        payBox.innerHTML = (promoTyped ? '<p><b>' + translations['feat.promoBad'][currentLang] + '</b></p>' : '') + '<h4>' + translations['feat.payTitle'][currentLang] + '</h4><p>' +
-          translations['feat.payBody'][currentLang].replace('{amt}', amt).replace('{alias}', alias) + '</p>' +
-          (newItem ? '<p class="pay-id">#' + escapeHtml(String(newItem.id).slice(0,8)) + '</p>' : '') +
-          '<a href="#" class="btn btn-ghost" onclick="closeUpload(); openInfo(\'contact\', event)">' + translations['feat.payBtn'][currentLang] + '</a>';
+        payBox.innerHTML = '<p><b>' + translations['feat.promoBad'][currentLang] + '</b></p>';
         payBox.style.display = 'block';
       } else { payBox.style.display = 'none'; payBox.innerHTML=''; }
     }
@@ -1481,7 +1478,7 @@
       const opts = featOpts(rank, 'featReq');
       if(opts){
         h += (active ? '<h4>' + T('feat.upTitle') + '</h4>' : '<h4>' + T('feat.pricesTitle') + '</h4>') + opts +
-             '<button type="button" class="btn btn-gold" onclick="requestFeatured()">' + T(active ? 'feat.upBtn' : 'feat.reqBtn') + '</button><p id="featReqMsg" class="feat-note"></p>';
+             '<div class="feat-promo"><label>' + T('feat.promoLabel') + '</label><input type="text" id="featReqCode" autocomplete="off" dir="ltr" placeholder="CODE"></div><button type="button" class="btn btn-gold" onclick="requestFeatured()">' + T(active ? 'feat.upBtn' : 'feat.reqBtn') + '</button><p id="featReqMsg" class="feat-note"></p>';
       }
     }
     box.innerHTML = h; box.style.display = 'block';
@@ -1489,11 +1486,12 @@
   async function requestFeatured(){
     const r = document.querySelector('input[name=featReq]:checked'); if(!r || !detailItem) return;
     const msg = document.getElementById('featReqMsg');
-    const {error} = await sb.rpc('xp_request_featured', {lid: detailItem.id, plan: r.value});
+    const code = ((document.getElementById('featReqCode')||{}).value || '').trim();
+    if(!code){ if(msg) msg.textContent = translations['feat.codeNeeded'][currentLang]; return; }
+    const {data, error} = await sb.rpc('xp_request_featured', {lid: detailItem.id, plan: r.value, p_promo: code});
     if(error){ console.warn(error); if(msg) msg.textContent = translations['feat.reqErr'][currentLang]; return; }
-    const active = detailFeat.featured_status === 'active' && (!detailFeat.featured_until || new Date(detailFeat.featured_until) > new Date());
-    if(active) detailFeat.featured_request = r.value; else { detailFeat.featured_plan = r.value; detailFeat.featured_status = 'pending'; }
-    renderFeatureBox();
+    if(data !== true){ if(msg) msg.textContent = translations['feat.promoBad'][currentLang]; return; }
+    location.reload();
   }
 
   /* ============ contact popup (safety notice + WhatsApp + call) ============ */
@@ -1761,6 +1759,7 @@
     const f = document.querySelector('#df-' + id + ' .dash-feat-form');
     const r = f.querySelector('input:checked'); if(!r) return;
     const code = (f.querySelector('.promo-in').value || '').trim();
+    if(!code){ f.querySelector('.feat-note').textContent = translations['feat.codeNeeded'][currentLang]; return; }
     const {data, error} = await sb.rpc('xp_request_featured', {lid:id, plan:r.value, p_promo: code || null});
     if(error){ console.warn(error); f.querySelector('.feat-note').textContent = translations['feat.reqErr'][currentLang]; return; }
     if(code && data !== true){ f.querySelector('.feat-note').textContent = translations['feat.promoBad'][currentLang]; setTimeout(renderDashboard, 1800); return; }

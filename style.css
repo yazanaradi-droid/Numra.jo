@@ -1048,3 +1048,6 @@ html[dir="rtl"] .ar-row input::placeholder{text-align:right;}
 .phone-row select:focus{outline:none; border-color:var(--gold);}
 .phone-row input{flex:1 1 auto; min-width:0;}
 #otpCode{letter-spacing:.35em; text-align:center; font-size:1.2rem;}
+
+/* featured ads: activation code only for now (no prices / payment shown) */
+.feat-price, .feat-total{display:none !important;}
