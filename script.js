@@ -488,23 +488,23 @@
   }
   async function buildPlateCanvas(it){
     await loadPlateFonts();
-    const W = 1200, H = 400, c = document.createElement('canvas'); c.width = W; c.height = H;
-    const g = c.getContext('2d');
+    const W = 1200, H = 400, SC = 2, c = document.createElement('canvas'); c.width = W * SC; c.height = H * SC;
+    const g = c.getContext('2d'); g.scale(SC, SC); g.imageSmoothingQuality = 'high';
     g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
     const rr = (x, y, w, h, r) => { g.beginPath(); g.moveTo(x+r, y); g.arcTo(x+w, y, x+w, y+h, r); g.arcTo(x+w, y+h, x, y+h, r); g.arcTo(x, y+h, x, y, r); g.arcTo(x, y, x+w, y, r); g.closePath(); };
     const px = 70, py = 40, pw = W - 140, ph = 270;
     g.save(); g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
-    rr(px, py, pw, ph, 30); const gr = g.createLinearGradient(0, py, 0, py + ph); gr.addColorStop(0, '#E9ECF1'); gr.addColorStop(.5, '#DDE1E8'); gr.addColorStop(1, '#D1D6DF'); g.fillStyle = gr; g.fill(); g.restore();
+    rr(px, py, pw, ph, 30); const gr = g.createLinearGradient(0, py, 0, py + ph); gr.addColorStop(0, '#F4F6F9'); gr.addColorStop(.5, '#EAEDF2'); gr.addColorStop(1, '#DFE3EA'); g.fillStyle = gr; g.fill(); g.restore();
     rr(px + 20, py + 20, pw - 40, ph - 40, 16); g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 3; g.stroke();
     /* surface of the sheet: fine grain, reflective sheen, darker corners */
     g.save(); rr(px + 7, py + 7, pw - 14, ph - 14, 26); g.clip();
     const nc = document.createElement('canvas'); nc.width = 256; nc.height = 128; const nq = nc.getContext('2d'), nd = nq.createImageData(256, 128);
     for(let i = 0; i < nd.data.length; i += 4){ const v = Math.random() * 255; nd.data[i] = nd.data[i+1] = nd.data[i+2] = v; nd.data[i+3] = 255; }
-    nq.putImageData(nd, 0, 0); g.globalAlpha = .05; g.globalCompositeOperation = 'multiply'; g.fillStyle = g.createPattern(nc, 'repeat'); g.fillRect(px, py, pw, ph);
+    nq.putImageData(nd, 0, 0); g.globalAlpha = .03; g.globalCompositeOperation = 'multiply'; g.fillStyle = g.createPattern(nc, 'repeat'); g.fillRect(px, py, pw, ph);
     g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
-    const sh = g.createLinearGradient(px, py, px + pw * .75, py + ph * 1.6); sh.addColorStop(0, 'rgba(255,255,255,0)'); sh.addColorStop(.28, 'rgba(255,255,255,.34)'); sh.addColorStop(.42, 'rgba(255,255,255,0)'); sh.addColorStop(.7, 'rgba(255,255,255,.12)'); sh.addColorStop(1, 'rgba(255,255,255,0)');
+    const sh = g.createLinearGradient(px, py, px + pw * .75, py + ph * 1.6); sh.addColorStop(0, 'rgba(255,255,255,0)'); sh.addColorStop(.28, 'rgba(255,255,255,.22)'); sh.addColorStop(.42, 'rgba(255,255,255,0)'); sh.addColorStop(.7, 'rgba(255,255,255,.12)'); sh.addColorStop(1, 'rgba(255,255,255,0)');
     g.fillStyle = sh; g.fillRect(px, py, pw, ph);
-    const vg = g.createRadialGradient(px + pw / 2, py + ph / 2, ph * .5, px + pw / 2, py + ph / 2, pw * .62); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.11)');
+    const vg = g.createRadialGradient(px + pw / 2, py + ph / 2, ph * .5, px + pw / 2, py + ph / 2, pw * .62); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.06)');
     g.fillStyle = vg; g.fillRect(px, py, pw, ph);
     g.restore();
     rr(px + 7, py + 7, pw - 14, ph - 14, 26); g.strokeStyle = '#0B0B0B'; g.lineWidth = 14; g.stroke();
@@ -516,19 +516,19 @@
       g.font = font; g.textAlign = align; const w = g.measureText(txt).width * (sx || 1);
       const k = Math.min(1, maxW / w) * (sx || 1);
       const dir = g.direction;
-      const layer = () => { const o = document.createElement('canvas'); o.width = W; o.height = H; const q = o.getContext('2d'); q.font = font; q.textAlign = align; q.direction = dir; q.textBaseline = 'alphabetic'; return [o, q]; };
+      const layer = () => { const o = document.createElement('canvas'); o.width = W * SC; o.height = H * SC; const q = o.getContext('2d'); q.scale(SC, SC); q.font = font; q.textAlign = align; q.direction = dir; q.textBaseline = 'alphabetic'; return [o, q]; };
       const put = (q, dx, dy, mode) => { q.save(); q.translate(x + dx, y + dy); q.scale(k, 1); mode === 'stroke' ? q.strokeText(txt, 0, 0) : q.fillText(txt, 0, 0); q.restore(); };
       // 1) cast shadow on the sheet (bottom-right) and a thin bright rim on the top-left edge of the raised metal
-      g.save(); g.translate(x, y); g.scale(k, 1); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 8; g.shadowOffsetX = 3; g.shadowOffsetY = 6; g.fillStyle = '#000'; g.fillText(txt, 0, 0); g.restore();
-      g.save(); g.translate(x - 1.6, y - 1.6); g.scale(k, 1); g.fillStyle = 'rgba(255,255,255,.95)'; g.fillText(txt, 0, 0); g.restore();
+      g.save(); g.translate(x, y); g.scale(k, 1); g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 5; g.shadowOffsetX = 2; g.shadowOffsetY = 4; g.fillStyle = '#000'; g.fillText(txt, 0, 0); g.restore();
+      g.save(); g.translate(x - 1.2, y - 1.2); g.scale(k, 1); g.fillStyle = 'rgba(255,255,255,.95)'; g.fillText(txt, 0, 0); g.restore();
       // 2) black body
       const fs = parseInt(font.match(/(\d+)px/)[1], 10);
-      g.save(); g.translate(x, y); g.scale(k, 1); const lg = g.createLinearGradient(0, -fs * .75, 0, fs * .02); lg.addColorStop(0, '#2B2D33'); lg.addColorStop(.35, '#0D0E10'); lg.addColorStop(1, '#000'); g.fillStyle = lg; g.fillText(txt, 0, 0); g.restore();
+      g.save(); g.translate(x, y); g.scale(k, 1); const lg = g.createLinearGradient(0, -fs * .75, 0, fs * .02); lg.addColorStop(0, '#16171A'); lg.addColorStop(.3, '#050506'); lg.addColorStop(1, '#000'); g.fillStyle = lg; g.fillText(txt, 0, 0); g.restore();
       // 3) light rim on the top-left edge
       const [oa, qa] = layer(); qa.fillStyle = '#000'; put(qa, 0, 0);
-      const [ob, qb] = layer(); qb.drawImage(oa, 0, 0); qb.globalCompositeOperation = 'destination-out'; put(qb, 3, 3);
+      const [ob, qb] = layer(); qb.drawImage(oa, 0, 0, W, H); qb.globalCompositeOperation = 'destination-out'; put(qb, 3, 3);
       qb.globalCompositeOperation = 'source-in'; qb.fillStyle = 'rgba(150,154,164,.9)'; qb.fillRect(0, 0, W, H);
-      g.drawImage(ob, 0, 0);
+      g.drawImage(ob, 0, 0, W, H);
     };
     g.textBaseline = 'alphabetic';
     const cx = px + .056 * pw, T = .16 * pw;   /* same proportions as the plate on the page */
