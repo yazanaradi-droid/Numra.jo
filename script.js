@@ -318,7 +318,7 @@
     "dash.deleteArm":{en:"Press again to delete forever",ar:"اضغط مرة أخرى للحذف نهائيًا"},
     "dash.deleteBad":{en:"Enter your current password to confirm.",ar:"أدخل كلمة مرورك الحالية للتأكيد."},
     "dash.deleteAdmin":{en:"An administrator account cannot be deleted here.",ar:"لا يمكن حذف حساب المشرف من هنا."},
-    "seller.viewAds":{en:"View seller's ads",ar:"عرض لوحات البائع"},
+    "seller.viewAds":{en:"View seller's ads",ar:"عرض إعلانات البائع"},
     "seller.platesTitle":{en:"License plates for sale",ar:"لوحات سيارات للبيع"},
     "seller.numbersTitle":{en:"Phone numbers for sale",ar:"أرقام هواتف للبيع"},
     "seller.whatsapp":{en:"WhatsApp",ar:"واتساب"},
@@ -388,6 +388,20 @@
     "nav.dashboard":{en:"Dashboard",ar:"لوحة التحكم"},
     "nav.admin":{en:"Admin panel",ar:"لوحة الإدارة"},
     "sold.label":{en:"SOLD",ar:"مباع"},
+    "sold.show":{en:"Show sold listings",ar:"عرض الإعلانات المباعة"},
+    "listings.onlySold":{en:"All matching listings are sold. Tick \u201cShow sold listings\u201d to see them.",ar:"كل الإعلانات المطابقة مباعة حالياً. فعّل «عرض الإعلانات المباعة» لرؤيتها."},
+    "listings.loading":{en:"Loading listings\u2026",ar:"جارٍ تحميل الإعلانات\u2026"},
+    "bundles.emptyTitle":{en:"No packages here yet.",ar:"لا توجد باقات هنا بعد."},
+    "bundles.browse":{en:"Browse single listings",ar:"تصفح الإعلانات الفردية"},
+    "bundles.add":{en:"Add your package",ar:"أضف باقتك"},
+    "search.lbl.contains":{en:"Contains",ar:"يتضمن"},
+    "search.lbl.max":{en:"Max price",ar:"أعلى سعر"},
+    "search.lbl.min":{en:"Min price",ar:"أقل سعر"},
+    "search.lbl.starts":{en:"Starts with",ar:"يبدأ بـ"},
+    "search.lbl.ends":{en:"Ends with",ar:"ينتهي بـ"},
+    "search.lbl.code":{en:"Plate code",ar:"رمز اللوحة"},
+    "search.lbl.digits":{en:"Number of digits",ar:"عدد الأرقام"},
+    "search.lbl.prefix":{en:"Operator code",ar:"رمز الشركة"},
     "sold.status":{en:"Status",ar:"الحالة"},
     "sold.available":{en:"Available",ar:"متوفر"},
     "sold.sold":{en:"Sold",ar:"مباع"},
@@ -459,7 +473,7 @@
     const params = new URLSearchParams(window.location.search);
     let saved = null; try{ saved = localStorage.getItem('xp_lang'); }catch(e){}
     const q = params.get('lang');
-    if(saved === 'ar' || saved === 'en') currentLang = saved; else if(q === 'ar' || q === 'en') currentLang = q;
+    if(q === 'ar' || q === 'en') currentLang = q; else if(saved === 'ar' || saved === 'en') currentLang = saved;   // the language in the link wins over the remembered one
     try{ localStorage.setItem('xp_lang', currentLang); }catch(e){}
   })();
 
@@ -482,6 +496,19 @@
       if(translations[key]) el.setAttribute('placeholder', translations[key][lang]);
     });
     document.documentElement.setAttribute('lang', lang);
+    (function(){   // static page titles follow the language (listing/seller pages set their own once data arrives)
+      const T = {'index':{ar:'سوق الأرقام | Souq Al Arqam – لوحات سيارات وأرقام موبايل مميزة في الأردن',en:'Souq Al Arqam | License Plates & VIP Mobile Numbers in Jordan'},
+        'plates':{ar:'لوحات سيارات مميزة للبيع في الأردن | سوق الأرقام',en:'Premium License Plates for Sale in Jordan | Souq Al Arqam'},
+        'numbers':{ar:'أرقام موبايل مميزة للبيع في الأردن | سوق الأرقام',en:'VIP Mobile Numbers for Sale in Jordan | Souq Al Arqam'},
+        'bundles':{ar:'باقات لوحات وأرقام مميزة للبيع | سوق الأرقام',en:'Plate & Number Bundles for Sale | Souq Al Arqam'},
+        'packages':{ar:'الباقات المميزة | سوق الأرقام',en:'Featured Packages | Souq Al Arqam'},
+        'add':{ar:'إضافة إعلان | سوق الأرقام',en:'Add a Listing | Souq Al Arqam'},
+        'dashboard':{ar:'حسابي | سوق الأرقام',en:'My Account | Souq Al Arqam'},
+        'admin':{ar:'الإدارة | سوق الأرقام',en:'Admin | Souq Al Arqam'}};
+      const pg = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/,'') || 'index';
+      if(T[pg]) document.title = T[pg][lang];
+      else if(!window.__dynTitle && (pg === 'listing' || pg === 'seller')) document.title = pg === 'listing' ? (lang === 'ar' ? 'إعلان | سوق الأرقام' : 'Listing | Souq Al Arqam') : (lang === 'ar' ? 'حساب بائع | سوق الأرقام' : 'Seller | Souq Al Arqam');
+    })();
     document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
     const langBtn = document.getElementById('langToggle');
     if(langBtn) langBtn.textContent = lang === 'ar' ? 'EN' : 'AR';
@@ -675,11 +702,13 @@
   }
   function renderHomeListings(){
     const grid = document.getElementById('homeListingsGrid'); if(!grid) return;
+    if(!listingsReady) return;   // wait for real data instead of flashing demo ads
     const items = sortFeatured(userListings).slice(0, 12);
     grid.innerHTML = items.map(safeCard).join('');
     document.getElementById('homeListings').style.display = items.length ? 'block' : 'none';
   }
   let listingsLoadError = false;
+  let listingsReady = !sb;   // false until the first load finishes, so the demo ads are never shown (and clickable) while real data is on its way
   async function loadRemoteListings(){
     if(!sb) return;
     try{
@@ -696,6 +725,7 @@
       userListings = dedupeListings(sortFeatured(userListings));
       listingsLoadError = false;
     }catch(err){ console.warn('Could not load listings:', err); listingsLoadError = true; }
+    listingsReady = true;
   }
   let currentUploadType = (typeof PAGE_TYPE !== 'undefined') ? PAGE_TYPE : 'plate';
 
@@ -800,15 +830,16 @@
     const mount = document.getElementById('searchPanel'); if(!mount) return;
     if(!keepState) readSearchState();
     const T = k => translations[k][currentLang], st = searchState, e = escapeHtml;
+    const lbl = (id, k, cls) => '<label class="' + (cls || 'sr-only') + '" for="' + id + '">' + e(T(k)) + '</label>';
     const select = (id, key, allLabel, opts) => '<select id="' + id + '" data-k="' + key + '"><option value="">' + e(allLabel) + '</option>' +
       opts.map(o => '<option value="' + e(o[0]) + '"' + (st[key] === o[0] ? ' selected' : '') + '>' + e(o[1]) + '</option>').join('') + '</select>';
-    const input = (id, key, ph) => '<input id="' + id + '" data-k="' + key + '" type="text" inputmode="numeric" autocomplete="off" value="' + e(st[key]) + '" placeholder="' + e(ph) + '">';
+    const input = (id, key, ph, lk) => '<div class="sf">' + lbl(id, lk, 'sf-lbl') + '<input id="' + id + '" data-k="' + key + '" type="text" inputmode="numeric" autocomplete="off" value="' + e(st[key]) + '" placeholder="' + e(ph) + '"></div>';
     let first = '';
     if(PAGE_TYPE === 'plate'){
-      first = select('sCode', 'code', T('search.codeAll'), Array.from({length:99}, (_,i) => [String(i+1), String(i+1)])) +
-              select('sDigits', 'digits', T('search.digitsAll'), [1,2,3,4,5].map(n => [String(n), T('search.digits' + n)]));
+      first = lbl('sCode', 'search.lbl.code') + select('sCode', 'code', T('search.codeAll'), Array.from({length:99}, (_,i) => [String(i+1), String(i+1)])) +
+              lbl('sDigits', 'search.lbl.digits') + select('sDigits', 'digits', T('search.digitsAll'), [1,2,3,4,5].map(n => [String(n), T('search.digits' + n)]));
     } else {
-      first = select('sPrefix', 'prefix', T('search.prefixAll'), ['077','078','079'].map(x => [x, x]));
+      first = lbl('sPrefix', 'search.lbl.prefix') + select('sPrefix', 'prefix', T('search.prefixAll'), ['077','078','079'].map(x => [x, x]));
     }
     const extraFilled = ['contains','max','min','starts','ends'].some(k => st[k]);
     const open = searchMoreOpen || extraFilled;
@@ -818,9 +849,9 @@
       '<button class="btn btn-gold" type="submit">' + T('search.button') + '</button>' +
       '<button class="btn btn-ghost" type="button" onclick="resetSearch()">' + T('search.reset') + '</button></div>' +
       '<div class="search-more' + (open ? ' open' : '') + '" id="searchMore"><div class="search-grid">' +
-      input('sContains', 'contains', T('search.contains')) +
-      input('sMax', 'max', T('search.max')) + input('sMin', 'min', T('search.min')) +
-      input('sStarts', 'starts', T('search.starts')) + input('sEnds', 'ends', T('search.ends')) +
+      input('sContains', 'contains', T('search.contains'), 'search.lbl.contains') +
+      input('sMax', 'max', T('search.max'), 'search.lbl.max') + input('sMin', 'min', T('search.min'), 'search.lbl.min') +
+      input('sStarts', 'starts', T('search.starts'), 'search.lbl.starts') + input('sEnds', 'ends', T('search.ends'), 'search.lbl.ends') +
       '</div></div></form>';
   }
   let searchMoreOpen = false;
@@ -953,6 +984,14 @@
     const grid = document.getElementById('listingsGrid');
     if(!grid) return; // homepage has no listing grid
     const empty = document.getElementById('listingsEmpty');
+    if(!listingsReady){   // neutral loading state: nothing clickable until the real listings arrive
+      const bar0 = document.getElementById('resultsBar'); if(bar0) bar0.style.display = 'none';
+      empty.style.display = 'none';
+      grid.setAttribute('aria-busy', 'true');
+      grid.innerHTML = '<div class="listings-loading" role="status">' + translations['listings.loading'][currentLang] + '</div>';
+      return;
+    }
+    grid.removeAttribute('aria-busy');
 
     const isBundle = PAGE_TYPE === 'bundle';
     let items = isBundle ? userListings.filter(i => i.pkgId && i.type === bundleType) : userListings.filter(i => i.type === PAGE_TYPE && !i.pkgId);
@@ -974,6 +1013,13 @@
       grid.innerHTML = '';
       if(bar) bar.style.display = 'none';
       empty.style.display = 'block';
+      if(isBundle && !active){   // clear next steps instead of a dead end
+        empty.removeAttribute('data-i18n');
+        const T0 = k => translations[k][currentLang];
+        const browse = bundleType === 'number' ? 'numbers.html' : 'plates.html', q = currentLang === 'ar' ? '?lang=ar' : '';
+        empty.innerHTML = '<p>' + T0('bundles.emptyTitle') + '</p><div class="empty-actions"><a class="btn btn-ghost" href="' + browse + q + '">' + T0('bundles.browse') + '</a><a class="btn btn-gold" href="add.html?type=' + bundleType + '&mode=multi' + (currentLang === 'ar' ? '&lang=ar' : '') + '">' + T0('bundles.add') + '</a></div>';
+        return;
+      }
       empty.setAttribute('data-i18n', active ? 'listings.emptyFiltered' : 'listings.empty');
       empty.textContent = translations[active ? 'listings.emptyFiltered' : 'listings.empty'][currentLang];
       return;
@@ -982,12 +1028,17 @@
 
     if(listingsLoadError && note){ note.textContent = translations['listings.loadErr'][currentLang]; note.style.display = 'block'; }
     items = sortItems(items);
-    const cards = sortFeatured(groupPackages(items, isBundle ? userListings : userListings.filter(i => i.type === PAGE_TYPE)));   // featured ads always come before normal ones
-    grid.innerHTML = cards.map(safeCard).join('');
-    paintResultsBar(bar, cards.length);
+    const allCards = sortFeatured(groupPackages(items, isBundle ? userListings : userListings.filter(i => i.type === PAGE_TYPE)));   // featured ads always come before normal ones
+    const soldN = allCards.filter(c => c.sold).length;
+    const cards = showSold ? allCards : allCards.filter(c => !c.sold);   // sold ads are hidden unless the visitor asks for them
+    if(!cards.length){
+      grid.innerHTML = ''; empty.style.display = 'block'; empty.removeAttribute('data-i18n'); empty.textContent = translations['listings.onlySold'][currentLang];
+    } else grid.innerHTML = cards.map(safeCard).join('');
+    paintResultsBar(bar, cards.length, soldN);
   }
   /* sort order + result count above the grid (featured ads still come first) */
   let sortMode = 'newest';
+  let showSold = false;
   function priceNum(i){ const n = parseFloat(i.price); return isNaN(n) ? null : n; }
   function sortItems(list){
     if(sortMode === 'newest') return list.slice().sort((a,b) => new Date(b.created||0) - new Date(a.created||0));
@@ -999,13 +1050,15 @@
     if(!bar){ bar = document.createElement('div'); bar.id = 'resultsBar'; bar.className = 'results-bar'; grid.parentNode.insertBefore(bar, grid); }
     return bar;
   }
-  function paintResultsBar(bar, n){
+  function paintResultsBar(bar, n, soldN){
     if(!bar) return;
     const T = k => translations[k][currentLang];
     bar.style.display = '';
     bar.innerHTML = '<span class="results-count" aria-live="polite">' + (n === 1 ? T('results.one') : T('results.count').replace('{n}', n)) + '</span>' +
       '<label class="sort-wrap"><span>' + T('sort.label') + '</span><select id="sortSel" aria-label="' + escapeHtml(T('sort.label')) + '">' +
-      ['newest','priceAsc','priceDesc'].map(k => '<option value="' + k + '"' + (k === sortMode ? ' selected' : '') + '>' + T('sort.' + k) + '</option>').join('') + '</select></label>';
+      ['newest','priceAsc','priceDesc'].map(k => '<option value="' + k + '"' + (k === sortMode ? ' selected' : '') + '>' + T('sort.' + k) + '</option>').join('') + '</select></label>' +
+      (soldN ? '<label class="sold-toggle"><input type="checkbox" id="showSoldChk"' + (showSold ? ' checked' : '') + '> <span>' + T('sold.show') + '</span></label>' : '');
+    const sc = document.getElementById('showSoldChk'); if(sc) sc.onchange = function(){ showSold = this.checked; renderListings(); };
     document.getElementById('sortSel').onchange = function(){ sortMode = this.value; renderListings(); };
   }
 
@@ -1519,7 +1572,7 @@
     const priceTxt = hasPrice ? (ar ? ' بسعر ' + priceN.toLocaleString('en-US') + ' دينار أردني' : ' for ' + priceN.toLocaleString('en-US') + ' JOD') : '';
     const title = kind + ' ' + label + (ar ? ' للبيع في الأردن' : ' for sale in Jordan') + ' | ' + (ar ? 'سوق الأرقام' : 'Souq Al Arqam');
     const desc = kind + ' ' + label + (ar ? ' للبيع' : ' for sale') + priceTxt + (ar ? '. تواصل مباشرة مع البائع على سوق الأرقام.' : '. Contact the seller directly on Souq Al Arqam.');
-    document.title = title;
+    document.title = title; window.__dynTitle = true;
     const url = 'https://souqalarqam.com/listing.html?id=' + encodeURIComponent(it.id);
     setMeta('meta[name="description"]', 'content', desc);
     setMeta('meta[property="og:title"]', 'content', title);
@@ -1648,7 +1701,7 @@
 
     /* featured box intentionally not shown on the listing page */
 
-    const sim = userListings.filter(x => x.id !== it.id && x.type === it.type)
+    const sim = userListings.filter(x => x.id !== it.id && x.type === it.type && !x.sold)
       .sort((a,b)=> (it.type==='plate' ? (b.code===it.code) - (a.code===it.code) : 0))
       .slice(0, 6);
     const simWrap = document.getElementById('similarWrap');
@@ -1729,6 +1782,7 @@
     renderSellerPage();
   }
   let sellerPage = {state:'loading', info:null, items:[]};
+  let sellerShowSold = false;
   function renderSellerPage(){
     const T = k => translations[k][currentLang];
     const msg = document.getElementById('sellerMsg'), body = document.getElementById('sellerBody');
@@ -1740,7 +1794,7 @@
     }
     const inf = sellerPage.info, name = ((inf.first_name || '') + ' ' + (inf.last_name || '')).trim();
     msg.style.display = 'none'; body.style.display = 'block';
-    document.title = name + ' | Souq Al Arqam';
+    document.title = name + ' | Souq Al Arqam'; window.__dynTitle = true;
     document.getElementById('sellerCrumb').textContent = name;
     document.getElementById('spAvatar').textContent = (name.charAt(0) || '?').toUpperCase();
     const badge = inf.dealer || inf.verified
@@ -1755,11 +1809,13 @@
       try{ if(navigator.share){ await navigator.share({title: document.title, url}); return; } await navigator.clipboard.writeText(url); const sp = document.getElementById('spShare'); sp.classList.add('done'); setTimeout(()=>sp.classList.remove('done'), 1500); }catch(e){}
     };
     const sec = (type, key) => {
-      const list = sortFeatured(sellerPage.items.filter(i => i.type === type));
+      const list = sortFeatured(sellerPage.items.filter(i => i.type === type && (sellerShowSold || !i.sold)));
       return list.length ? '<h2 class="seller-sec">' + T(key) + ' (' + list.length + ')</h2><div class="listings-grid">' + list.map(safeCard).join('') + '</div>' : '';
     };
+    const soldAny = sellerPage.items.some(i => i.sold);
     const html = sec('plate', 'seller.platesTitle') + sec('number', 'seller.numbersTitle');
-    document.getElementById('spSections').innerHTML = html || '<p class="seller-none">' + T('seller.none') + '</p>';
+    document.getElementById('spSections').innerHTML = (soldAny ? '<label class="sold-toggle"><input type="checkbox" id="spShowSold"' + (sellerShowSold ? ' checked' : '') + '> <span>' + T('sold.show') + '</span></label>' : '') + (html || '<p class="seller-none">' + T('seller.none') + '</p>');
+    const sc2 = document.getElementById('spShowSold'); if(sc2) sc2.onchange = function(){ sellerShowSold = this.checked; renderSellerPage(); };
   }
 
   function wireShare(){
