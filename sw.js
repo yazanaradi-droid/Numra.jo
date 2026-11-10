@@ -1,5 +1,5 @@
 /* Souq Al Arqam service worker: network first (the site always loads fresh), cached copy only when offline */
-const CACHE = 'sa-offline-v1';
+const CACHE = 'sa-offline-v2';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
