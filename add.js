@@ -3,16 +3,16 @@
   const L = {
     en: {
       plate1:'Add a new plate', plateN:'Add new plates (multiple)', num1:'Add a new number', numN:'Add new numbers (multiple)',
-      note:'Note: you can use the following letters: X, Y and Z to hide some digits.', code:'Code', number:'Plate number', mobile:'Phone number', prefix:'Code', mobile7:'Number (7 digits)', price:'Price (JOD, optional)', pkgPrice:'Package price (JOD, optional)', pkgHint:'All items you add here are shown together as one package with one price. Leave empty for "Contact for price".',
+      note:'Fields marked * are required; the price is optional. You can use the letters X, Y and Z to hide some digits.', code:'Code', number:'Plate number', mobile:'Phone number', prefix:'Code', mobile7:'Number (7 digits)', price:'Price (JOD, optional)', pkgPrice:'Package price (JOD, optional)', pkgHint:'All items you add here are shown together as one package with one price. Leave empty for "Contact for price".',
       addRow:'+ Add a new row (max 6)', submit:'Advertise now', login:'Please log in to add listings.', loginBtn:'Log in',
-      bad:'Check this row', ok:'Published ✓', upd:'Updated ✓', dup:'Already listed by another account', rate:'Posting limit reached, try later', banned:'Account suspended', err:'Could not save',
+      bad:'Check this row', badPrice:'Price must be a number (digits only)', badCode:'Enter a plate code (1 or 2 digits)', badNum:'Enter the plate number (up to 5 digits)', badPre:'Choose the code: 077, 078 or 079', badMob:'Enter the 7 remaining digits', req:'required', opt:'optional', cfmTitle:'Confirm publishing', cfmBody:'The following will be published on the site:', cfmOk:'Confirm and publish', cfmBack:'Go back and edit', ok:'Published ✓', upd:'Updated ✓', dup:'Already listed by another account', rate:'Posting limit reached, try later', banned:'Account suspended', err:'Could not save',
       done:'Done', toDash:'Go to my listings', toSite:'View on the site', more:'Add more', empty:'Fill at least one row.', remove:'Remove', loading:'Loading…', pricePh:'Contact for price'
     },
     ar: {
       plate1:'إضافة لوحة جديدة', plateN:'إضافة لوحات جديدة (متعددة)', num1:'إضافة رقم جديد', numN:'إضافة أرقام جديدة (متعددة)',
-      note:'ملاحظة: يمكن استخدام الأحرف التالية: X، Y و Z لإخفاء بعض الأرقام.', code:'الرمز', number:'رقم اللوحة', mobile:'رقم الهاتف', prefix:'الكود', mobile7:'الرقم (7 أرقام)', price:'السعر (دينار، اختياري)', pkgPrice:'سعر الباقة (دينار، اختياري)', pkgHint:'كل ما تضيفه هنا يظهر معاً كباقة واحدة بسعر واحد. اتركه فارغاً لتظهر عبارة «تواصل للسعر».',
+      note:'الحقول المعلّمة بـ * مطلوبة، والسعر اختياري. يمكنك استخدام الأحرف X وY وZ لإخفاء بعض الأرقام.', code:'الرمز', number:'رقم اللوحة', mobile:'رقم الهاتف', prefix:'الكود', mobile7:'الرقم (7 أرقام)', price:'السعر (دينار، اختياري)', pkgPrice:'سعر الباقة (دينار، اختياري)', pkgHint:'كل ما تضيفه هنا يظهر معاً كباقة واحدة بسعر واحد. اتركه فارغاً لتظهر عبارة «تواصل للسعر».',
       addRow:'+ إضافة خانة جديدة (الحد الأقصى 6)', submit:'أعلن الآن', login:'سجّل الدخول لإضافة الإعلانات.', loginBtn:'تسجيل الدخول',
-      bad:'تحقق من هذا الصف', ok:'تم النشر ✓', upd:'تم التحديث ✓', dup:'معروض مسبقاً من حساب آخر', rate:'وصلت إلى حد النشر، حاول لاحقاً', banned:'الحساب موقوف', err:'تعذّر الحفظ',
+      bad:'تحقق من هذا الصف', badPrice:'السعر يجب أن يكون أرقاماً فقط', badCode:'أدخل رمز اللوحة (رقم أو رقمان)', badNum:'أدخل رقم اللوحة (حتى 5 أرقام)', badPre:'اختر الكود: 077 أو 078 أو 079', badMob:'أدخل الأرقام السبعة المتبقية', req:'مطلوب', opt:'اختياري', cfmTitle:'تأكيد النشر', cfmBody:'سيتم نشر الإعلانات التالية على الموقع:', cfmOk:'تأكيد ونشر', cfmBack:'رجوع وتعديل', ok:'تم النشر ✓', upd:'تم التحديث ✓', dup:'معروض مسبقاً من حساب آخر', rate:'وصلت إلى حد النشر، حاول لاحقاً', banned:'الحساب موقوف', err:'تعذّر الحفظ',
       done:'تم', toDash:'الذهاب إلى إعلاناتي', toSite:'عرض في الموقع', more:'إضافة المزيد', empty:'املأ صفاً واحداً على الأقل.', remove:'حذف', loading:'جارٍ التحميل…', pricePh:'تواصل للسعر'
     }
   };
@@ -48,7 +48,7 @@
   function headHtml(){
     const names = type === 'plate' ? (isAr() ? [T('number'), T('code'), T('price')] : [T('code'), T('number'), T('price')]) : (isAr() ? [T('mobile7'), T('prefix'), T('price')] : [T('prefix'), T('mobile7'), T('price')]);
     return '<div class="ar-head" style="' + gridStyle() + 'padding:0 0 10px;margin-bottom:12px;border-bottom:2px solid var(--line);font-weight:700;font-size:.9rem;color:#fff">' +
-      names.map(n => '<div>' + n + '</div>').join('') + '<div></div></div>';
+      names.map((n, i) => '<div>' + n.replace(/\s*\((.*?)\)\s*$/, '') + ' ' + (n === T('price') ? '<span class="ar-opt">(' + T('opt') + ')</span>' : '<span class="ar-req" title="' + T('req') + '">*</span>') + '</div>').join('') + '<div></div></div>';
   }
   function rowHtml(i){
     const rm = multi ? '<button type="button" class="btn btn-ghost ar-rm" title="' + T('remove') + '" style="padding:6px 12px">✕</button>' : '<span></span>';
@@ -150,6 +150,34 @@
     return {p_type:'number', p_code:null, p_number:null, p_value:m, p_price:p};
   }
 
+  function badField(r){
+    const pe = r.querySelector('.ar-price'); const price = pe ? pe.value : '';
+    if(price !== '' && !(/^\d+(\.\d+)?$/.test(price) && +price >= 0)) return {msg:'badPrice', el:pe};
+    if(type === 'plate'){
+      const ce = r.querySelector('.ar-code'), ne = r.querySelector('.ar-num');
+      const okC = /^\d{1,2}$/.test(ce.value) ? (+ce.value >= 1 && +ce.value <= 99) : /^[0-9XYZ]{1,2}$/.test(ce.value);
+      if(!okC) return {msg:'badCode', el:ce};
+      return {msg:'badNum', el:ne};
+    }
+    const pre = r.querySelector('.ar-pre'), mob = r.querySelector('.ar-mob');
+    if(!pre.value) return {msg:'badPre', el:pre};
+    return {msg:'badMob', el:mob};
+  }
+  /* one simple confirmation before publishing */
+  function confirmPublish(todo){
+    return new Promise(function(resolve){
+      const lines = todo.map(function(x){ const d = x.d; return '<li dir="ltr"><b>' + escapeHtml(d.p_type === 'plate' ? d.p_code + ' - ' + d.p_number : d.p_value.replace(/^(\d{3})(\d{3})(.*)$/, '$1 $2 $3')) + '</b>' + (d.p_price != null ? ' <span>' + escapeHtml(String(d.p_price)) + ' JOD</span>' : '') + '</li>'; }).join('');
+      const ov = document.createElement('div'); ov.className = 'modal-overlay open';
+      ov.innerHTML = '<div class="modal" role="dialog" aria-modal="true"><h3>' + T('cfmTitle') + '</h3><p class="sub">' + T('cfmBody') + '</p><ul class="cfm-list">' + lines + '</ul>' +
+        '<div class="cfm-actions"><button type="button" class="btn btn-gold" id="cfmOk">' + T('cfmOk') + '</button><button type="button" class="btn btn-ghost" id="cfmBack">' + T('cfmBack') + '</button></div></div>';
+      document.body.appendChild(ov);
+      function done(v){ ov.remove(); resolve(v); }
+      ov.querySelector('#cfmOk').onclick = function(){ done(true); };
+      ov.querySelector('#cfmBack').onclick = function(){ done(false); };
+      ov.addEventListener('click', function(ev){ if(ev.target === ov) done(false); });
+      ov.querySelector('#cfmOk').focus();
+    });
+  }
   document.addEventListener('submit', async function(e){
     if(e.target.id !== 'addForm') return;
     e.preventDefault();
@@ -158,9 +186,12 @@
     items.forEach(x => { x.r.querySelector('.ar-stat').textContent = ''; });
     const todo = items.filter(x => !(x.d && x.d.empty));
     let bad = false;
-    todo.forEach(x => { if(!x.d){ bad = true; const s = x.r.querySelector('.ar-stat'); s.textContent = T('bad'); s.style.color = 'var(--danger)'; } });
+    document.querySelectorAll('.ar-row input, .ar-row select').forEach(i => { i.style.borderColor = ''; i.removeAttribute('aria-invalid'); });
+    todo.forEach(x => { if(!x.d){ bad = true; const f = badField(x.r); const s = x.r.querySelector('.ar-stat'); s.textContent = T(f.msg); s.style.color = 'var(--danger)'; if(f.el){ f.el.style.borderColor = 'var(--danger)'; f.el.setAttribute('aria-invalid','true'); } } });
+    const firstBad = document.querySelector('.ar-row [aria-invalid]'); if(firstBad) firstBad.focus();
     if(!todo.length){ document.getElementById('addDone').innerHTML = '<p class="dash-note" style="color:var(--danger)">' + T('empty') + '</p>'; return; }
     if(bad) return;
+    if(!(await confirmPublish(todo))) return;
     document.getElementById('addDone').innerHTML = '';
     const btn = document.getElementById('addSubmit'); btn.disabled = true;
     let okCount = 0;

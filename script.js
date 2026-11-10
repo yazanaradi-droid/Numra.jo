@@ -2,7 +2,7 @@
 
   const translations = {
     "nav.brand":{en:"Souq Al Arqam",ar:"سوق الأرقام"},
-    "hero.eyebrowHome":{en:"Jordan's number marketplace",ar:"السوق الأول في الأردن للوحات والأرقام المميزة"},
+    "hero.eyebrowHome":{en:"Jordan's number marketplace",ar:"منصة أردنية للوحات السيارات والأرقام المميزة"},
     "hero.titleHome":{en:'<span class="hl">Your number.</span><span class="hl accent">Your signature</span><span class="hl">on the road.</span>',ar:'<span class="hl">نمرتك</span><span class="hl accent">توقيعك</span><span class="hl">على الطريق</span>'},
     "hero.leadHome":{en:"Buy and sell Jordanian license plates and VIP phone numbers from Zain, Orange and Umniah — safely, negotiating directly with the seller.",ar:"اشترِ وبِع لوحات السيارات الأردنية وأرقام الهواتف المميزة من زين وأورنج وأمنية، بأمان وتفاوض مباشر مع البائع."},
     "hero.browse":{en:"Browse car plates",ar:"تصفح لوحات السيارات"},
@@ -33,6 +33,19 @@
     "nav.uploadPackage":{en:"Upload Package",ar:"إضافة باقة"},
     "nav.uploadDiscount":{en:"Upload Discount",ar:"إضافة عرض خصم"},
     "nav.more":{en:"More ▾",ar:"المزيد ▾"},
+    "sort.label":{en:"Sort by",ar:"الترتيب"},
+    "sort.newest":{en:"Newest",ar:"الأحدث"},
+    "sort.priceAsc":{en:"Price: low to high",ar:"السعر: من الأقل للأعلى"},
+    "sort.priceDesc":{en:"Price: high to low",ar:"السعر: من الأعلى للأقل"},
+    "results.count":{en:"{n} results",ar:"عدد النتائج: {n}"},
+    "results.one":{en:"1 result",ar:"نتيجة واحدة"},
+    "carrier.zain":{en:"Zain",ar:"زين"},"carrier.orange":{en:"Orange",ar:"أورانج"},"carrier.umniah":{en:"Umniah",ar:"أمنية"},
+    "detail.demoAd":{en:"This is a sample listing that shows how the site looks",ar:"هذا إعلان تجريبي لعرض شكل الموقع"},
+    "detail.sellerNoPhone":{en:"The seller has not added a contact number yet",ar:"لم يضف البائع رقم تواصل بعد"},
+    "detail.platformNote":{en:"Souq Al Arqam is an advertising and direct-contact platform. It does not guarantee sales, payments or the accuracy of any listing.",ar:"سوق الأرقام منصة إعلانات وتواصل مباشر، ولا تضمن عمليات البيع أو الدفع أو صحة أي إعلان."},
+    "dash.noPhoneTitle":{en:"Your contact number is missing",ar:"رقم التواصل غير مضاف إلى حسابك"},
+    "dash.noPhoneBody":{en:"Buyers cannot call or WhatsApp you without a number. Please contact support to add it to your account.",ar:"لا يستطيع المشترون الاتصال بك أو مراسلتك على واتساب بدون رقم. تواصل مع الدعم لإضافته إلى حسابك."},
+    "dash.noPhoneBtn":{en:"Contact support",ar:"تواصل مع الدعم"},
     "nav.how":{en:"How does the site work?",ar:"كيف يعمل الموقع؟"},
     "how.tag":{en:"Quick guide",ar:"دليل سريع"},
     "how.title":{en:"How does Souq Al Arqam work?",ar:"كيف يعمل سوق الأرقام؟"},
@@ -48,9 +61,9 @@
     "nav.register":{en:"Register",ar:"تسجيل"},
 
     "hero.breadcrumb":{en:"/ License plates and phone numbers",ar:"/ لوحات السيارات وأرقام الهواتف"},
-    "hero.eyebrow":{en:"#1 marketplace",ar:"المنصة رقم 1"},
+    "hero.eyebrow":{en:"Jordanian marketplace",ar:"منصة أردنية"},
     "hero.title":{en:'License plates &amp; phone numbers',ar:'لوحات سيارات و أرقام هواتف'},
-    "hero.lead":{en:"The biggest marketplace for buying and selling license plates and VIP phone numbers.",ar:"أكبر منصة لبيع وشراء لوحات السيارات وأرقام الهواتف المميزة."},
+    "hero.lead":{en:"A Jordanian platform dedicated to buying and selling license plates and VIP mobile numbers.",ar:"منصة أردنية متخصصة في بيع وشراء لوحات السيارات وأرقام الموبايل المميزة."},
     "hero.browsePlates":{en:"Browse Car Plates",ar:"تصفح لوحات السيارات"},
     "hero.browseNumbers":{en:"Browse Phone Numbers",ar:"تصفح أرقام الهواتف"},
 
@@ -104,14 +117,14 @@
     "about.title":{en:"About Souq Al Arqam",ar:"عن سوق الأرقام"},
     "about.sub":{en:"Where distinguished numbers find their owners.",ar:"حيث تجد الأرقام المميزة أصحابها."},
     "about.p1":{en:"<b>Souq Al Arqam</b> is a Jordanian digital marketplace dedicated to buying and selling distinguished vehicle plates and VIP phone numbers (Zain, Orange and Umniah), built around the needs of the local market.",ar:"<b>سوق الأرقام</b> منصة أردنية رقمية متخصصة في بيع وشراء لوحات المركبات المميزة وأرقام الهواتف المميزة (زين وأورانج وأمنية)، صُمّمت لتلائم احتياجات السوق المحلي."},
-    "about.p2":{en:"We connect sellers and buyers directly, without middlemen: browse thousands of listings, filter precisely, and contact the owner or dealer in a few taps. Our aim is a clear, trustworthy and effortless experience from the first search to the final deal.",ar:"نربط البائع بالمشتري مباشرة ودون وسطاء: تصفّح الإعلانات، وفلتر بدقة، وتواصل مع المالك أو التاجر بلمسات قليلة. هدفنا تجربة واضحة وموثوقة وسهلة من أول بحث حتى إتمام الصفقة."},
+    "about.p2":{en:"We connect sellers and buyers directly, without middlemen: browse listings, filter precisely, and contact the owner or dealer in a few taps. Our aim is a clear, trustworthy and effortless experience from the first search to the final deal.",ar:"نربط البائع بالمشتري مباشرة ودون وسطاء: تصفّح الإعلانات، وفلتر بدقة، وتواصل مع المالك أو التاجر بلمسات قليلة. هدفنا تجربة واضحة وموثوقة وسهلة من أول بحث حتى إتمام الصفقة."},
     "why.tag":{en:"Why us",ar:"مميزاتنا"},
     "why.title":{en:"Why choose Souq Al Arqam?",ar:"لماذا تختار سوق الأرقام؟"},
     "why.sub":{en:"Ease of access, trust, and a showcase for your listings.",ar:"سهولة الوصول، وضمان الموثوقية، وتمييز إعلاناتك."},
     "why.1.t":{en:"Easy to use",ar:"سهولة الاستخدام"},
     "why.1.d":{en:"Browse, filter by code, number or price, and reach the owner in seconds, with no sign-up needed.",ar:"تصفّح وفلتر بالكود أو الرقم أو السعر، وتواصل مع المالك خلال ثوانٍ دون الحاجة إلى تسجيل."},
     "why.2.t":{en:"Trusted sellers",ar:"بائعون موثوقون"},
-    "why.2.d":{en:"Verified individuals and dealers carry a badge next to their name, so you know who you are dealing with.",ar:"يحمل الأفراد والتجار الموثّقون علامة بجانب أسمائهم لتعرف مع من تتعامل."},
+    "why.2.d":{en:"The site team gives a verification badge to accounts it has reviewed; it appears next to the seller name. No badge does not mean the account is untrustworthy, but always verify ownership before paying.",ar:"تمنح إدارة الموقع شارة التوثيق للحسابات التي راجعتها، وتظهر بجانب اسم البائع. غياب الشارة لا يعني أن الحساب غير موثوق، لكن تحقق دائماً من الملكية قبل الدفع."},
     "why.3.t":{en:"Stand-out listings",ar:"إعلانات بارزة"},
     "why.3.d":{en:"Every plate and number is shown as a clear, realistic image, with featured placement for the best offers.",ar:"تُعرض كل لوحة ورقم بصورة واضحة وواقعية، مع ظهور مميز لأفضل العروض."},
     "why.4.t":{en:"Direct contact",ar:"تواصل مباشر"},
@@ -142,7 +155,7 @@
     "time.6min":{en:"Joined 6 minutes ago",ar:"انضم قبل 6 دقائق"},
     "time.26min":{en:"Joined 26 minutes ago",ar:"انضم قبل 26 دقيقة"},
 
-    "footer.tagline":{en:"The biggest marketplace for license plates and phone numbers.",ar:"أكبر منصة للوحات السيارات وأرقام الهواتف."},
+    "footer.tagline":{en:"A Jordanian platform for buying and selling license plates and VIP mobile numbers.",ar:"منصة أردنية متخصصة في بيع وشراء لوحات السيارات وأرقام الموبايل المميزة."},
     "footer.marketplace":{en:"Marketplace",ar:"السوق"},
     "footer.company":{en:"Company",ar:"الشركة"},
     "footer.legal":{en:"Legal",ar:"قانوني"},
@@ -315,7 +328,7 @@
     "seller.none":{en:"No ads in this section.",ar:"لا توجد إعلانات في هذا القسم."},
     "seller.loading":{en:"Loading...",ar:"جارٍ التحميل..."},
     "badge.dealer":{en:"Verified dealer",ar:"تاجر موثّق"},
-    "badge.verified":{en:"Verified account",ar:"حساب موثّق"},
+    "badge.verified":{en:"Account verified by the site team",ar:"حساب موثّق من إدارة الموقع"},
     "share.btn":{en:"Share this ad",ar:"مشاركة الإعلان"},
     "share.copied":{en:"Link copied",ar:"تم نسخ الرابط"},
     "dash.currentPassword":{en:"Current password",ar:"كلمة المرور الحالية"},
@@ -411,6 +424,7 @@
     "listings.filterPlates":{en:"Car Plates",ar:"لوحات السيارات"},
     "listings.filterNumbers":{en:"Phone Numbers",ar:"أرقام الهواتف"},
     "listings.verified":{en:"Verified listing",ar:"إعلان موثوق"},
+    "listings.demo":{en:"Sample listing",ar:"إعلان تجريبي"},
     "listings.plateBadge":{en:"Plate",ar:"لوحة"},
     "listings.numberBadge":{en:"Phone Number",ar:"رقم هاتف"},
     "listings.justNow":{en:"Just added",ar:"أُضيف الآن"},
@@ -823,15 +837,24 @@
     return 'listing.html?id=' + encodeURIComponent(item.id) + (currentLang === 'ar' ? '&lang=ar' : '');
   }
   function safeCard(it){ try{ return listingCardHtml(it); }catch(err){ console.warn('bad listing skipped:', it, err); return ''; } }
+  function carrierOf(v){
+    const d = String(v||'').replace(/[^0-9]/g,'');
+    const m = d.startsWith('962') ? '0' + d.slice(3) : (d.startsWith('7') && d.length === 9 ? '0' + d : d);
+    return m.startsWith('077') ? 'orange' : m.startsWith('078') ? 'umniah' : m.startsWith('079') ? 'zain' : '';
+  }
+  function carrierChip(v){
+    const c = carrierOf(v); if(!c) return '';
+    return '<span class="carrier-chip carrier-' + c + '">' + translations['carrier.' + c][currentLang] + '</span>';
+  }
   function listingCardHtml(item){
     if(item.isPackage) return packageCardHtml(item);
     const badgeKey = item.type === 'plate' ? 'listings.plateBadge' : 'listings.numberBadge';
     const badgeLabel = translations[badgeKey][currentLang];
-    const metaLabel = item.seed ? translations['listings.verified'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString('en-GB') : translations['listings.justNow'][currentLang]);
+    const metaLabel = item.seed ? translations['listings.demo'][currentLang] : (item.created ? new Date(item.created).toLocaleDateString('en-GB') : translations['listings.justNow'][currentLang]);
     const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
     const valueBlock = item.type === 'plate'
       ? plateHtml(item.code, item.number, false)
-      : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(fmtMobile(item.value)) + '</div></div>';
+      : '<div class="row"><div class="num-icon">\ud83d\udcf1</div><div class="value">' + escapeHtml(fmtMobile(item.value)) + '</div></div>' + carrierChip(item.value);
     const T = k => translations[k][currentLang];
     const phoneHtml = !item.phoneMasked ? '' : (true
       ? '<span class="card-phone card-phone-btn" role="button" tabindex="0" data-contact="' + escapeHtml(item.id) + '"><span class="ph-ico">\ud83d\udcde</span><b>' + T('feat.callLabel') + '</b> <span class="ph-num">' + escapeHtml(item.phoneMasked) + '</span></span>'
@@ -946,8 +969,10 @@
       }
     }
 
+    const bar = ensureResultsBar(grid);
     if(items.length === 0){
       grid.innerHTML = '';
+      if(bar) bar.style.display = 'none';
       empty.style.display = 'block';
       empty.setAttribute('data-i18n', active ? 'listings.emptyFiltered' : 'listings.empty');
       empty.textContent = translations[active ? 'listings.emptyFiltered' : 'listings.empty'][currentLang];
@@ -956,7 +981,32 @@
     empty.style.display = 'none';
 
     if(listingsLoadError && note){ note.textContent = translations['listings.loadErr'][currentLang]; note.style.display = 'block'; }
-    grid.innerHTML = sortFeatured(groupPackages(items, isBundle ? userListings : userListings.filter(i => i.type === PAGE_TYPE))).map(safeCard).join('');   // featured ads always come before normal ones
+    items = sortItems(items);
+    const cards = sortFeatured(groupPackages(items, isBundle ? userListings : userListings.filter(i => i.type === PAGE_TYPE)));   // featured ads always come before normal ones
+    grid.innerHTML = cards.map(safeCard).join('');
+    paintResultsBar(bar, cards.length);
+  }
+  /* sort order + result count above the grid (featured ads still come first) */
+  let sortMode = 'newest';
+  function priceNum(i){ const n = parseFloat(i.price); return isNaN(n) ? null : n; }
+  function sortItems(list){
+    if(sortMode === 'newest') return list.slice().sort((a,b) => new Date(b.created||0) - new Date(a.created||0));
+    const dir = sortMode === 'priceAsc' ? 1 : -1;
+    return list.slice().sort((a,b) => { const x = priceNum(a), y = priceNum(b); if(x === null && y === null) return 0; if(x === null) return 1; if(y === null) return -1; return (x - y) * dir; });
+  }
+  function ensureResultsBar(grid){
+    let bar = document.getElementById('resultsBar');
+    if(!bar){ bar = document.createElement('div'); bar.id = 'resultsBar'; bar.className = 'results-bar'; grid.parentNode.insertBefore(bar, grid); }
+    return bar;
+  }
+  function paintResultsBar(bar, n){
+    if(!bar) return;
+    const T = k => translations[k][currentLang];
+    bar.style.display = '';
+    bar.innerHTML = '<span class="results-count" aria-live="polite">' + (n === 1 ? T('results.one') : T('results.count').replace('{n}', n)) + '</span>' +
+      '<label class="sort-wrap"><span>' + T('sort.label') + '</span><select id="sortSel" aria-label="' + escapeHtml(T('sort.label')) + '">' +
+      ['newest','priceAsc','priceDesc'].map(k => '<option value="' + k + '"' + (k === sortMode ? ' selected' : '') + '>' + T('sort.' + k) + '</option>').join('') + '</select></label>';
+    document.getElementById('sortSel').onchange = function(){ sortMode = this.value; renderListings(); };
   }
 
 
@@ -1451,6 +1501,7 @@
     let d = String(phone||'').replace(/[^0-9]/g,'');
     if(d.startsWith('00')) d = d.slice(2);
     else if(d.startsWith('0')) d = '962' + d.slice(1);
+    else if(/^7[0-9]{8}$/.test(d)) d = '962' + d;      // 79xxxxxxx saved without the leading 0
     return d;
   }
   function maskPhone(phone){
@@ -1458,6 +1509,29 @@
     return p.length > 3 ? p.slice(0, p.length-3) + 'xxx' : p;
   }
   function fmtMobile(v){ const d = String(v||'').toUpperCase().replace(/[^0-9XYZ]/g,''); return /^07[0-9XYZ]{8}$/.test(d) ? d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6) : String(v||''); }
+  /* per-listing SEO: title, description, canonical, social tags and structured data (never includes the seller phone) */
+  function setMeta(sel, attr, val){ let m = document.querySelector(sel); if(!m){ m = document.createElement('meta'); const k = sel.match(/\[(name|property)="([^"]+)"\]/); m.setAttribute(k[1], k[2]); document.head.appendChild(m); } m.setAttribute(attr, val); }
+  function applyListingSeo(it, label){
+    const ar = currentLang === 'ar';
+    const kind = it.type === 'plate' ? (ar ? 'لوحة سيارة' : 'License plate') : (ar ? 'رقم هاتف مميز' : 'VIP phone number');
+    const priceN = parseFloat(it.price);
+    const hasPrice = !isNaN(priceN) && priceN > 0;
+    const priceTxt = hasPrice ? (ar ? ' بسعر ' + priceN.toLocaleString('en-US') + ' دينار أردني' : ' for ' + priceN.toLocaleString('en-US') + ' JOD') : '';
+    const title = kind + ' ' + label + (ar ? ' للبيع في الأردن' : ' for sale in Jordan') + ' | ' + (ar ? 'سوق الأرقام' : 'Souq Al Arqam');
+    const desc = kind + ' ' + label + (ar ? ' للبيع' : ' for sale') + priceTxt + (ar ? '. تواصل مباشرة مع البائع على سوق الأرقام.' : '. Contact the seller directly on Souq Al Arqam.');
+    document.title = title;
+    const url = 'https://souqalarqam.com/listing.html?id=' + encodeURIComponent(it.id);
+    setMeta('meta[name="description"]', 'content', desc);
+    setMeta('meta[property="og:title"]', 'content', title);
+    setMeta('meta[property="og:description"]', 'content', desc);
+    setMeta('meta[property="og:url"]', 'content', url);
+    let c = document.querySelector('link[rel="canonical"]'); if(!c){ c = document.createElement('link'); c.rel = 'canonical'; document.head.appendChild(c); } c.href = url;
+    const old = document.getElementById('listingLd'); if(old) old.remove();
+    if(it.seed){ setMeta('meta[name="robots"]', 'content', 'noindex'); return; }   // sample listings must not be indexed
+    const ld = {'@context':'https://schema.org', '@type':'Product', name: kind + ' ' + label, description: desc, url: url, category: it.type === 'plate' ? 'Vehicle license plate' : 'Mobile phone number'};
+    if(hasPrice) ld.offers = {'@type':'Offer', priceCurrency:'JOD', price: String(priceN), availability: it.sold ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock', url: url};
+    const sc = document.createElement('script'); sc.type = 'application/ld+json'; sc.id = 'listingLd'; sc.textContent = JSON.stringify(ld); document.head.appendChild(sc);
+  }
   function itemLabel(item){ return item.type === 'plate' ? item.code + ' - ' + item.number : fmtMobile(item.value); }
 
   let detailFeat = null;
@@ -1511,7 +1585,7 @@
     const label = itemLabel(it);
     const priceLabel = currentLang === 'ar' ? '\u062f\u064a\u0646\u0627\u0631' : 'JOD';
 
-    document.title = label + ' | Souq Al Arqam';
+    applyListingSeo(it, label);
     document.getElementById('detailTitle').innerHTML = T(it.type === 'plate' ? 'detail.title.plate' : 'detail.title.number').replace('{x}', '<bdi dir="ltr">' + escapeHtml(label) + '</bdi>');
     const crumb = document.getElementById('detailCrumbType');
     crumb.textContent = T(it.type === 'plate' ? 'nav.plates.crumb' : 'nav.numbers.crumb');
@@ -1538,6 +1612,7 @@
     const mem = it.pkgId ? userListings.filter(x => x.pkgId === it.pkgId && x.type === it.type) : [];
     pk.innerHTML = mem.length > 1 ? '<div class="pkg-title" style="margin:10px 0 6px">' + T('bundle.inThis') + ' (' + mem.length + ')</div><div class="pkg-grid">' + mem.map(m => m.type === 'plate' ? '<a class="pkg-cell" href="' + listingHref(m) + '">' + plateHtml(m.code, m.number, false) + '</a>' : '<a class="pkg-cell pkg-numcell" href="' + listingHref(m) + '">' + escapeHtml(fmtMobile(m.value)) + '</a>').join('') + '</div>' : '';
     document.getElementById('detailPrice').innerHTML = detailPriceText(it) + (it.sold ? ' <span class="sold-badge">' + T('sold.label') + '</span>' : '');
+    const dcar = document.getElementById('detailCarrier'); if(dcar) dcar.innerHTML = it.type === 'number' ? carrierChip(it.value) : '';
 
     wireShare();
     const sl = document.getElementById('sellerAdsLink');
@@ -1554,6 +1629,14 @@
     } else if(detailSeller && detailSeller.locked === 'limit'){
       btn.disabled = true;
       btn.textContent = T('detail.phoneLimit');
+      btn.onclick = null;
+    } else if(it.seed){
+      btn.disabled = true;
+      btn.textContent = T('detail.demoAd');
+      btn.onclick = null;
+    } else if(detailSeller){
+      btn.disabled = true;
+      btn.textContent = T('detail.sellerNoPhone');
       btn.onclick = null;
     } else {
       btn.disabled = true;
@@ -1714,7 +1797,15 @@
       const r = Array.isArray(data) ? data[0] : data;
       if(r && r.phone) openContact(rowToItem(r), {phone:r.phone});
       else if(r && r.phone_locked === 'login') openAuth('login', null, true);
-    }catch(err){ console.warn(err); }
+      else if(r && r.phone_locked === 'limit') saToast(translations['detail.phoneLimit'][currentLang]);
+      else if(r) saToast(translations['detail.sellerNoPhone'][currentLang]);
+    }catch(err){ console.warn(err); saToast(translations['auth.genericErr'][currentLang]); }
+  }
+  function saToast(msg){
+    let t = document.getElementById('saToast');
+    if(!t){ t = document.createElement('div'); t.id = 'saToast'; t.className = 'sa-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(saToast._t); saToast._t = setTimeout(function(){ t.classList.remove('show'); }, 3600);
   }
   document.addEventListener('click', function(e){
     const fb = e.target.closest && e.target.closest('.fav-btn');
@@ -1813,7 +1904,10 @@
     else if(dashTab === 'favorites') html = await dashFavoritesHtml();
     else html = await dashPackageHtml();
     if(seq !== dashRenderSeq) return;      // a newer render superseded this one
-    panel.innerHTML = html;
+    const prof = await fetchMyProfile();
+    if(seq !== dashRenderSeq) return;
+    const noPhone = prof && !String(prof.phone || '').trim();
+    panel.innerHTML = (noPhone ? '<div class="dash-warn" role="alert"><div><b>' + T('dash.noPhoneTitle') + '</b><p>' + T('dash.noPhoneBody') + '</p></div><a class="btn btn-gold" href="mailto:support@souqalarqam.com">' + T('dash.noPhoneBtn') + '</a></div>' : '') + html;
   }
 
   async function dashProfileHtml(){

@@ -3,27 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Listing | Souq Al Arqam</title>
-<meta name="description" content="License plate or mobile number listing on Souq Al Arqam.">
+<title>إعلان | سوق الأرقام</title>
+<meta name="description" content="لوحة سيارة أو رقم موبايل للبيع على سوق الأرقام. License plate or mobile number for sale on Souq Al Arqam.">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="ar_JO">
+<meta property="og:locale:alternate" content="en_US">
 <meta property="og:site_name" content="Souq Al Arqam | سوق الأرقام">
-<meta property="og:title" content="Souq Al Arqam | سوق الأرقام">
-<meta property="og:description" content="لوحات السيارات وأرقام الهواتف المميزة في الأردن — License plates &amp; VIP phone numbers in Jordan.">
+<meta property="og:title" content="إعلان | سوق الأرقام">
+<meta property="og:description" content="لوحة سيارة أو رقم موبايل للبيع على سوق الأرقام. License plate or mobile number for sale on Souq Al Arqam.">
 <meta property="og:image" content="https://souqalarqam.com/images/og-v2.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://souqalarqam.com/images/og-v2.png">
 <meta name="theme-color" content="#FFFFFF">
-<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611101527">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611101539">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="images/icon-180.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="سوق الأرقام">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Cairo:wght@500;600;700;800&amp;family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap">
 <script src="theme.js?v=2"></script>
-<link rel="stylesheet" href="style.css?v=202611101527">
+<link rel="stylesheet" href="style.css?v=202611101539">
 </head>
 <body>
 
@@ -106,13 +111,15 @@
 
       <div class="detail-card">
         <div id="detailVisual" class="detail-visual"></div>
+        <div class="detail-price" id="detailPrice"></div>
+        <div class="detail-carrier" id="detailCarrier"></div>
         <div class="seller-row">
           <div>
             <div class="seller-name-line"><strong id="sellerName"></strong></div>
             <a href="#" class="seller-ads-link" id="sellerAdsLink" target="_blank" rel="noopener" data-i18n="seller.viewAds">View seller's ads</a>
           </div>
         </div>
-        <div class="detail-price" id="detailPrice"></div>
+        <button type="button" class="contact-btn" id="contactBtn" disabled></button>
         <div class="detail-actions">
           <button type="button" class="rep-btn" id="reportBtn" style="display:none" data-i18n="report.btn">Report this ad</button>
         </div>
@@ -124,7 +131,7 @@
             <li data-i18n="detail.tip3">Verify ownership and transfer procedures before paying.</li>
           </ul>
         </div>
-        <button type="button" class="contact-btn" id="contactBtn" disabled></button>
+        <p class="platform-note" data-i18n="detail.platformNote">Souq Al Arqam is an advertising and direct-contact platform.</p>
       </div>
 
       <div id="similarWrap" style="display:none;">
@@ -360,6 +367,6 @@
 
 <script>const PAGE_TYPE = 'listing';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611101527"></script>
+<script src="script.js?v=202611101539"></script>
 </body>
 </html>
