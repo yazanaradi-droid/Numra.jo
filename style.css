@@ -1132,3 +1132,12 @@ html[dir="rtl"] .section-head .tag{letter-spacing:0; font-family:inherit; font-s
 
 /* brand mark: script "SA" on the blue wave (image replaces the old text badge) */
 .logo-mark{font-size:0 !important; color:transparent !important; background:url(images/logo-mark.png?v=202611101054) center/cover no-repeat !important; box-shadow:none !important; border-radius:9px;}
+
+/* wordmark logo (replaces the old SA badge in header and footer) */
+.logo{gap:0 !important;}
+.wm{display:inline-flex; flex-direction:column; align-items:center; line-height:1;}
+.wm-ar{font-family:'Cairo',var(--font-display); font-weight:800; font-size:1.75rem; line-height:1.15; color:#fff; direction:rtl; white-space:nowrap;}
+.wm-ar b{color:#8FA9E8; font-weight:800;}
+.wm-bar{display:block; width:34px; height:3px; border-radius:2px; background:#8FA9E8; margin:1px 0 4px;}
+.wm-en{font-family:var(--font-display); font-weight:800; font-size:.5rem; letter-spacing:.42em; padding-inline-start:.42em; color:#AAB3C5; white-space:nowrap;}
+@media (max-width:480px){.wm-ar{font-size:1.4rem;} .wm-bar{width:28px;} .wm-en{font-size:.44rem;}}
