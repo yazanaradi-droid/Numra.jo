@@ -374,6 +374,9 @@
     "search.reset":{en:"Clear",ar:"مسح"},
     "search.closest":{en:"No exact match \u2014 showing the closest results.",ar:"لا توجد نتيجة مطابقة تماماً \u2014 هذه أقرب النتائج."},
     "login.needed":{en:"Please log in (or register) to list a plate or number.",ar:"سجّل الدخول (أو أنشئ حساباً) لإضافة لوحة أو رقم."},
+    "login.favNeeded":{en:"Please log in (or register) to save favorites.",ar:"سجّل الدخول (أو أنشئ حساباً) لحفظ الإعلانات في المفضلة."},
+    "login.reportNeeded":{en:"Please log in (or register) to report a listing.",ar:"سجّل الدخول (أو أنشئ حساباً) للإبلاغ عن إعلان."},
+    "login.contactNeeded":{en:"Please log in (or register) to view the seller\u2019s contact details.",ar:"سجّل الدخول (أو أنشئ حساباً) لعرض بيانات التواصل مع البائع."},
     "auth.offline":{en:"Cannot reach the server. Check your connection and refresh.",ar:"تعذّر الاتصال بالخادم. تحقق من الاتصال وحدّث الصفحة."},
     "listings.loadErr":{en:"Could not load the live listings right now (permissions or connection). Run supabase-fix-guest-access.sql in Supabase.",ar:"تعذّر تحميل الإعلانات الحية الآن (صلاحيات أو اتصال). شغّل ملف supabase-fix-guest-access.sql في Supabase."},
     "upload.rateErr":{en:"You have reached the posting limit. Please try again later.",ar:"وصلت إلى حد النشر المسموح. حاول لاحقاً."},
@@ -922,7 +925,7 @@
     }catch(err){ console.warn('favorites:', err); }
   }
   async function toggleFav(id){
-    if(!currentUser){ openAuth('login', null, true); return; }
+    if(!currentUser){ openAuth('login', null, 'login.favNeeded'); return; }
     id = String(id);
     const had = favs.has(id);
     if(had) favs.delete(id); else favs.add(id);
@@ -1330,7 +1333,7 @@
     authFlow.mode = null; authFlow.details = null;
     showAuthPanel(mode==='register' ? 'registerForm' : 'loginForm');
     showBanner('loginErr', null); showBanner('regGlobalErr', null); showBanner('forgotErr', null); showBanner('otpErr', null);
-    const ln=document.getElementById('loginNote'); if(ln) ln.style.display = note ? 'block' : 'none';
+    const ln=document.getElementById('loginNote'); if(ln){ const nk = (typeof note === 'string') ? note : 'login.needed'; ln.setAttribute('data-i18n', nk); ln.textContent = translations[nk][currentLang]; ln.style.display = note ? 'block' : 'none'; }   // note: true = list-an-ad text, or a translation key
     ['regEmailErr','regFirstErr','regLastErr','regPhoneErr','regPasswordErr'].forEach(id=>setErr(id,null));
     document.querySelectorAll('#registerOverlay .field-invalid').forEach(i=>i.classList.remove('field-invalid'));
     setTimeout(()=>{ const f=document.getElementById(mode==='register'?'regEmail':'loginUsername'); if(f) f.focus(); }, 50);
@@ -1678,7 +1681,7 @@
     } else if(detailSeller && detailSeller.locked === 'login'){
       btn.disabled = false;
       btn.textContent = T('detail.loginToSee');
-      btn.onclick = function(){ openAuth('login', null, true); };
+      btn.onclick = function(){ openAuth('login', null, 'login.contactNeeded'); };
     } else if(detailSeller && detailSeller.locked === 'limit'){
       btn.disabled = true;
       btn.textContent = T('detail.phoneLimit');
@@ -1711,7 +1714,7 @@
 
   async function reportListing(){
     if(!detailItem || !sb) return;
-    if(!currentUser){ openAuth('login', null, true); return; }
+    if(!currentUser){ openAuth('login', null, 'login.reportNeeded'); return; }
     if(!confirm(translations['report.confirm'][currentLang])) return;
     const rb = document.getElementById('reportBtn');
     const {error} = await sb.rpc('xp_report_listing', {lid: detailItem.id, p_reason: null});
@@ -1852,7 +1855,7 @@
       if(error) throw error;
       const r = Array.isArray(data) ? data[0] : data;
       if(r && r.phone) openContact(rowToItem(r), {phone:r.phone});
-      else if(r && r.phone_locked === 'login') openAuth('login', null, true);
+      else if(r && r.phone_locked === 'login') openAuth('login', null, 'login.contactNeeded');
       else if(r && r.phone_locked === 'limit') saToast(translations['detail.phoneLimit'][currentLang]);
       else if(r) saToast(translations['detail.sellerNoPhone'][currentLang]);
     }catch(err){ console.warn(err); saToast(translations['auth.genericErr'][currentLang]); }
