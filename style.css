@@ -1214,3 +1214,7 @@ html[data-theme="light"] .price, html[data-theme="light"] .listing-card .price, 
 html[data-theme="light"] .pkg-cellprice{color:#E0263B !important;}
 /* soft decorative wave under the hero + footer line */
 html[data-theme="light"] .hero-home{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 70 C240 10 480 110 760 60 S1200 20 1440 55 L1440 120 L0 120Z' fill='%23EEF2FF'/%3E%3Cpath d='M0 95 C300 50 560 125 840 88 S1250 60 1440 85 L1440 120 L0 120Z' fill='%23DDE6FF'/%3E%3C/svg%3E"),radial-gradient(ellipse at 85% 10%,#E4EBFF 0%,rgba(255,255,255,0) 60%); background-repeat:no-repeat; background-position:bottom center,center; background-size:100% 90px,auto;}
+
+/* light mode hero title: two colours like the English design (navy + brand blue) */
+html[data-theme="light"] .hero-home h1{background:none; -webkit-background-clip:border-box; background-clip:border-box; color:#1E2E6E; -webkit-text-fill-color:#1E2E6E;}
+html[data-theme="light"] .hero-home h1 .hl.accent{color:#3B5BDB; -webkit-text-fill-color:#3B5BDB;}
