@@ -477,6 +477,7 @@
 
   /* ===== branded, fixed-design image of a plate / number (download or share) ===== */
   const SITE_MARK = 'Souq Al Arqam';
+  const PLATE_MARK = 'souqalarqam.com';
   let plateFontsP = null, plateFontsOk = false;
   function loadPlateFonts(){
     if(!plateFontsP){
@@ -547,8 +548,8 @@
       emboss(fmtMobile(it.value), W / 2 + 90, py + 195, '700 170px "SAP Barlow", "Arial Narrow", Arial', pw - 420, 'center', py + 40, py + 215, sx);
     }
     /* site mark: inside the plate, bottom-right corner */
-    g.save(); g.textAlign = 'right'; g.font = '800 27px "SAP Inter", Arial'; g.fillStyle = 'rgba(255,255,255,.8)'; g.fillText(SITE_MARK, px + pw - 52, py + ph - 28 + 1.2);
-    g.fillStyle = 'rgba(43,46,53,.85)'; g.fillText(SITE_MARK, px + pw - 52, py + ph - 28); g.restore();
+    g.save(); g.textAlign = 'right'; g.font = '800 27px "SAP Inter", Arial'; g.fillStyle = 'rgba(255,255,255,.8)'; g.fillText(PLATE_MARK, px + pw - 52, py + ph - 28 + 1.2);
+    g.fillStyle = 'rgba(43,46,53,.85)'; g.fillText(PLATE_MARK, px + pw - 52, py + ph - 28); g.restore();
     return c;
   }
   async function plateImage(mode, btn){
@@ -683,7 +684,7 @@
     return '<div class="plate' + (large ? ' plate-lg' : '') + '" style="--fs:.205">' +
       '<div class="plate-country"><span class="ar">\u0627\u0644\u0627\u0631\u062f\u0646</span><span class="en">JORDAN</span></div>' +
       '<div class="plate-digits"><span class="pw"><span class="pc">' + escapeHtml(code) + '</span><span class="pd">-</span><span class="pn">' + escapeHtml(number) + '</span></span></div>' +
-      '<span class="plate-site">Souq Al Arqam</span></div>';
+      '<span class="plate-site">souqalarqam.com</span></div>';
   }
   function fitPlates(){
     document.querySelectorAll('.plate-country').forEach(cn => {   // الاردن and JORDAN get exactly the same width

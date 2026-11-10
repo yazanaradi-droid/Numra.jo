@@ -791,9 +791,9 @@ body{overflow-x:clip;}
 .detail-visual{flex-wrap:wrap;}
 .detail-visual .img-actions{justify-content:center;}
 /* site mark sits in the bottom-right corner, just under the plate */
-.plate-site{right:1.5cqw !important; bottom:-4.6cqw !important; font-size:3cqw !important; color:#4B5160 !important; opacity:1 !important; text-shadow:none !important; z-index:1;}
-.listing-card .plate, .my-item .plate, .pkg-cell .plate{margin-bottom:16px !important;}
-.detail-visual .plate{margin-bottom:18px;}
+.plate-site{right:6cqw !important; bottom:1.1cqw !important; font-size:2.3cqw !important; letter-spacing:.03em !important; color:#3B4150 !important; opacity:.92 !important; text-shadow:0 1px 0 rgba(255,255,255,.7) !important; z-index:3;}
+.listing-card .plate, .my-item .plate, .pkg-cell .plate{margin-bottom:8px !important;}
+.detail-visual .plate{margin-bottom:10px;}
 /* letters X/Y/Z are wider than digits: let each part take its full width so the gradient fill never cuts a glyph */
 .plate-digits .pc, .plate-digits .pn{width:max-content; min-width:100%; padding:0 .06em; box-sizing:content-box; white-space:nowrap;}
 .my-item{padding-bottom:20px;}
