@@ -1218,3 +1218,4 @@ html[data-theme="light"] .hero-home{background-image:url("data:image/svg+xml,%3C
 /* light mode hero title: two colours like the English design (navy + brand blue) */
 html[data-theme="light"] .hero-home h1{background:none; -webkit-background-clip:border-box; background-clip:border-box; color:#1E2E6E; -webkit-text-fill-color:#1E2E6E;}
 html[data-theme="light"] .hero-home h1 .hl.accent{color:#3B5BDB; -webkit-text-fill-color:#3B5BDB;}
+html[data-theme="light"] .dash-feat .feat-open, html[data-theme="light"] #uploadForm .modal-submit, html[data-theme="light"] .btn-ghost.feat-open{color:#fff !important; -webkit-text-fill-color:#fff;}
