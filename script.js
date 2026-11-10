@@ -33,6 +33,13 @@
     "nav.uploadPackage":{en:"Upload Package",ar:"إضافة باقة"},
     "nav.uploadDiscount":{en:"Upload Discount",ar:"إضافة عرض خصم"},
     "nav.more":{en:"More ▾",ar:"المزيد ▾"},
+    "nav.how":{en:"How does the site work?",ar:"كيف يعمل الموقع؟"},
+    "how.tag":{en:"Quick guide",ar:"دليل سريع"},
+    "how.title":{en:"How does Souq Al Arqam work?",ar:"كيف يعمل سوق الأرقام؟"},
+    "how.sub":{en:"A short video: signing up, posting an ad, contacting sellers, negotiating, and staying safe.",ar:"فيديو قصير: التسجيل، نشر الإعلان، التواصل مع البائع، المفاوضات، ونصائح لتجنّب الاحتيال."},
+    "how.watch":{en:"Watch the video",ar:"شاهد الفيديو"},
+    "how.close":{en:"Close",ar:"إغلاق"},
+    "how.t1":{en:"Seller sign-up",ar:"تسجيل البائع"},"how.t2":{en:"Posting an ad",ar:"نشر الإعلان"},"how.t3":{en:"Contacting the seller",ar:"تواصل المشتري"},"how.t4":{en:"Negotiation",ar:"المفاوضات"},"how.t5":{en:"Our role and limits",ar:"دور الموقع وحدوده"},"how.t6":{en:"Avoiding fraud",ar:"تجنّب الاحتيال"},
     "nav.contact":{en:"Contact Us",ar:"اتصل بنا"},
     "nav.about":{en:"About Us",ar:"من نحن"},
     "nav.privacy":{en:"Privacy Policy",ar:"سياسة الخصوصية"},
@@ -464,6 +471,9 @@
     document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
     const langBtn = document.getElementById('langToggle');
     if(langBtn) langBtn.textContent = lang === 'ar' ? 'EN' : 'AR';
+    document.querySelectorAll('img[data-how-poster]').forEach(function(im){ im.src = 'video/poster_' + (lang === 'ar' ? 'ar' : 'en') + '.jpg'; });
+    var hv = document.getElementById('howTitle'); if(hv && translations['how.title']) hv.textContent = translations['how.title'][lang];
+    var hc = document.getElementById('howCloseTxt'); if(hc) hc.textContent = translations['how.close'][lang];
 
     const infoBody = document.getElementById('infoBody');
     if(infoBody){
@@ -1096,6 +1106,39 @@
     document.getElementById('infoBody').innerHTML = translations['info.' + key + '.body'][currentLang];
     document.getElementById('infoBody').setAttribute('data-i18n-html-key', key);
     applyTranslations(currentLang);
+  }
+
+  /* "How does the site work?" video popup: the video element is created on first open, never autoplays, pauses on close */
+  function openHow(e){
+    if(e) e.preventDefault();
+    if(typeof closeMobileNav === 'function') closeMobileNav();
+    var ov = document.getElementById('howOverlay');
+    if(!ov){
+      ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.id = 'howOverlay';
+      ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-labelledby','howTitle');
+      ov.innerHTML = '<div class="modal how-modal"><button type="button" class="modal-close" id="howX" aria-label="Close">\u2715</button>' +
+        '<h3 id="howTitle"></h3><div class="how-frame"></div>' +
+        '<button type="button" class="btn btn-ghost how-close" id="howClose"><span id="howCloseTxt"></span></button></div>';
+      document.body.appendChild(ov);
+      ov.addEventListener('click', function(ev){ if(ev.target === ov) closeHow(); });
+      document.getElementById('howX').addEventListener('click', closeHow);
+      document.getElementById('howClose').addEventListener('click', closeHow);
+      document.addEventListener('keydown', function(ev){ if(ev.key === 'Escape') closeHow(); });
+    }
+    var lang = currentLang === 'ar' ? 'ar' : 'en';
+    document.getElementById('howTitle').textContent = translations['how.title'][currentLang];
+    document.getElementById('howCloseTxt').textContent = translations['how.close'][currentLang];
+    var fr = ov.querySelector('.how-frame'), v = fr.querySelector('video');
+    if(!v){ v = document.createElement('video'); v.controls = true; v.playsInline = true; v.setAttribute('playsinline',''); v.preload = 'metadata'; fr.appendChild(v); }
+    var src = 'video/how_it_works_' + lang + '.mp4';
+    if(v.getAttribute('data-src') !== src){ v.pause(); v.setAttribute('data-src', src); v.poster = 'video/poster_' + lang + '.jpg'; v.src = src; }
+    ov.classList.add('open');
+    document.getElementById('howClose').focus();
+  }
+  function closeHow(){
+    var ov = document.getElementById('howOverlay'); if(!ov) return;
+    var v = ov.querySelector('video'); if(v) v.pause();
+    ov.classList.remove('open');
   }
   function closeInfo(){
     document.getElementById('infoOverlay').classList.remove('open');

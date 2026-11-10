@@ -17,7 +17,7 @@
 <meta name="twitter:image" content="https://souqalarqam.com/images/og-v2.png">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="canonical" href="https://souqalarqam.com/">
-<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611101520">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611101527">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="images/icon-180.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -25,7 +25,7 @@
 <meta name="apple-mobile-web-app-title" content="سوق الأرقام">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="theme.js?v=2"></script>
-<link rel="stylesheet" href="style.css?v=202611101520">
+<link rel="stylesheet" href="style.css?v=202611101527">
 </head>
 <body>
 
@@ -54,6 +54,7 @@
             <a href="#" onclick="goAdd('number','multi',event)" data-i18n="nav.uploadMulti">Upload New (Multiple)</a>
           </div>
         </li>
+        <li><a href="#" class="nav-how" onclick="openHow(event)"><svg class="how-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M9.5 7.6v8.8l7.2-4.4z" fill="currentColor"/></svg><span data-i18n="nav.how">كيف يعمل الموقع؟</span></a></li>
         <li><a href="#" data-i18n="nav.more">More ▾</a>
           <div class="dropdown">
             <a href="#" onclick="openInfo('contact', event)" data-i18n="nav.contact">Contact Us</a>
@@ -167,6 +168,25 @@
         <div class="org"><div class="mark">SND</div><h4 data-i18n="links.snd.name">Sanad – Government Services</h4></div>
         <p data-i18n="links.snd.desc">The official portal for e-government services in Jordan.</p>
         <a class="visit" href="https://www.sanad.gov.jo/" target="_blank" rel="noopener" data-i18n="links.visit">Visit the website →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="how-sec">
+  <div class="wrap">
+    <div class="section-head"><div>
+      <span class="tag" data-i18n="how.tag">Quick guide</span>
+      <h2 data-i18n="how.title">How does Souq Al Arqam work?</h2>
+      <p data-i18n="how.sub"></p>
+    </div></div>
+    <div class="how-card">
+      <button type="button" class="how-thumb" onclick="openHow(event)" aria-label="Play video"><img data-how-poster src="video/poster_ar.jpg" alt="" width="270" height="480" loading="lazy" decoding="async"><span class="how-play"><svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path d="M8.5 6.2v11.6l9.6-5.8z" fill="#fff"/></svg></span></button>
+      <div class="how-info">
+        <ul class="how-chips">
+          <li data-i18n="how.t1"></li><li data-i18n="how.t2"></li><li data-i18n="how.t3"></li><li data-i18n="how.t4"></li><li data-i18n="how.t5"></li><li data-i18n="how.t6"></li>
+        </ul>
+        <button type="button" class="btn btn-gold how-btn" onclick="openHow(event)"><svg class="how-ico" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M9.5 7.6v8.8l7.2-4.4z" fill="currentColor"/></svg><span data-i18n="how.watch">Watch the video</span></button>
       </div>
     </div>
   </div>
@@ -427,6 +447,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611101520"></script>
+<script src="script.js?v=202611101527"></script>
 </body>
 </html>

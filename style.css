@@ -1219,3 +1219,31 @@ html[data-theme="light"] .hero-home{background-image:url("data:image/svg+xml,%3C
 html[data-theme="light"] .hero-home h1{background:none; -webkit-background-clip:border-box; background-clip:border-box; color:#1E2E6E; -webkit-text-fill-color:#1E2E6E;}
 html[data-theme="light"] .hero-home h1 .hl.accent{color:#3B5BDB; -webkit-text-fill-color:#3B5BDB;}
 html[data-theme="light"] .dash-feat .feat-open, html[data-theme="light"] #uploadForm .modal-submit, html[data-theme="light"] .btn-ghost.feat-open{color:#fff !important; -webkit-text-fill-color:#fff;}
+
+/* "How does the site work?": menu item, popup, home section */
+nav.primary a.nav-how{display:inline-flex !important; align-items:center; gap:6px; color:var(--accent-text) !important; font-weight:700;}
+nav.primary a.nav-how .how-ico{flex:none;}
+header.mnav-open nav.primary a.nav-how{padding:9px 0;}
+.modal.how-modal{width:auto; max-width:94vw; padding:22px 20px 18px; text-align:center;}
+.how-modal h3{padding-inline:34px; font-size:1.15rem; line-height:1.5;}
+.how-frame{aspect-ratio:9/16; height:min(70vh, calc((100vw - 80px) * 16 / 9)); max-height:760px; width:auto; margin:14px auto 12px; border-radius:14px; overflow:hidden; background:#fff; border:1px solid var(--line);}
+.how-frame video{width:100%; height:100%; display:block; object-fit:contain; background:#fff;}
+.how-close{min-width:140px;}
+.how-sec{padding:60px 0;}
+.how-card{display:flex; align-items:center; gap:36px; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:24px; max-width:860px;}
+.how-thumb{position:relative; flex:none; width:170px; aspect-ratio:9/16; border:1px solid var(--line); border-radius:16px; overflow:hidden; padding:0; background:#fff; cursor:pointer; box-shadow:0 10px 26px rgba(30,46,110,.12);}
+.how-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+.how-play{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;}
+.how-play svg{width:62px; height:62px; padding:14px; border-radius:50%; background:linear-gradient(135deg,#4C6BE6,#2F4BC0); box-shadow:0 8px 22px rgba(59,91,219,.45); transition:transform .15s;}
+.how-thumb:hover .how-play svg{transform:scale(1.08);}
+.how-info{flex:1 1 auto; min-width:0;}
+.how-chips{list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin:0 0 22px; padding:0;}
+.how-chips li{background:rgba(59,91,219,.12); color:var(--accent-text); border:1px solid rgba(59,91,219,.28); border-radius:999px; padding:6px 14px; font-size:.88rem; font-weight:600;}
+.how-btn{display:inline-flex; align-items:center; gap:10px; padding:13px 28px; border-radius:999px; font-size:.95rem;}
+.how-btn .how-ico{color:#fff;}
+@media (max-width:600px){ .how-card{flex-direction:column; text-align:center; padding:20px;} .how-thumb{width:150px;} .how-chips{justify-content:center;} .how-sec{padding:44px 0;} }
+html[data-theme="light"] .how-card{background:linear-gradient(160deg,#fff,#F4F7FF); box-shadow:0 8px 26px rgba(30,46,110,.07);}
+html[data-theme="light"] .how-chips li{background:#EEF2FF; color:#2A3E8F; border-color:#C9D5FA;}
+html[data-theme="light"] nav.primary a.nav-how{color:#3B5BDB !important;}
+nav.primary > ul > li > a{white-space:nowrap;}
+@media (min-width:821px) and (max-width:1180px){ nav.primary > ul{gap:16px;} nav.primary > ul > li > a{font-size:.86rem;} }
