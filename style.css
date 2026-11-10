@@ -1137,7 +1137,7 @@ html[dir="rtl"] .section-head .tag{letter-spacing:0; font-family:inherit; font-s
 .logo{gap:0 !important;}
 .wm{display:inline-flex; flex-direction:column; align-items:center; line-height:1;}
 .wm-ar{font-family:'Cairo',var(--font-display); font-weight:800; font-size:1.75rem; line-height:1.15; color:#fff; direction:rtl; white-space:nowrap;}
-.wm-ar b{color:#8FA9E8; font-weight:800;}
+.wm-ar b{color:#4C6BF0; font-weight:800;}
 .wm-bar{display:block; width:34px; height:3px; border-radius:2px; background:#8FA9E8; margin:1px 0 4px;}
-.wm-en{font-family:var(--font-display); font-weight:800; font-size:.5rem; letter-spacing:.42em; padding-inline-start:.42em; color:#AAB3C5; white-space:nowrap;}
+.wm-en{margin-top:5px; font-family:var(--font-display); font-weight:800; font-size:.5rem; letter-spacing:.42em; padding-inline-start:.42em; color:#AAB3C5; white-space:nowrap;}
 @media (max-width:480px){.wm-ar{font-size:1.4rem;} .wm-bar{width:28px;} .wm-en{font-size:.44rem;}}
