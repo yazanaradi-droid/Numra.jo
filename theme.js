@@ -1,7 +1,7 @@
-/* Light / dark switch: dark is the default, the choice is remembered on this device */
+/* Light / dark switch: light is the default, the choice is remembered on this device */
 (function(){
   var root = document.documentElement, KEY = 'sa-theme';
-  function get(){ try{ return localStorage.getItem(KEY) === 'light' ? 'light' : 'dark'; }catch(e){ return 'dark'; } }
+  function get(){ try{ return localStorage.getItem(KEY) === 'dark' ? 'dark' : 'light'; }catch(e){ return 'light'; } }
   function apply(t){
     if(t === 'light') root.setAttribute('data-theme','light'); else root.removeAttribute('data-theme');
     var m = document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content', t === 'light' ? '#FFFFFF' : '#0A0D14');
