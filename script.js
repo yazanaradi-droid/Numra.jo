@@ -515,7 +515,7 @@
     document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
     const langBtn = document.getElementById('langToggle');
     if(langBtn) langBtn.textContent = lang === 'ar' ? 'EN' : 'AR';
-    document.querySelectorAll('img[data-how-poster]').forEach(function(im){ im.src = 'video/poster_' + (lang === 'ar' ? 'ar' : 'en') + '.jpg'; });
+    document.querySelectorAll('img[data-how-poster]').forEach(function(im){ im.src = 'video/poster_' + (lang === 'ar' ? 'ar' : 'en') + '.jpg?v=2'; });
     var hv = document.getElementById('howTitle'); if(hv && translations['how.title']) hv.textContent = translations['how.title'][lang];
     var hc = document.getElementById('howCloseTxt'); if(hc) hc.textContent = translations['how.close'][lang];
 
@@ -1236,8 +1236,8 @@
     document.getElementById('howCloseTxt').textContent = translations['how.close'][currentLang];
     var fr = ov.querySelector('.how-frame'), v = fr.querySelector('video');
     if(!v){ v = document.createElement('video'); v.controls = true; v.playsInline = true; v.setAttribute('playsinline',''); v.preload = 'metadata'; fr.appendChild(v); }
-    var src = 'video/how_it_works_' + lang + '.mp4';
-    if(v.getAttribute('data-src') !== src){ v.pause(); v.setAttribute('data-src', src); v.poster = 'video/poster_' + lang + '.jpg'; v.src = src; }
+    var src = 'video/how_it_works_' + lang + '.mp4?v=2';
+    if(v.getAttribute('data-src') !== src){ v.pause(); v.setAttribute('data-src', src); v.poster = 'video/poster_' + lang + '.jpg?v=2'; v.src = src; }
     ov.classList.add('open');
     document.getElementById('howClose').focus();
   }
