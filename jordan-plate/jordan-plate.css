@@ -1,0 +1,6 @@
+/* Replaces the old plate frame without changing card or listing layout. */
+.plate.jp-real{display:block!important;position:relative!important;width:100%!important;max-width:300px;aspect-ratio:1200 / 265!important;direction:ltr!important;unicode-bidi:isolate;container-type:normal!important;background:transparent!important;color:inherit!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important;overflow:visible!important;line-height:0!important;min-height:0!important;height:auto!important;}
+.plate.jp-real.plate-lg{max-width:600px;}
+.plate.jp-real::before,.plate.jp-real::after{display:none!important;content:none!important;}
+.plate.jp-real>svg{display:block!important;width:100%!important;height:auto!important;aspect-ratio:1200 / 265!important;overflow:hidden!important;filter:none!important;transform:none!important;}
+@media(max-width:600px){.plate.jp-real.plate-lg{max-width:100%;}}
