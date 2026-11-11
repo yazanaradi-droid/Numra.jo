@@ -543,6 +543,13 @@
   }
   async function buildPlateCanvas(it){
     await loadPlateFonts();
+    if(it.type === 'plate' && window.SouqJordanPlate){   // plates: the approved Jordanian plate design, with the real code and number
+      const pc = await window.SouqJordanPlate.canvas(it.code, it.number, 2400), pad = 80, out = document.createElement('canvas');
+      out.width = pc.width + pad * 2; out.height = pc.height + pad * 2;
+      const og = out.getContext('2d'); og.fillStyle = '#FFFFFF'; og.fillRect(0, 0, out.width, out.height);
+      og.save(); og.shadowColor = 'rgba(0,0,0,.28)'; og.shadowBlur = 36; og.shadowOffsetY = 12; og.drawImage(pc, pad, pad); og.restore();
+      return out;
+    }
     const W = 1200, H = 350, SC = 2, c = document.createElement('canvas'); c.width = W * SC; c.height = H * SC;
     const g = c.getContext('2d'); g.scale(SC, SC); g.imageSmoothingQuality = 'high';
     g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
