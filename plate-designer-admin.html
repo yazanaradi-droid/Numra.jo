@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#FFFFFF">
-<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611111308">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611111757">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="images/icon-180.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -14,8 +14,8 @@
 <meta name="apple-mobile-web-app-title" content="سوق الأرقام">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="theme.js?v=2"></script>
-<link rel="stylesheet" href="style.css?v=202611111308">
-<link rel="stylesheet" href="plate-flow.css?v=202611111308">
+<link rel="stylesheet" href="style.css?v=202611111757">
+<link rel="stylesheet" href="plate-flow.css?v=202611111757">
 </head>
 <body>
 <header>
@@ -83,7 +83,7 @@
 </header>
 <nav class="quickbar" aria-label="Quick links"><a href="index.html" data-qb="index.html" data-i18n="qb.home">Home</a><a href="plates.html" data-qb="plates.html" onclick="navTo('plates.html', event)" data-i18n="qb.plates">Plates</a><a href="numbers.html" data-qb="numbers.html" onclick="navTo('numbers.html', event)" data-i18n="qb.numbers">Numbers</a></nav>
 
-<main class="pd-app" data-mode="admin"><h1 id="pdTitle">إدارة قوالب اللوحات</h1><p class="pd-lead" id="pdLead"></p><div id="pdMessage" role="status" aria-live="polite" class="pd-message">جارٍ التحميل...</div><div id="pdGate" class="pd-card" hidden><p id="pdGateText"></p><div class="pd-actions"><button type="button" id="pdLogin">تسجيل الدخول</button><a class="pd-link" href="dashboard.html">حسابي</a></div></div><div class="pd-grid" id="pdWorkspace" hidden><aside><section class="pd-card"><h2 data-pd="details">بيانات اللوحة</h2><div class="pd-row"><label><span data-pd="code">الرمز</span><input id="pdCode" dir="ltr" maxlength="2" value="19" autocomplete="off" aria-describedby="pdCodeHelp"></label><label><span data-pd="number">رقم اللوحة</span><input id="pdNumber" dir="ltr" maxlength="5" value="11111" autocomplete="off" aria-describedby="pdNumberHelp"></label></div><p id="pdCodeHelp" class="pd-note" data-pd="codeHelp">الرمز من 1 إلى 99، أو خانة/خانتان من الأرقام وX وY.</p><p id="pdNumberHelp" class="pd-note" data-pd="numberHelp">من خانة إلى خمس خانات: أرقام أو X وY وZ، منفردة أو مدمجة.</p><label style="margin-top:16px"><span data-pd="price">السعر بالدينار (اختياري)</span><input id="pdPrice" dir="ltr" inputmode="decimal" maxlength="16" placeholder="15,800"></label></section><section class="pd-card"><h2 data-pd="choose">اختر السيارة</h2><div id="pdCars" class="pd-cars"></div><p class="pd-note" data-pd="fixed">موضع اللوحة وحجمها معدّان من إدارة الموقع.</p></section><section class="pd-card"><h2 data-pd="placement">ضبط لوحة الصدام</h2><p class="pd-note" data-pd="dragHelp">اسحب الزوايا الأربع على الصورة أو أدخل إحداثياتها. هذه الأدوات تظهر للأدمن فقط.</p><div id="pdCorners" class="pd-corners"></div><label><span data-pd="digitSize">حجم الأرقام (%)</span><input id="pdDigitSize" type="number" min="42" max="65" step="1" value="64"></label><label><span data-pd="digitSpacing">تباعد الأرقام</span><input id="pdDigitSpacing" type="number" min="75" max="110" step="1" value="102"></label><label><input id="pdActive" type="checkbox" checked style="display:inline;width:auto"> <span data-pd="active">القالب متاح للزوار</span></label><p id="pdRevision" class="pd-admin-status"></p><div class="pd-actions"><button type="button" class="pd-primary" id="pdSave" data-pd="save">حفظ للزوار</button><button type="button" id="pdReset" data-pd="reset">إلغاء التعديلات غير المحفوظة</button></div><p class="pd-note" data-pd="publishNote">الحفظ ينشر الإعدادات لكل الزوار. المطبوعات السابقة تحتفظ بشكلها وقت إنشائها.</p></section></aside><section class="pd-card pd-preview-card"><div class="pd-bar"><b id="pdSelected">—</b><a class="pd-link" href="my-prints.html" data-pd="myPrints">مطبوعاتي</a></div><div class="pd-preview"><canvas id="pdCanvas" width="1254" height="1254" aria-label="معاينة تصميم اللوحة"></canvas><svg id="pdHandles" viewBox="0 0 1254 1254" aria-label="ضبط زوايا اللوحة"></svg></div><div class="pd-actions"><span class="pd-note" data-pd="adminPreview">معاينة للأدمن؛ اضغط حفظ لنشر التعديل.</span></div><p class="pd-note" data-pd="saveNote">يُحفظ التصميم في مطبوعاتي عند التحميل، ويمكن تنزيله لاحقاً من حسابك.</p></section></div></main>
+<main class="pd-app" data-mode="admin"><h1 id="pdTitle">إدارة قوالب اللوحات</h1><p class="pd-lead" id="pdLead"></p><div id="pdMessage" role="status" aria-live="polite" class="pd-message">جارٍ التحميل...</div><div id="pdGate" class="pd-card" hidden><p id="pdGateText"></p><div class="pd-actions"><button type="button" id="pdLogin">تسجيل الدخول</button><a class="pd-link" href="dashboard.html">حسابي</a></div></div><div class="pd-grid" id="pdWorkspace" hidden><aside><section class="pd-card"><h2 data-pd="details">بيانات اللوحة</h2><div class="pd-row"><label><span data-pd="code">الرمز</span><input id="pdCode" dir="ltr" maxlength="2" value="" autocomplete="off" aria-describedby="pdCodeHelp"></label><label><span data-pd="number">رقم اللوحة</span><input id="pdNumber" dir="ltr" maxlength="5" value="" autocomplete="off" aria-describedby="pdNumberHelp"></label></div><p id="pdCodeHelp" class="pd-note" data-pd="codeHelp">الرمز من 1 إلى 99، أو خانة/خانتان من الأرقام وX وY.</p><p id="pdNumberHelp" class="pd-note" data-pd="numberHelp">من خانة إلى خمس خانات: أرقام أو X وY وZ، منفردة أو مدمجة.</p><label style="margin-top:16px"><span data-pd="price">السعر بالدينار (اختياري)</span><input id="pdPrice" dir="ltr" inputmode="decimal" maxlength="16" placeholder=""></label></section><section class="pd-card"><h2 data-pd="choose">اختر السيارة</h2><div id="pdCars" class="pd-cars"></div><p class="pd-note" data-pd="fixed">موضع اللوحة وحجمها معدّان من إدارة الموقع.</p></section><section class="pd-card"><h2 data-pd="placement">ضبط لوحة الصدام</h2><p class="pd-note" data-pd="dragHelp">اسحب الزوايا الأربع على الصورة أو استخدم خطوط السحب. هذه الأدوات تظهر للأدمن فقط.</p><div id="pdCorners" class="pd-corners"></div><label><span data-pd="digitSize">حجم الأرقام (%)</span><input id="pdDigitSize" type="range" min="42" max="65" step="1" value="64"></label><label><span data-pd="digitSpacing">تباعد الأرقام</span><input id="pdDigitSpacing" type="range" min="75" max="110" step="1" value="102"></label><label><input id="pdActive" type="checkbox" checked style="display:inline;width:auto"> <span data-pd="active">القالب متاح للزوار</span></label><p id="pdRevision" class="pd-admin-status"></p><div class="pd-actions"><button type="button" class="pd-primary" id="pdSave" data-pd="save">حفظ للزوار</button><button type="button" id="pdReset" data-pd="reset">إلغاء التعديلات غير المحفوظة</button></div><p class="pd-note" data-pd="publishNote">الحفظ ينشر الإعدادات لكل الزوار. المطبوعات السابقة تحتفظ بشكلها وقت إنشائها.</p></section></aside><section class="pd-card pd-preview-card"><div class="pd-bar"><b id="pdSelected">—</b><a class="pd-link" href="my-prints.html" data-pd="myPrints">مطبوعاتي</a></div><div class="pd-preview"><canvas id="pdCanvas" width="1254" height="1254" aria-label="معاينة تصميم اللوحة"></canvas><svg id="pdHandles" viewBox="0 0 1254 1254" aria-label="ضبط زوايا اللوحة"></svg></div><div class="pd-actions"><span class="pd-note" data-pd="adminPreview">معاينة للأدمن؛ اضغط حفظ لنشر التعديل.</span></div><p class="pd-note" data-pd="saveNote">يُحفظ التصميم في مطبوعاتي عند التحميل، ويمكن تنزيله لاحقاً من حسابك.</p></section></div></main>
 
 <footer>
   <div class="wrap">
@@ -310,12 +310,12 @@
 
 <script>const PAGE_TYPE='plate-print';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611111308"></script>
-<script src="car-designer-assets/templates.js?v=202611111308"></script>
-<script src="car-designer-assets/digit-regions.js?v=202611111308"></script>
-<script src="plate-core.js?v=202611111308"></script>
-<script src="plate-renderer.js?v=202611111308"></script>
-<script src="plate-flow.js?v=202611111308"></script>
-<script src="print-links.js?v=202611111308" defer></script>
+<script src="script.js?v=202611111757"></script>
+<script src="car-designer-assets/templates.js?v=202611111757"></script>
+<script src="car-designer-assets/digit-regions.js?v=202611111757"></script>
+<script src="plate-core.js?v=202611111757"></script>
+<script src="plate-renderer.js?v=202611111757"></script>
+<script src="plate-flow.js?v=202611111757"></script>
+<script src="print-links.js?v=202611111757" defer></script>
 </body>
 </html>
