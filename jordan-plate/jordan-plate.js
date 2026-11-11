@@ -15,7 +15,7 @@
  function svg(code,number){
   const L=layout(code,number),id='souq-jp-atlas-'+(++seq),parts=['<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 265" width="1200" height="265" aria-hidden="true" focusable="false">','<defs><image id="'+id+'" width="1254" height="1254" xlink:href="'+esc(atlasUrl)+'"/></defs>','<svg width="1200" height="265" viewBox="32 159 2110 407" preserveAspectRatio="none"><image width="2172" height="724" xlink:href="'+esc(plateUrl)+'"/></svg>'];
   L.digits.forEach(d=>parts.push('<svg x="'+d.x+'" y="'+d.y+'" width="'+d.w+'" height="'+d.h+'" viewBox="'+d.b.join(' ')+'" preserveAspectRatio="none"><use xlink:href="#'+id+'"/></svg>'));
-  if(L.any){parts.push('<rect x="523" y="126" width="36" height="13" rx="2" fill="#111"/>');parts.push('<text x="'+MARK_X+'" y="'+MARK_Y+'" text-anchor="end" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="'+MARK_FS+'" letter-spacing="1" fill="#3B4150" fill-opacity=".9">'+MARK+'</text>');}
+  if(L.any){parts.push('<rect x="515" y="125.5" width="52" height="14" rx="2" fill="#111"/>');parts.push('<text x="'+MARK_X+'" y="'+MARK_Y+'" text-anchor="end" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="'+MARK_FS+'" letter-spacing="1" fill="#3B4150" fill-opacity=".9">'+MARK+'</text>');}
   parts.push('</svg>');return parts.join('');
  }
  /* the same plate drawn on a canvas (for "download image" / "share") */
@@ -28,7 +28,7 @@
   g.drawImage(ref,32,159,2110,407,0,0,c.width,c.height);
   const sc=atlas.naturalWidth/1254,L=layout(code,number);
   L.digits.forEach(d=>g.drawImage(atlas,d.b[0]*sc,d.b[1]*sc,d.b[2]*sc,d.b[3]*sc,d.x*k,d.y*k,d.w*k,d.h*k));
-  if(L.any){g.fillStyle='#111';g.beginPath();(g.roundRect?g.roundRect(523*k,126*k,36*k,13*k,2*k):g.rect(523*k,126*k,36*k,13*k));g.fill();g.save();g.textAlign='right';g.fillStyle='rgba(59,65,80,.9)';g.font='800 '+(MARK_FS*k)+'px "SAP Inter", Inter, Arial, sans-serif';if('letterSpacing' in g)g.letterSpacing=(1*k)+'px';g.fillText(MARK,MARK_X*k,MARK_Y*k);g.restore();}
+  if(L.any){g.fillStyle='#111';g.beginPath();(g.roundRect?g.roundRect(515*k,125.5*k,52*k,14*k,2*k):g.rect(515*k,125.5*k,52*k,14*k));g.fill();g.save();g.textAlign='right';g.fillStyle='rgba(59,65,80,.9)';g.font='800 '+(MARK_FS*k)+'px "SAP Inter", Inter, Arial, sans-serif';if('letterSpacing' in g)g.letterSpacing=(1*k)+'px';g.fillText(MARK,MARK_X*k,MARK_Y*k);g.restore();}
   return c;
  }
  function html(code,number,large){return '<div class="plate jp-real'+(large?' plate-lg':'')+'" role="img" aria-label="'+esc(clean(code,2)+' · '+clean(number,5))+'">'+svg(code,number)+'</div>';}
