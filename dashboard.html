@@ -16,7 +16,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://souqalarqam.com/images/og-v2.png">
 <meta name="theme-color" content="#FFFFFF">
-<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611111757">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=202611121123">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="images/icon-180.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -24,8 +24,9 @@
 <meta name="apple-mobile-web-app-title" content="سوق الأرقام">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="theme.js?v=2"></script>
-<link rel="stylesheet" href="style.css?v=202611111757">
-<link rel="stylesheet" href="jordan-plate/jordan-plate.css?v=202611111757">
+<link rel="stylesheet" href="style.css?v=202611121123">
+<link rel="stylesheet" href="jordan-plate/jordan-plate.css?v=202611121123">
+<script src="app-bridge.js?v=202611121123"></script>
 </head>
 <body>
 
@@ -208,6 +209,10 @@
           <div class="hint error" id="regPasswordErr"></div>
         </div>
         <div id="regCaptcha"></div>
+        <div class="field agree-field">
+          <label class="agree"><input type="checkbox" id="regAgree"><span><span data-i18n="modal.agree">I agree to the</span> <a href="terms.html" target="_blank" rel="noopener" data-i18n="nav.terms">Terms</a> <span data-i18n="modal.and">and</span> <a href="privacy.html" target="_blank" rel="noopener" data-i18n="nav.privacy">Privacy Policy</a></span></label>
+          <div class="hint error" id="regAgreeErr"></div>
+        </div>
         <button class="modal-submit" type="submit" data-i18n="modal.submit">Create Account</button>
         <p class="auth-switch"><span data-i18n="modal.haveAccount">Already have an account?</span> <a href="#" onclick="openAuth('login',event)" data-i18n="modal.goLogin">Log in</a></p>
       </form>
@@ -333,8 +338,8 @@
 
 <script>const PAGE_TYPE = 'dashboard';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="script.js?v=202611111757"></script>
-<script src="print-links.js?v=202611111757" defer></script>
-<script src="jordan-plate/jordan-plate.js?v=202611111757" defer></script>
+<script src="script.js?v=202611121123"></script>
+<script src="print-links.js?v=202611121123" defer></script>
+<script src="jordan-plate/jordan-plate.js?v=202611121123" defer></script>
 </body>
 </html>

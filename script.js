@@ -180,6 +180,11 @@
     "modal.phonePlaceholder":{en:"79 123 4567",ar:"79 123 4567"},
     "modal.phoneErr":{en:"Enter a valid phone number (at least 7 digits) for the selected country.",ar:"أدخل رقم هاتف صحيح (7 أرقام على الأقل) حسب الدولة المختارة."},
     "modal.password":{en:"Password",ar:"كلمة المرور"},
+    "modal.agree":{en:"I agree to the",ar:"أوافق على"},
+    "modal.and":{en:"and",ar:"و"},
+    "modal.agreeNeeded":{en:"Please accept the Terms and Privacy Policy to continue.",ar:"يرجى الموافقة على الشروط وسياسة الخصوصية للمتابعة."},
+    "report.reason":{en:"Reason for reporting",ar:"سبب الإبلاغ"},
+    "report.send":{en:"Send report",ar:"إرسال البلاغ"},
     "modal.passwordPlaceholder":{en:"At least 6 characters",ar:"6 أحرف على الأقل"},
     "modal.passwordErr":{en:"Password must be at least 6 characters.",ar:"كلمة المرور 6 أحرف على الأقل."},
     "dash.name":{en:"Name",ar:"الاسم"},
@@ -464,8 +469,8 @@
                        ar:'<p>سياسة الخصوصية:</p><ul><li>نجمع فقط ما يلزم لتشغيل حسابك وإعلاناتك: البريد الإلكتروني والاسم ورقم الهاتف.</li><li>لا يظهر رقم هاتف البائع إلا للمستخدمين المسجّلين الذين يطلبون التواصل معه.</li><li>لا نبيع بياناتك الشخصية لأي طرف ثالث.</li><li>يمكنك طلب حذف حسابك وبياناتك في أي وقت: support@souqalarqam.com</li></ul>'},
     "info.refund.body":{en:'<p>Refunds:</p><ul><li>Dealings are directly between buyer and seller. Souq Al Arqam does not hold or transfer payments for sales.</li><li>For any fee paid to the platform (such as featured promotion), contact support@souqalarqam.com.</li></ul>',
                        ar:'<p>الاسترجاع:</p><ul><li>التعامل يتم مباشرة بين البائع والمشتري، ولا تستلم المنصة أو تحوّل أي مبالغ مقابل عمليات البيع.</li><li>لأي رسوم تُدفع للمنصة (مثل الإعلان المميز) تواصل معنا على support@souqalarqam.com.</li></ul>'},
-    "info.terms.body":{en:'<p>Terms of use:</p><ul><li>Listings must be accurate and the number or plate must be owned by the seller.</li><li>Souq Al Arqam only connects buyers and sellers and is not responsible for dealings between them.</li><li>Do not transfer money before meeting and verifying the seller.</li><li>Misuse, false listings or fraud may result in removing ads and suspending the account.</li></ul>',
-                       ar:'<p>شروط الاستخدام:</p><ul><li>يجب أن تكون الإعلانات دقيقة، وأن يكون الرقم أو اللوحة مملوكاً للبائع.</li><li>تعمل سوق الأرقام كوسيط للتواصل فقط، ولا تتحمل مسؤولية التعاملات بين البائع والمشتري.</li><li>لا تحوّل أي مبلغ قبل مقابلة البائع والتحقق منه.</li><li>قد يؤدي إساءة الاستخدام أو الإعلانات الكاذبة أو الاحتيال إلى حذف الإعلانات وتعليق الحساب.</li></ul>'}
+    "info.terms.body":{en:'<p>Terms of use:</p><ul><li>Listings must be accurate and the number or plate must be owned by the seller.</li><li>Souq Al Arqam only connects buyers and sellers and is not responsible for dealings between them.</li><li>Do not transfer money before meeting and verifying the seller.</li><li>Misuse, false listings or fraud may result in removing ads and suspending the account.</li><li>Illegal, offensive, misleading or rights-infringing content is not allowed. We have zero tolerance for objectionable content and abusive users.</li><li>Every ad has a Report button. We review reports and act promptly (target: within 24 hours) by removing content and suspending abusive accounts. Contact: support@souqalarqam.com.</li></ul>',
+                       ar:'<p>شروط الاستخدام:</p><ul><li>يجب أن تكون الإعلانات دقيقة، وأن يكون الرقم أو اللوحة مملوكاً للبائع.</li><li>تعمل سوق الأرقام كوسيط للتواصل فقط، ولا تتحمل مسؤولية التعاملات بين البائع والمشتري.</li><li>لا تحوّل أي مبلغ قبل مقابلة البائع والتحقق منه.</li><li>قد يؤدي إساءة الاستخدام أو الإعلانات الكاذبة أو الاحتيال إلى حذف الإعلانات وتعليق الحساب.</li><li>يُمنع أي محتوى غير قانوني أو مسيء أو مضلل أو ينتهك حقوق الآخرين. لا نتسامح مع المحتوى المسيء أو المستخدمين المسيئين.</li><li>في كل إعلان زر «الإبلاغ». نراجع البلاغات ونتصرف بسرعة (الهدف خلال 24 ساعة) بحذف المحتوى وتعليق الحسابات المسيئة. للتواصل: support@souqalarqam.com.</li></ul>'}
   };
 
 
@@ -1401,6 +1406,8 @@
     if(last.length<2){ setErr('regLastErr','modal.nameErr'); markInvalid('regLast',true); ok=false; } else { setErr('regLastErr',null); markInvalid('regLast',false); }
     if(nat.length < 7 || (dial.length + nat.length) > 15){ setErr('regPhoneErr','modal.phoneErr'); markInvalid('regPhone',true); ok=false; } else { setErr('regPhoneErr',null); markInvalid('regPhone',false); }
     if(pw.length<6){ setErr('regPasswordErr','modal.passwordErr'); markInvalid('regPassword',true); ok=false; } else { setErr('regPasswordErr',null); markInvalid('regPassword',false); }
+    const agreeBox=document.getElementById('regAgree');
+    if(agreeBox && !agreeBox.checked){ setErr('regAgreeErr','modal.agreeNeeded'); ok=false; } else { setErr('regAgreeErr',null); }
     if(!ok) return false;
 
     const btn=document.querySelector('#registerForm .modal-submit'); btn.disabled=true;
@@ -1719,13 +1726,26 @@
     document.getElementById('similarGrid').innerHTML = sim.map(safeCard).join('');
   }
 
+  const REPORT_REASONS = [['scam','Scam or fraud','احتيال أو نصب'],['fake','Fake or misleading ad','إعلان وهمي أو مضلل'],['price','Wrong price or details','سعر أو بيانات غير صحيحة'],['sold','Already sold','تم بيعه'],['offensive','Offensive or inappropriate content','محتوى مسيء أو غير لائق'],['other','Other','سبب آخر']];
   async function reportListing(){
     if(!detailItem || !sb) return;
     if(!currentUser){ openAuth('login', null, 'login.reportNeeded'); return; }
-    if(!confirm(translations['report.confirm'][currentLang])) return;
     const rb = document.getElementById('reportBtn');
-    const {error} = await sb.rpc('xp_report_listing', {lid: detailItem.id, p_reason: null});
-    if(rb){ rb.textContent = translations[error ? 'auth.genericErr' : 'report.done'][currentLang]; if(!error) rb.disabled = true; }
+    let box = document.getElementById('reportBox');
+    if(box){ box.style.display = box.style.display === 'none' ? 'flex' : 'none'; return; }
+    box = document.createElement('div'); box.id = 'reportBox'; box.className = 'report-box';
+    const sel = document.createElement('select'); sel.id = 'reportReason'; sel.setAttribute('aria-label', translations['report.reason'][currentLang]);
+    REPORT_REASONS.forEach(r => { const o = document.createElement('option'); o.value = r[0]; o.textContent = currentLang === 'ar' ? r[2] : r[1]; sel.appendChild(o); });
+    const send = document.createElement('button'); send.type = 'button'; send.className = 'rep-btn'; send.textContent = translations['report.send'][currentLang];
+    const msg = document.createElement('span'); msg.className = 'rep-msg';
+    send.onclick = async () => {
+      send.disabled = true;
+      const {error} = await sb.rpc('xp_report_listing', {lid: detailItem.id, p_reason: sel.value});
+      if(error){ send.disabled = false; msg.textContent = translations['auth.genericErr'][currentLang]; }
+      else { box.textContent = translations['report.done'][currentLang]; if(rb) rb.style.display = 'none'; }
+    };
+    box.append(sel, send, msg);
+    rb.insertAdjacentElement('afterend', box);
   }
 
   function featOpts(minRank, name){
