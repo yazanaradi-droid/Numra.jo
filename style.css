@@ -1305,3 +1305,10 @@ html:not([dir="rtl"]) .detail-title{font-size:clamp(1.1rem,5.2vw,1.7rem); line-h
 #listingDetail ~ *{}
 body:has(#listingDetail) .page-hero{padding:18px 0 4px;}
 body:has(#listingDetail) .page-hero .breadcrumb{margin:0;}
+
+/* store-compliance additions: terms checkbox + report reason */
+.agree{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;line-height:1.6;cursor:pointer}
+.agree input{margin-top:.35em;flex:none}
+.report-box{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.report-box select{padding:8px;border:1px solid var(--line,#ccd);border-radius:8px;background:inherit;color:inherit;font:inherit}
+.rep-msg{font-size:.85rem;color:var(--muted)}
