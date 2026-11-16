@@ -1,7 +1,7 @@
 (function(root){
   'use strict';
   const normalize=v=>String(v??'').replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).trim().toUpperCase();
-  function code(v){v=normalize(v);return /^[0-9XY]{1,2}$/.test(v)&&(/[XY]/.test(v)||/^(1|[1-4][0-9]|66|77|80|81|88)$/.test(v));}
+  function code(v){v=normalize(v);return /^[0-9XY]{1,2}$/.test(v)&&(/[XY]/.test(v)||/^[1-9][0-9]?$/.test(v));}
   function number(v){return /^[0-9XYZ]{1,5}$/.test(normalize(v));}
   function price(v){v=normalize(v).replace(/٬/g,',').replace(/٫/g,'.');if(v==='')return null;if(!/^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d{1,2})?$/.test(v))throw Error('INVALID_PRICE');v=v.replace(/,/g,'');if(!/^\d+(\.\d{1,2})?$/.test(v)||!Number.isFinite(+v)||+v<=0||+v>9999999999.99)throw Error('INVALID_PRICE');return +v;}
   function validQuad(q){if(!Array.isArray(q)||q.length!==4||q.some(p=>!Array.isArray(p)||p.length!==2||p.some(v=>!Number.isFinite(v)||v<0||v>1254)))return false;let area=0;for(let i=0;i<4;i++){const a=q[i],b=q[(i+1)%4],c=q[(i+2)%4];if((b[0]-a[0])*(c[1]-b[1])-(b[1]-a[1])*(c[0]-b[0])<=1)return false;area+=a[0]*b[1]-b[0]*a[1];}return area/2>=100&&area/2<=150000;}
