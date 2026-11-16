@@ -436,7 +436,7 @@
     "upload.plateValue":{en:"Plate number",ar:"رقم اللوحة"},
     "upload.numberValue":{en:"Phone number",ar:"رقم الهاتف"},
     "upload.country":{en:"Country",ar:"الدولة"},
-    "upload.codeHint":{en:"Code (1\u201399, letters X Y Z allowed) and number (1\u20135 digits/letters X Y Z).",ar:"الرمز (1-99 ويسمح بالأحرف X Y Z) والرقم (من 1 إلى 5 أرقام أو أحرف X Y Z)."},
+    "upload.codeHint":{en:"Code: 1, 10\u201349, 66, 77, 80, 81 or 88 (letters X Y Z also allowed), and number (1\u20135 digits/letters X Y Z).",ar:"الرمز: 1 أو 10-49 أو 66 أو 77 أو 80 أو 81 أو 88 (ويسمح بالأحرف X Y Z)، والرقم من 1 إلى 5 أرقام أو أحرف X Y Z."},
 
     "listings.tag":{en:"Catalog",ar:"الفهرس"},
     "listings.title":{en:"Browse listings",ar:"تصفح الإعلانات"},
@@ -1140,7 +1140,7 @@
       if(id==='upValue') el.value = el.value.replace(/\D/g,''); });
     { const pr=document.getElementById('upPrice'); pr.value = pr.value.replace(/[,\u066c\u060c\s]/g,'').replace(/\u066b/g,'.').replace(/[^0-9.]/g,''); }
     const checks = {
-      upCode:  v => /^\d{1,2}$/.test(v) ? (+v>=1 && +v<=99) : /^[0-9XYZ]{1,2}$/.test(v),
+      upCode:  v => /^\d{1,2}$/.test(v) ? /^(1|[1-4][0-9]|66|77|80|81|88)$/.test(v) : /^[0-9XYZ]{1,2}$/.test(v),
       upNumber:v => /^[0-9XYZ]{1,5}$/.test(v),
       upValue: v => /^07[789]\d{7}$/.test(v),
       upPrice: v => v === '' || (/^\d+(\.\d+)?$/.test(v) && +v>0)
