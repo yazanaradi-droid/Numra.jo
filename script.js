@@ -704,6 +704,13 @@
   const SUPABASE_URL = 'https://xfkahevdccmogaxboffy.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx';   // public (publishable) key, safe in the browser
   const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+  /* any call that changes ads clears the 30-second feed cache first, so a seller (or the admin) always sees the change at once */
+  if(sb){
+    const _rpc = sb.rpc.bind(sb);
+    sb.rpc = function(name){ if(/^xp_(publish|update_my|report|admin_(set|delete))/.test(String(name))){ try{ sessionStorage.removeItem('xp_feed_v1'); }catch(e){} } return _rpc.apply(null, arguments); };
+    const _from = sb.from.bind(sb);
+    sb.from = function(t){ if(t === 'xp_listings'){ try{ sessionStorage.removeItem('xp_feed_v1'); }catch(e){} } return _from(t); };
+  }
   let currentUser = null;
   let userListings = [...seedListings];
 
@@ -725,19 +732,27 @@
   }
   let listingsLoadError = false;
   let listingsReady = !sb;   // false until the first load finishes, so the demo ads are never shown (and clickable) while real data is on its way
-  async function loadRemoteListings(){
+  /* the feed is cached for 30 s in this tab, so moving between pages (or a refresh) does not hit the database again;
+     every action that changes ads (publish, edit, delete, report) clears it first */
+  const FEED_KEY = 'xp_feed_v1', FEED_TTL = 30000;
+  function clearFeedCache(){ try{ sessionStorage.removeItem(FEED_KEY); }catch(e){} }
+  window.xpClearFeedCache = clearFeedCache;
+  function readFeedCache(){
+    try{ const c = JSON.parse(sessionStorage.getItem(FEED_KEY) || 'null'); if(c && Array.isArray(c.rows) && Date.now() - c.t < FEED_TTL) return c.rows; }catch(e){}
+    return null;
+  }
+  async function loadRemoteListings(force){
     if(!sb) return;
     try{
-      /* the table is public; the feed adds the masked phone + featured flag. Use both so no ad can be lost if the feed drops a row */
-      const [feed, tbl] = await Promise.all([
-        sb.rpc('xp_listings_feed').then(r => r, e => ({error:e})),
-        sb.from('xp_listings').select('id,type,code,number,value,price,created_at').order('created_at', {ascending:false}).limit(500).then(r => r, e => ({error:e}))
-      ]);
-      if(feed.error && tbl.error) throw tbl.error;
-      const byId = new Map();
-      (tbl.data || []).forEach(r => byId.set(String(r.id), r));
-      (feed.data || []).forEach(r => byId.set(String(r.id), Object.assign({}, byId.get(String(r.id)) || {}, r)));
-      userListings = [...Array.from(byId.values()).map(rowToItem), ...seedListings];
+      let rows = force ? null : readFeedCache();
+      if(!rows){
+        /* the feed already holds every public ad (hidden ads and banned sellers are left out on the server) */
+        const feed = await sb.rpc('xp_listings_feed');
+        if(feed.error) throw feed.error;
+        rows = feed.data || [];
+        try{ sessionStorage.setItem(FEED_KEY, JSON.stringify({t:Date.now(), rows})); }catch(e){}
+      }
+      userListings = [...rows.map(rowToItem), ...seedListings];
       userListings = dedupeListings(sortFeatured(userListings));
       listingsLoadError = false;
     }catch(err){ console.warn('Could not load listings:', err); listingsLoadError = true; }
