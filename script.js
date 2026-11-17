@@ -474,15 +474,15 @@
   };
 
 
-  let currentLang = 'en';
+  let currentLang = 'ar';   // Arabic is the default; a saved choice or ?lang= still wins
 
   // preserve language across page navigation via ?lang=ar in the URL
   (function(){
     const params = new URLSearchParams(window.location.search);
-    let saved = null; try{ saved = localStorage.getItem('xp_lang'); }catch(e){}
+    let saved = null; try{ saved = localStorage.getItem('xp_lang2'); }catch(e){}   // xp_lang2 = a language the visitor chose on purpose (the old xp_lang was written automatically, so it is ignored)
     const q = params.get('lang');
-    if(q === 'ar' || q === 'en') currentLang = q; else if(saved === 'ar' || saved === 'en') currentLang = saved;   // the language in the link wins over the remembered one
-    try{ localStorage.setItem('xp_lang', currentLang); }catch(e){}
+    if(q === 'ar' || q === 'en'){ currentLang = q; try{ localStorage.setItem('xp_lang2', q); }catch(e){} }   // the language in the link wins over the remembered one
+    else if(saved === 'ar' || saved === 'en') currentLang = saved;
   })();
 
   function navTo(url, e){
@@ -518,6 +518,7 @@
       else if(!window.__dynTitle && (pg === 'listing' || pg === 'seller')) document.title = pg === 'listing' ? (lang === 'ar' ? 'إعلان | سوق الأرقام' : 'Listing | Souq Al Arqam') : (lang === 'ar' ? 'حساب بائع | سوق الأرقام' : 'Seller | Souq Al Arqam');
     })();
     document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.classList.remove('en-wait');
     const langBtn = document.getElementById('langToggle');
     if(langBtn) langBtn.textContent = lang === 'ar' ? 'EN' : 'AR';
     document.querySelectorAll('img[data-how-poster]').forEach(function(im){ im.src = 'video/poster_' + (lang === 'ar' ? 'ar' : 'en') + '.jpg?v=2'; });
@@ -653,7 +654,7 @@
   });
   function toggleLang(){
     currentLang = currentLang === 'en' ? 'ar' : 'en';
-    try{ localStorage.setItem('xp_lang', currentLang); }catch(e){}
+    try{ localStorage.setItem('xp_lang2', currentLang); }catch(e){}
     try{ const u = new URL(window.location.href); if(u.searchParams.has('lang')){ u.searchParams.set('lang', currentLang); history.replaceState(null, '', u.toString()); } }catch(e){}
     applyTranslations(currentLang);
     refreshAuthUI();
