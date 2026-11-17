@@ -701,8 +701,8 @@
   seedListings.forEach((x,k)=>{ x.id='seed-'+k; });
 
   /* ============ Supabase (shared database + accounts) ============ */
-  const SUPABASE_URL = 'https://xfkahevdccmogaxboffy.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx';   // public (publishable) key, safe in the browser
+  const SUPABASE_URL = 'https://cjuxikvqdablznqhslpm.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Y39vuvjU2AfkmJyl0buCRQ_dRmIitly';   // public (publishable) key, safe in the browser
   const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
   /* any call that changes ads clears the 30-second feed cache first, so a seller (or the admin) always sees the change at once */
   if(sb){
@@ -1337,7 +1337,7 @@
   }
 
   /* optional Cloudflare Turnstile (free CAPTCHA). Leave empty to disable. Also enable it in Supabase > Authentication > Attack Protection. */
-  const TURNSTILE_SITE_KEY = '';
+  const TURNSTILE_SITE_KEY = '0x4AAAAAAGE7fgTQukL299_T';
   const capIds = {reg:null, login:null}, capTok = {reg:undefined, login:undefined};
   function captchaToken(w){ const t = capTok[w]; capTok[w] = undefined; try{ if(window.turnstile && capIds[w] !== null) window.turnstile.reset(capIds[w]); }catch(e){} return t; }
   function initCaptcha(){
@@ -1551,7 +1551,7 @@
         ({data, error} = await sb.auth.signInWithPassword({ email: id.toLowerCase(), password: pw, options:{ captchaToken: captchaToken('login') } }));
       }else{
         /* phone: a server function finds the email that belongs to the number and returns a session */
-        const r = await fetch(SUPABASE_URL + '/functions/v1/phone-login', { method:'POST', headers:{ 'Content-Type':'application/json', 'apikey': SUPABASE_KEY }, body: JSON.stringify({ phone: id, password: pw }) });
+        const r = await fetch(SUPABASE_URL + '/functions/v1/phone-login', { method:'POST', headers:{ 'Content-Type':'application/json', 'apikey': SUPABASE_KEY }, body: JSON.stringify({ phone: id, password: pw, captchaToken: captchaToken('login') }) });
         const j = await r.json().catch(()=>({}));
         if(r.ok && j.access_token){
           const s2 = await sb.auth.setSession({ access_token: j.access_token, refresh_token: j.refresh_token });
@@ -2288,7 +2288,7 @@ async function sendContactMail(e){
   var show=function(k,good){st.textContent=M[k][L];st.className='cu-status '+(good?'ok':'bad');};
   btn.disabled=true;
   try{
-    var r=await fetch('https://xfkahevdccmogaxboffy.supabase.co/functions/v1/contact',{method:'POST',headers:{'Content-Type':'application/json'},
+    var r=await fetch('https://cjuxikvqdablznqhslpm.supabase.co/functions/v1/contact',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:document.getElementById('cuName').value,email:document.getElementById('cuEmail').value,message:document.getElementById('cuMsg').value,website:document.getElementById('cuWeb').value,lang:L})});
     if(r.ok){ show('ok',true); f.reset(); }
     else if(r.status===429) show('rate',false);
