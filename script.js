@@ -701,8 +701,8 @@
   seedListings.forEach((x,k)=>{ x.id='seed-'+k; });
 
   /* ============ Supabase (shared database + accounts) ============ */
-  const SUPABASE_URL = 'https://xfkahevdccmogaxboffy.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx';   // public (publishable) key, safe in the browser
+  const SUPABASE_URL = 'https://cjuxikvqdablznqhslpm.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Y39vuvjU2AfkmJyl0buCRQ_dRmIitly';   // public (publishable) key, safe in the browser
   const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
   /* any call that changes ads clears the 30-second feed cache first, so a seller (or the admin) always sees the change at once */
   if(sb){
@@ -2288,7 +2288,7 @@ async function sendContactMail(e){
   var show=function(k,good){st.textContent=M[k][L];st.className='cu-status '+(good?'ok':'bad');};
   btn.disabled=true;
   try{
-    var r=await fetch('https://xfkahevdccmogaxboffy.supabase.co/functions/v1/contact',{method:'POST',headers:{'Content-Type':'application/json'},
+    var r=await fetch('https://cjuxikvqdablznqhslpm.supabase.co/functions/v1/contact',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:document.getElementById('cuName').value,email:document.getElementById('cuEmail').value,message:document.getElementById('cuMsg').value,website:document.getElementById('cuWeb').value,lang:L})});
     if(r.ok){ show('ok',true); f.reset(); }
     else if(r.status===429) show('rate',false);

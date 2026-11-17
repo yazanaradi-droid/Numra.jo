@@ -13,8 +13,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          KEY="sb_publishable_RjEelulxPpEmHc5IJsdGJw_urv20frx"
-          URL="https://xfkahevdccmogaxboffy.supabase.co/rest/v1/xp_listings?select=id&limit=1"
+          KEY="sb_publishable_Y39vuvjU2AfkmJyl0buCRQ_dRmIitly"
+          URL="https://cjuxikvqdablznqhslpm.supabase.co/rest/v1/xp_listings?select=id&limit=1"
           HDR=$(curl -fsS -D - -o /dev/null "$URL" -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Prefer: count=exact")
           COUNT=$(echo "$HDR" | tr -d '\r' | grep -i '^content-range' | sed 's/.*\///')
           echo "Visible listings: $COUNT"
