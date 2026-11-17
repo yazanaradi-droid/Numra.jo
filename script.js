@@ -1337,7 +1337,7 @@
   }
 
   /* optional Cloudflare Turnstile (free CAPTCHA). Leave empty to disable. Also enable it in Supabase > Authentication > Attack Protection. */
-  const TURNSTILE_SITE_KEY = '';
+  const TURNSTILE_SITE_KEY = '0x4AAAAAAGE7fgTQukL299_T';
   const capIds = {reg:null, login:null}, capTok = {reg:undefined, login:undefined};
   function captchaToken(w){ const t = capTok[w]; capTok[w] = undefined; try{ if(window.turnstile && capIds[w] !== null) window.turnstile.reset(capIds[w]); }catch(e){} return t; }
   function initCaptcha(){
