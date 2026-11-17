@@ -1551,7 +1551,7 @@
         ({data, error} = await sb.auth.signInWithPassword({ email: id.toLowerCase(), password: pw, options:{ captchaToken: captchaToken('login') } }));
       }else{
         /* phone: a server function finds the email that belongs to the number and returns a session */
-        const r = await fetch(SUPABASE_URL + '/functions/v1/phone-login', { method:'POST', headers:{ 'Content-Type':'application/json', 'apikey': SUPABASE_KEY }, body: JSON.stringify({ phone: id, password: pw }) });
+        const r = await fetch(SUPABASE_URL + '/functions/v1/phone-login', { method:'POST', headers:{ 'Content-Type':'application/json', 'apikey': SUPABASE_KEY }, body: JSON.stringify({ phone: id, password: pw, captchaToken: captchaToken('login') }) });
         const j = await r.json().catch(()=>({}));
         if(r.ok && j.access_token){
           const s2 = await sb.auth.setSession({ access_token: j.access_token, refresh_token: j.refresh_token });
