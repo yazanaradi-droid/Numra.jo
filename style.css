@@ -1315,3 +1315,7 @@ body:has(#listingDetail) .page-hero .breadcrumb{margin:0;}
 
 /* English visitors: keep the page hidden for a moment until the English text is applied (static HTML is Arabic) */
 html.en-wait body{visibility:hidden}
+
+/* Arabic headings: Cairo's descenders (ح ر و ج) were clipped by the tight line-height and the gradient text clip */
+html[dir="rtl"] h1, html[dir="rtl"] .section-head h2{line-height:1.45; padding-bottom:.12em;}
+html[dir="rtl"] .hero-home h1{line-height:1.45;}
