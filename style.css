@@ -1315,3 +1315,10 @@ body:has(#listingDetail) .page-hero .breadcrumb{margin:0;}
 
 /* English visitors: keep the page hidden for a moment until the English text is applied (static HTML is Arabic) */
 html.en-wait body{visibility:hidden}
+
+/* phone-number cards: the number sits in its own framed box instead of loose text */
+.listing-card .row .value{
+  flex:1; min-width:0; text-align:center;
+  border:2px solid var(--gold); border-radius:12px; background:var(--surface-2);
+  padding:8px 12px; white-space:nowrap;
+}
