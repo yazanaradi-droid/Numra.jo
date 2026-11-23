@@ -165,7 +165,7 @@
     "why.title":{en:"Why choose Souq Al Arqam?",ar:"لماذا تختار سوق الأرقام؟"},
     "why.sub":{en:"Ease of access, trust, and a showcase for your listings.",ar:"سهولة الوصول، وضمان الموثوقية، وتمييز إعلاناتك."},
     "why.1.t":{en:"Easy to use",ar:"سهولة الاستخدام"},
-    "why.1.d":{en:"Browse, filter by code, number or price, and reach the owner in seconds, with no sign-up needed.",ar:"تصفّح وفلتر بالكود أو الرقم أو السعر، وتواصل مع المالك خلال ثوانٍ دون الحاجة إلى تسجيل."},
+    "why.1.d":{en:"Browse and filter by code, number or price with no sign-up needed, then sign in to see the owner's contact details.",ar:"تصفّح وفلتر بالكود أو الرقم أو السعر دون الحاجة إلى تسجيل، وسجّل الدخول لتظهر لك بيانات التواصل مع المالك."},
     "why.2.t":{en:"Trusted sellers",ar:"بائعون موثوقون"},
     "why.2.d":{en:"The site team gives a verification badge to accounts it has reviewed; it appears next to the seller name. No badge does not mean the account is untrustworthy, but always verify ownership before paying.",ar:"تمنح إدارة الموقع شارة التوثيق للحسابات التي راجعتها، وتظهر بجانب اسم البائع. غياب الشارة لا يعني أن الحساب غير موثوق، لكن تحقق دائماً من الملكية قبل الدفع."},
     "why.3.t":{en:"Stand-out listings",ar:"إعلانات بارزة"},
