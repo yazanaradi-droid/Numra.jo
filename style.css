@@ -1325,3 +1325,12 @@ html.en-wait body{visibility:hidden}
 /* Arabic headings: Cairo's descenders (ح ر و ج) were clipped by the tight line-height and the gradient text clip */
 html[dir="rtl"] h1, html[dir="rtl"] .section-head h2{line-height:1.45; padding-bottom:.12em;}
 html[dir="rtl"] .hero-home h1{line-height:1.45;}
+
+/* static intro text + FAQ under the listings (helps search engines understand the page; works without JavaScript) */
+.seo-text{padding:28px 0 36px;border-top:1px solid var(--line,#e5e8f0);margin-top:8px}
+.seo-text h2{font-size:1.25rem;margin:0 0 10px}
+.seo-text > .wrap > p{color:var(--muted);line-height:1.8;margin:0 0 14px;max-width:820px}
+.seo-text details{border:1px solid var(--line,#e5e8f0);border-radius:12px;padding:10px 14px;margin:8px 0;max-width:820px;background:var(--surface-2,transparent)}
+.seo-text summary{cursor:pointer;font-weight:700;line-height:1.6}
+.seo-text details p{margin:8px 0 2px;color:var(--muted);line-height:1.8}
+.seo-text .seo-link{margin:14px 0 0}.seo-text .seo-link a{font-weight:700}

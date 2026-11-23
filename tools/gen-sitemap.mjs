@@ -10,7 +10,7 @@ const BASE = 'https://souqalarqam.com';
 const SB_URL = process.env.SB_URL || 'https://cjuxikvqdablznqhslpm.supabase.co';
 const SB_KEY = process.env.SB_KEY || 'sb_publishable_Y39vuvjU2AfkmJyl0buCRQ_dRmIitly';
 const MAX = 5000; // sitemap limit is 50,000; stay far below it
-const STATIC = ['/', '/plates.html', '/numbers.html', '/bundles.html'];
+const STATIC = ['/', '/plates.html', '/numbers.html', '/bundles.html', '/plate-designer.html'];
 
 async function loadFeed() {
   if (process.env.FEED_FILE) return JSON.parse(readFileSync(process.env.FEED_FILE, 'utf8'));
