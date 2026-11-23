@@ -16,7 +16,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: node scripts/build-www.js
       - run: npx cap add android
-      - run: npx capacitor-assets generate --android --iconBackgroundColor '#2F4BC0' --splashBackgroundColor '#0A0D14' --splashBackgroundColorDark '#0A0D14'
+      - run: npx capacitor-assets generate --android --iconBackgroundColor '#F0F6FF' --splashBackgroundColor '#F0F6FF' --splashBackgroundColorDark '#F0F6FF'
       - run: npx cap sync android
       - name: Build debug APK (installable for testing)
         working-directory: mobile/android

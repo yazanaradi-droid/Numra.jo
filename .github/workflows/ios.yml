@@ -16,7 +16,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: node scripts/build-www.js
       - run: npx cap add ios
-      - run: npx capacitor-assets generate --ios --iconBackgroundColor '#2F4BC0' --splashBackgroundColor '#0A0D14' --splashBackgroundColorDark '#0A0D14'
+      - run: npx capacitor-assets generate --ios --iconBackgroundColor '#F0F6FF' --splashBackgroundColor '#F0F6FF' --splashBackgroundColorDark '#F0F6FF'
       - run: npx cap sync ios
       - name: Compile for the iOS simulator (no signing needed, proves the project builds)
         working-directory: mobile/ios/App
