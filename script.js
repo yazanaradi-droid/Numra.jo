@@ -150,7 +150,7 @@
     "seo.bundles.q2":{en:"How do I contact a bundle seller?",ar:"كيف أتواصل مع بائع الباقة؟"},
     "seo.bundles.a2":{en:"Open the listing and log in to see the contact details, then contact the seller by call or WhatsApp.",ar:"افتح الإعلان وسجّل الدخول لعرض بيانات التواصل، ثم تواصل مع البائع بالاتصال أو واتساب."},
     "seo.designer.t":{en:"Souq Al Arqam tools: see your plate on a car",ar:"أدوات سوق الأرقام: شاهد لوحتك على سيارة"},
-    "seo.designer.p":{en:"Draw a Jordanian license plate with your code and number on a car of your choice. Sign in to your Souq Al Arqam account to use the tool; the design is saved in My Prints when you download it.",ar:"ارسم لوحة سيارة أردنية برمزك ورقمك على سيارة من اختيارك. لاستخدام الأداة سجّل الدخول بحسابك في سوق الأرقام، ويُحفظ التصميم في «مطبوعاتي» عند تحميله."},
+    "seo.designer.p":{en:"Draw a Jordanian license plate with your code and number on a car of your choice. Sign in to your Souq Al Arqam account to use the tool; the design is saved in My Prints and the plate is listed for sale when you download it.",ar:"ارسم لوحة سيارة أردنية برمزك ورقمك على سيارة من اختيارك. لاستخدام الأداة سجّل الدخول بحسابك في سوق الأرقام، ويُحفظ التصميم في «مطبوعاتي» عند تحميله، ويُنشر الرقم أيضاً في لوحات البيع."},
     "seo.designer.q1":{en:"What is this tool?",ar:"ما هذه الأداة؟"},
     "seo.designer.a1":{en:"A tool that lets you enter your plate code and number and choose a car to see the plate on it, then download the design.",ar:"أداة تتيح لك كتابة رمز ورقم لوحتك واختيار سيارة لترى اللوحة عليها، ثم تحميل التصميم."},
     "seo.designer.q2":{en:"Why use it?",ar:"لماذا أستخدمها؟"},
