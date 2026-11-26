@@ -336,6 +336,9 @@
     "feat.activeNow":{en:"Your ad is featured",ar:"إعلانك مميز"},
     "feat.until":{en:"until",ar:"حتى"},
     "feat.reqSent":{en:"Request received. It is activated once the payment is confirmed.",ar:"تم استلام طلبك، ويتم التفعيل بعد تأكيد الدفع."},
+    "feat.offerTitle":{en:"Make your ad featured (optional)",ar:"اجعل إعلانك مميزاً (اختياري)"},
+    "feat.offerDesc":{en:"Your ad is already published. A featured ad is shown first and in gold so more buyers see it.",ar:"إعلانك منشور الآن. الإعلان المميز يظهر أولاً وباللون الذهبي ليراه مشترون أكثر."},
+    "feat.skip":{en:"Not now",ar:"ليس الآن"},
     "feat.buying":{en:"Opening the store…",ar:"جارٍ فتح المتجر…"},
     "feat.buyFail":{en:"The purchase was not completed. If you were charged, reopen the app and it will be activated.",ar:"لم تكتمل عملية الشراء. إن تم الخصم فأعد فتح التطبيق وسيتم التفعيل."},
     "feat.reqErr":{en:"Could not send the request. Please try again.",ar:"تعذّر إرسال الطلب. حاول مرة أخرى."},
@@ -1266,7 +1269,8 @@
       } else if(featPlan && !featuredSkipped){
         payBox.innerHTML = '<p><b>' + translations['feat.promoBad'][currentLang] + '</b></p>';
         payBox.style.display = 'block';
-      } else { payBox.style.display = 'none'; payBox.innerHTML=''; }
+      } else if(newItem && !newItem.featured){ payBox.innerHTML = featureOfferHtml(newItem.id, 'featOfferUp'); payBox.style.display = 'block'; }
+      else { payBox.style.display = 'none'; payBox.innerHTML=''; }
     }
 
     const viewLink = document.getElementById('uploadViewLink');
@@ -1881,6 +1885,32 @@
     if(error){ console.warn(error); if(msg) msg.textContent = translations['feat.reqErr'][currentLang]; return; }
     if(data !== true){ if(msg) msg.textContent = translations['feat.promoBad'][currentLang]; return; }
     location.reload();
+  }
+
+  /* Optional "make it featured" step shown right after an ad is published (website: activation code; app: store purchase). */
+  function featureOfferHtml(id, name){
+    const T = k => translations[k][currentLang];
+    return '<div class="feat-offer" data-id="' + id + '"><h4>★ ' + T('feat.offerTitle') + '</h4><p class="feat-note">' + T('feat.offerDesc') + '</p>' + featOpts(0, name) +
+      (inApp() ? '' : '<div class="feat-promo"><label>' + T('feat.promoLabel') + '</label><input type="text" class="promo-in" autocomplete="off" dir="ltr" placeholder="CODE"></div>') +
+      '<button type="button" class="btn btn-gold" onclick="featureOfferGo(\'' + id + '\', \'' + name + '\')">' + T('feat.reqBtn') + '</button> ' +
+      '<button type="button" class="btn btn-ghost" onclick="this.closest(\'.feat-offer\').style.display=\'none\'">' + T('feat.skip') + '</button><p class="feat-note feat-offer-msg"></p></div>';
+  }
+  async function featureOfferGo(id, name){
+    const T = k => translations[k][currentLang];
+    const box = document.querySelector('.feat-offer[data-id="' + id + '"]'); if(!box) return;
+    const r = box.querySelector('input[name="' + name + '"]:checked'), msg = box.querySelector('.feat-offer-msg'); if(!r) return;
+    if(inApp()){
+      msg.textContent = T('feat.buying');
+      try{ await storeBuy(id, r.value); box.innerHTML = '<h4>★ ' + T('feat.activeNow') + '</h4>'; }
+      catch(e){ console.warn(e); msg.textContent = T('feat.buyFail'); }
+      return;
+    }
+    const code = (box.querySelector('.promo-in').value || '').trim();
+    if(!code){ msg.textContent = T('feat.codeNeeded'); return; }
+    const {data, error} = await sb.rpc('xp_request_featured', {lid:id, plan:r.value, p_promo:code});
+    if(error){ console.warn(error); msg.textContent = T('feat.reqErr'); return; }
+    if(data !== true){ msg.textContent = T('feat.promoBad'); return; }
+    box.innerHTML = '<h4>★ ' + T('feat.promoOk') + '</h4>';
   }
 
   /* ===== the seller's own page (opens in a new tab) ===== */

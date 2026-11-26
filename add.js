@@ -194,7 +194,7 @@
     if(!(await confirmPublish(todo))) return;
     document.getElementById('addDone').innerHTML = '';
     const btn = document.getElementById('addSubmit'); btn.disabled = true;
-    let okCount = 0;
+    let okCount = 0, lastId = null;
     if(multi){
       const pv = latin(pkgPriceVal()).replace(/[,\u066c\u060c\s]/g, '');
       if(pv !== '' && !/^\d+(\.\d+)?$/.test(pv)){ document.getElementById('pkgPrice').style.borderColor = 'var(--danger)'; btn.disabled = false; return; }
@@ -225,11 +225,11 @@
         s.textContent = /already_listed|duplicate|unique/i.test(m) ? T('dup') : /rate_limited/.test(m) ? T('rate') : /banned/.test(m) ? T('banned') : T('err');
         s.style.color = 'var(--danger)';
         if(/rate_limited/.test(m)) break;
-      } else { okCount++; s.textContent = data && data._updated ? T('upd') : T('ok'); s.style.color = '#1a8f4c'; x.r.querySelectorAll('input').forEach(i => i.disabled = true); x.r.dataset.done = '1'; }
+      } else { okCount++; lastId = data && data.id; s.textContent = data && data._updated ? T('upd') : T('ok'); s.style.color = '#1a8f4c'; x.r.querySelectorAll('input').forEach(i => i.disabled = true); x.r.dataset.done = '1'; }
     }
     btn.disabled = false;
     if(okCount){
-      document.getElementById('addDone').innerHTML = '<p style="margin-top:14px"><a class="btn btn-gold" href="dashboard.html?tab=' + (type === 'plate' ? 'plates' : 'numbers') + (currentLang === 'ar' ? '&lang=ar' : '') + '">' + T('toDash') + '</a></p>';
+      document.getElementById('addDone').innerHTML = (okCount === 1 && todo.length === 1 && lastId && typeof featureOfferHtml === 'function' ? featureOfferHtml(lastId, 'featOfferAdd') : '') + '<p style="margin-top:14px"><a class="btn btn-gold" href="dashboard.html?tab=' + (type === 'plate' ? 'plates' : 'numbers') + (currentLang === 'ar' ? '&lang=ar' : '') + '">' + T('toDash') + '</a></p>';
     }
   });
 
