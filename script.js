@@ -336,6 +336,8 @@
     "feat.activeNow":{en:"Your ad is featured",ar:"إعلانك مميز"},
     "feat.until":{en:"until",ar:"حتى"},
     "feat.reqSent":{en:"Request received. It is activated once the payment is confirmed.",ar:"تم استلام طلبك، ويتم التفعيل بعد تأكيد الدفع."},
+    "feat.buying":{en:"Opening the store…",ar:"جارٍ فتح المتجر…"},
+    "feat.buyFail":{en:"The purchase was not completed. If you were charged, reopen the app and it will be activated.",ar:"لم تكتمل عملية الشراء. إن تم الخصم فأعد فتح التطبيق وسيتم التفعيل."},
     "feat.reqErr":{en:"Could not send the request. Please try again.",ar:"تعذّر إرسال الطلب. حاول مرة أخرى."},
     "feat.homeTitle":{en:"Latest listings",ar:"أحدث الإعلانات"},
     "feat.homeSub":{en:"Featured ads first, then the newest listings.",ar:"الإعلانات المميزة أولاً ثم أحدث الإعلانات."},
@@ -1807,9 +1809,36 @@
     rb.insertAdjacentElement('afterend', box);
   }
 
+  function inApp(){ return !!(window.SouqApp && window.SouqApp.native); }
+  function featPriceLabel(p){
+    if(inApp()) return (window.SouqApp.prices && window.SouqApp.prices[p]) || '';
+    return FEATURED_PRICES[p] + ' ' + translations['pkg.jod'][currentLang];
+  }
+  /* In the app a featured ad is bought through the App Store / Google Play only (store rules): no codes. */
+  async function storeBuy(lid, plan){
+    const NP = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.NativePurchases;
+    if(!NP || !sb) throw new Error('NO_STORE');
+    const a = await sb.functions.invoke('iap-intent', {body:{listing_id:lid, plan:plan}});
+    if(a.error || !a.data || !a.data.token) throw new Error('INTENT');
+    const tx = await NP.purchaseProduct({productIdentifier:a.data.product, productType:'inapp', appAccountToken:a.data.token, isConsumable:true, quantity:1});
+    const job = {intent:a.data.token, transaction_id:String(tx.transactionId)};
+    try{ localStorage.setItem('souq_iap_pending', JSON.stringify(job)); }catch(e){}
+    await storeVerify(job);
+  }
+  async function storeVerify(job){
+    const v = await sb.functions.invoke('iap-verify', {body:job});
+    if(v.error || !v.data || !v.data.ok) throw new Error('VERIFY');
+    try{ localStorage.removeItem('souq_iap_pending'); }catch(e){}
+  }
+  // A purchase that was paid but not confirmed to our server (network dropped) is retried at the next start.
+  async function retryPendingPurchase(){
+    if(!inApp() || !sb) return;
+    let job = null; try{ job = JSON.parse(localStorage.getItem('souq_iap_pending') || 'null'); }catch(e){}
+    if(job) try{ await storeVerify(job); }catch(e){}
+  }
   function featOpts(minRank, name){
     const T = k => translations[k][currentLang];
-    const plans = ['2w','1m','forever'].filter(p => PLAN_RANK[p] > minRank);
+    const plans = ['2w','1m'].filter(p => PLAN_RANK[p] > minRank);
     return plans.map((p,i)=> '<label class="feat-opt' + (i===0?' sel':'') + '"><input type="radio" name="' + name + '" value="' + p + '"' + (i===0?' checked':'') + ' onchange="document.querySelectorAll(\'.feat-opt\').forEach(l=>l.classList.toggle(\'sel\', l.querySelector(\'input\').checked))"><span class="feat-name">' + T('feat.' + p) + '</span><span class="feat-price">' + FEATURED_PRICES[p] + ' ' + T('pkg.jod') + '</span></label>').join('');
   }
   function renderFeatureBox(){
@@ -1832,7 +1861,7 @@
       const opts = featOpts(rank, 'featReq');
       if(opts){
         h += (active ? '<h4>' + T('feat.upTitle') + '</h4>' : '<h4>' + T('feat.pricesTitle') + '</h4>') + opts +
-             '<div class="feat-promo"><label>' + T('feat.promoLabel') + '</label><input type="text" id="featReqCode" autocomplete="off" dir="ltr" placeholder="CODE"></div><button type="button" class="btn btn-gold" onclick="requestFeatured()">' + T(active ? 'feat.upBtn' : 'feat.reqBtn') + '</button><p id="featReqMsg" class="feat-note"></p>';
+             (inApp() ? '' : '<div class="feat-promo"><label>' + T('feat.promoLabel') + '</label><input type="text" id="featReqCode" autocomplete="off" dir="ltr" placeholder="CODE"></div>') + '<button type="button" class="btn btn-gold" onclick="requestFeatured()">' + T(active ? 'feat.upBtn' : 'feat.reqBtn') + '</button><p id="featReqMsg" class="feat-note"></p>';
       }
     }
     box.innerHTML = h; box.style.display = 'block';
@@ -1840,6 +1869,12 @@
   async function requestFeatured(){
     const r = document.querySelector('input[name=featReq]:checked'); if(!r || !detailItem) return;
     const msg = document.getElementById('featReqMsg');
+    if(inApp()){
+      if(msg) msg.textContent = translations['feat.buying'][currentLang];
+      try{ await storeBuy(detailItem.id, r.value); location.reload(); }
+      catch(e){ console.warn(e); if(msg) msg.textContent = translations['feat.buyFail'][currentLang]; }
+      return;
+    }
     const code = ((document.getElementById('featReqCode')||{}).value || '').trim();
     if(!code){ if(msg) msg.textContent = translations['feat.codeNeeded'][currentLang]; return; }
     const {data, error} = await sb.rpc('xp_request_featured', {lid: detailItem.id, plan: r.value, p_promo: code});
@@ -2218,13 +2253,19 @@
     if(f.style.display === 'block'){ f.style.display = 'none'; return; }
     const T = k => translations[k][currentLang];
     f.innerHTML = featOpts(rank, 'featDash-' + id) +
-      '<div class="feat-promo"><label>' + T('feat.promoLabel') + '</label><input type="text" class="promo-in" autocomplete="off" dir="ltr" placeholder="CODE"></div>' +
+      (inApp() ? '' : '<div class="feat-promo"><label>' + T('feat.promoLabel') + '</label><input type="text" class="promo-in" autocomplete="off" dir="ltr" placeholder="CODE"></div>') +
       '<button type="button" class="btn btn-gold" onclick="dashFeatSend(\'' + id + '\')">' + T(rank ? 'feat.upBtn' : 'feat.reqBtn') + '</button><p class="feat-note"></p>';
     f.style.display = 'block';
   }
   async function dashFeatSend(id){
     const f = document.querySelector('#df-' + id + ' .dash-feat-form');
     const r = f.querySelector('input:checked'); if(!r) return;
+    if(inApp()){
+      const note = f.querySelector('.feat-note'); note.textContent = translations['feat.buying'][currentLang];
+      try{ await storeBuy(id, r.value); renderDashboard(); }
+      catch(e){ console.warn(e); note.textContent = translations['feat.buyFail'][currentLang]; }
+      return;
+    }
     const code = (f.querySelector('.promo-in').value || '').trim();
     if(!code){ f.querySelector('.feat-note').textContent = translations['feat.codeNeeded'][currentLang]; return; }
     const {data, error} = await sb.rpc('xp_request_featured', {lid:id, plan:r.value, p_promo: code || null});
@@ -2266,6 +2307,7 @@
 
   /* ============ wire up overlay click-to-close (guarded per page) ============ */
   document.addEventListener('DOMContentLoaded', function(){
+    try{ retryPendingPurchase(); }catch(e){}
     buildCountries();
     const phoneEl = document.getElementById('regPhone'); if(phoneEl) phoneEl.addEventListener('input', () => { phoneEl.value = phoneEl.value.replace(/[^0-9 ]/g,''); });
     const codeEl = document.getElementById('otpCode'); if(codeEl) codeEl.addEventListener('input', () => { codeEl.value = codeEl.value.replace(/\D/g,'').slice(0,6); });

@@ -1,6 +1,5 @@
 /* Souq Al Arqam – native app bridge. Does nothing in a normal browser.
-   Inside the Android/iOS app (Capacitor) it: hides paid-membership and paid-promotion screens
-   (store payment rules), and saves/shares downloaded images through the system share sheet. */
+   Inside the Android/iOS app (Capacitor) it: hides paid-membership screens and promo-code entry; featured ads are bought through the store (script.js), and saves/shares downloaded images through the system share sheet. */
 (function(){
   var cap = window.Capacitor, native = false;
   try { native = !!(cap && ((cap.isNativePlatform && cap.isNativePlatform()) || (cap.getPlatform && cap.getPlatform() !== 'web'))); } catch(e){}
@@ -14,6 +13,19 @@
     (document.head || root).appendChild(st);
   } catch(e){}
   if(/\/packages\.html$/.test(location.pathname)) location.replace('index.html');
+
+  // Store prices (shown to the buyer exactly as the App Store / Google Play charge them).
+  window.SouqApp.prices = {};
+  (async function(){
+    try{
+      var NP = (cap && cap.Plugins && cap.Plugins.NativePurchases); if(!NP) return;
+      var ids = { '2w':'feature_2w', '1m':'feature_1m' };
+      for(var k in ids){
+        var r = await NP.getProduct({ productIdentifier: ids[k], productType: 'inapp' });
+        if(r && r.product) window.SouqApp.prices[k] = r.product.priceString;
+      }
+    }catch(e){}
+  })();
 
   function toBase64(blob){
     return new Promise(function(res, rej){
