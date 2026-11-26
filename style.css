@@ -1334,3 +1334,6 @@ html[dir="rtl"] .hero-home h1{line-height:1.45;}
 .seo-text summary{cursor:pointer;font-weight:700;line-height:1.6}
 .seo-text details p{margin:8px 0 2px;color:var(--muted);line-height:1.8}
 .seo-text .seo-link{margin:14px 0 0}.seo-text .seo-link a{font-weight:700}
+
+/* listing detail: keep the favourite heart above the plate on small screens */
+@media (max-width:600px){.detail-visual{padding-top:54px;}}

@@ -720,32 +720,7 @@
   /* ============ listings data ============ */
   // PAGE_TYPE is defined inline on plates.html / numbers.html before this file loads.
   // On the homepage PAGE_TYPE is undefined and no listing grid exists, so listings code below is inert there.
-  const seedListings = [
-    {type:'plate', code:'7',  number:'8891',  price:'3200', seed:true,
-      desc:{en:'Rare single-digit code, highly sought after.', ar:'\u0631\u0645\u0632 \u0645\u0645\u064a\u0632 \u0645\u0646 \u0631\u0642\u0645 \u0648\u0627\u062d\u062f\u060c \u0645\u0637\u0644\u0648\u0628 \u0628\u0634\u062f\u0629.'}},
-    {type:'plate', code:'23', number:'45678', price:'950',  seed:true,
-      desc:{en:'Clean standard plate, easy transfer.', ar:'\u0644\u0648\u062d\u0629 \u0639\u0627\u062f\u064a\u0629 \u0646\u0638\u064a\u0641\u0629\u060c \u0646\u0642\u0644 \u0645\u0644\u0643\u064a\u0629 \u0633\u0647\u0644.'}},
-    {type:'plate', code:'55', number:'1',     price:'8500', seed:true,
-      desc:{en:'Single-digit number, collector item.', ar:'\u0631\u0642\u0645 \u0645\u0643\u0648\u0646 \u0645\u0646 \u062e\u0627\u0646\u0629 \u0648\u0627\u062d\u062f\u0629\u060c \u0642\u0637\u0639\u0629 \u0646\u0627\u062f\u0631\u0629 \u0644\u0644\u0647\u0648\u0627\u0629.'}},
-    {type:'plate', code:'12', number:'99999', price:'4100', seed:true,
-      desc:{en:'Repeating digits, easy to remember.', ar:'\u0623\u0631\u0642\u0627\u0645 \u0645\u062a\u0643\u0631\u0631\u0629\u060c \u0633\u0647\u0644\u0629 \u0627\u0644\u062d\u0641\u0638.'}},
-    {type:'plate', code:'8',  number:'2024',  price:'1800', seed:true,
-      desc:{en:'Year-style number, popular pick.', ar:'\u0631\u0642\u0645 \u0639\u0644\u0649 \u0634\u0643\u0644 \u0633\u0646\u0629\u060c \u062e\u064a\u0627\u0631 \u0645\u0631\u063a\u0648\u0628.'}},
-    {type:'plate', code:'41', number:'70007', price:'2600', seed:true,
-      desc:{en:'Mirrored digits, sharp look.', ar:'\u0623\u0631\u0642\u0627\u0645 \u0645\u062a\u0646\u0627\u0638\u0631\u0629\u060c \u0634\u0643\u0644 \u0623\u0646\u064a\u0642.'}},
-    {type:'number', value:'079 555 5555', price:'6500', seed:true,
-      desc:{en:'All fives, top-tier VIP number.', ar:'\u0643\u0644 \u0627\u0644\u0623\u0631\u0642\u0627\u0645 \u062e\u0645\u0633\u0627\u062a\u060c \u0631\u0642\u0645 \u0645\u0645\u064a\u0632 \u0645\u0646 \u0627\u0644\u062f\u0631\u062c\u0629 \u0627\u0644\u0623\u0648\u0644\u0649.'}},
-    {type:'number', value:'077 123 4567', price:'450',  seed:true,
-      desc:{en:'Sequential digits, easy to recall.', ar:'\u0623\u0631\u0642\u0627\u0645 \u0645\u062a\u0633\u0644\u0633\u0644\u0629\u060c \u0633\u0647\u0644\u0629 \u0627\u0644\u062a\u0630\u0643\u0631.'}},
-    {type:'number', value:'078 000 1111', price:'1900', seed:true,
-      desc:{en:'Clean pattern, Orange network.', ar:'\u0646\u0645\u0637 \u0646\u0638\u064a\u0641\u060c \u0634\u0628\u0643\u0629 \u0623\u0648\u0631\u0627\u0646\u062c.'}},
-    {type:'number', value:'079 900 0009', price:'2200', seed:true,
-      desc:{en:'Palindrome number, Zain network.', ar:'\u0631\u0642\u0645 \u0645\u062a\u0646\u0627\u0638\u0631 (\u0628\u0627\u0644\u0645\u0642\u0644\u0648\u0628)\u060c \u0634\u0628\u0643\u0629 \u0632\u064a\u0646.'}},
-    {type:'number', value:'077 888 8888', price:'9800', seed:true,
-      desc:{en:'All eights, premium VIP listing.', ar:'\u0643\u0644 \u0627\u0644\u0623\u0631\u0642\u0627\u0645 \u062b\u0645\u0627\u0646\u064a\u0627\u062a\u060c \u0625\u0639\u0644\u0627\u0646 VIP \u0641\u0627\u062e\u0631.'}},
-    {type:'number', value:'078 456 7890', price:'380',  seed:true,
-      desc:{en:'Straight sequence, budget friendly.', ar:'\u062a\u0633\u0644\u0633\u0644 \u0645\u0628\u0627\u0634\u0631\u060c \u0628\u0633\u0639\u0631 \u0645\u0646\u0627\u0633\u0628.'}}
-  ];
+  const seedListings = [];
   seedListings.forEach((x,k)=>{ x.id='seed-'+k; });
 
   /* ============ Supabase (shared database + accounts) ============ */
@@ -1843,7 +1818,7 @@
   function featOpts(minRank, name){
     const T = k => translations[k][currentLang];
     const plans = ['2w','1m'].filter(p => PLAN_RANK[p] > minRank);
-    return plans.map((p,i)=> '<label class="feat-opt' + (i===0?' sel':'') + '"><input type="radio" name="' + name + '" value="' + p + '"' + (i===0?' checked':'') + ' onchange="document.querySelectorAll(\'.feat-opt\').forEach(l=>l.classList.toggle(\'sel\', l.querySelector(\'input\').checked))"><span class="feat-name">' + T('feat.' + p) + '</span><span class="feat-price">' + FEATURED_PRICES[p] + ' ' + T('pkg.jod') + '</span></label>').join('');
+    return plans.map((p,i)=> '<label class="feat-opt' + (i===0?' sel':'') + '"><input type="radio" name="' + name + '" value="' + p + '"' + (i===0?' checked':'') + ' onchange="document.querySelectorAll(\'.feat-opt\').forEach(l=>l.classList.toggle(\'sel\', l.querySelector(\'input\').checked))"><span class="feat-name">' + T('feat.' + p) + '</span><span class="feat-price">' + featPriceLabel(p) + '</span></label>').join('');
   }
   function renderFeatureBox(){
     const box = document.getElementById('featureBox'); if(!box) return;

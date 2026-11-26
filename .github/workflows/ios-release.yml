@@ -22,6 +22,9 @@ jobs:
       - run: npx cap add ios
       - run: npx capacitor-assets generate --ios --iconBackgroundColor '#F0F6FF' --splashBackgroundColor '#F0F6FF' --splashBackgroundColorDark '#F0F6FF'
       - run: npx cap sync ios
+      - name: Declare that the app uses only exempt encryption (HTTPS)
+        working-directory: mobile
+        run: /usr/libexec/PlistBuddy -c 'Add :ITSAppUsesNonExemptEncryption bool false' ios/App/App/Info.plist || /usr/libexec/PlistBuddy -c 'Set :ITSAppUsesNonExemptEncryption false' ios/App/App/Info.plist
       - name: Write the App Store Connect key
         env: { ASC_KEY_P8: '${{ secrets.ASC_KEY_P8 }}', ASC_KEY_ID: '${{ secrets.ASC_KEY_ID }}' }
         run: |

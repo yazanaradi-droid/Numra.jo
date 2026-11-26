@@ -9,7 +9,7 @@
   root.classList.add('in-app');
   try {
     var st = document.createElement('style');
-    st.textContent = 'html.in-app .feat-box,html.in-app .plans,html.in-app a[href^="packages.html"]{display:none!important}';
+    st.textContent = 'html.in-app .feat-box,html.in-app .plans,html.in-app a[href^="packages.html"]{display:none!important}html.in-app .feat-price{display:inline!important}';
     (document.head || root).appendChild(st);
   } catch(e){}
   if(/\/packages\.html$/.test(location.pathname)) location.replace('index.html');
