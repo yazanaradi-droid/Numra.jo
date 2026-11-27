@@ -369,7 +369,8 @@
     "dash.deleteWarn":{en:"This permanently deletes your account, your ads and your favourites. It cannot be undone.",ar:"سيُحذف حسابك وإعلاناتك ومفضلتك نهائيًا. لا يمكن التراجع عن ذلك."},
     "dash.deleteBtn":{en:"Delete my account",ar:"حذف حسابي"},
     "dash.deleteArm":{en:"Press again to delete forever",ar:"اضغط مرة أخرى للحذف نهائيًا"},
-    "dash.deleteBad":{en:"Enter your current password to confirm.",ar:"أدخل كلمة مرورك الحالية للتأكيد."},
+    "dash.deleteBad":{en:"Type the word DELETE to confirm.",ar:"اكتب كلمة «حذف» للتأكيد."},
+    "dash.deleteConfirmLabel":{en:"Type DELETE to confirm",ar:"اكتب «حذف» للتأكيد"},
     "dash.deleteAdmin":{en:"An administrator account cannot be deleted here.",ar:"لا يمكن حذف حساب المشرف من هنا."},
     "seller.viewAds":{en:"View seller's ads",ar:"عرض إعلانات البائع"},
     "seller.platesTitle":{en:"License plates for sale",ar:"لوحات سيارات للبيع"},
@@ -2124,7 +2125,7 @@
       '</form></div>' +
       '<div class="dash-card dash-danger"><h2>' + T('dash.deleteAccount') + '</h2><p class="hint">' + T('dash.deleteWarn') + '</p>' +
       '<form onsubmit="return submitDeleteAccount(event)" novalidate autocomplete="off">' +
-        '<div class="field"><label for="delPw">' + T('dash.currentPassword') + '</label><input id="delPw" type="password" autocomplete="current-password"></div>' +
+        '<div class="field"><label for="delPw">' + T('dash.deleteConfirmLabel') + '</label><input id="delPw" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"></div>' +
         '<div class="dash-msg" id="deleteMsg" style="display:none;"></div>' +
         '<button class="btn btn-danger" id="delBtn" type="submit">' + T('dash.deleteBtn') + '</button>' +
       '</form></div>';
@@ -2132,9 +2133,10 @@
 
   async function submitDeleteAccount(e){
     e.preventDefault();
-    const btn = document.getElementById('delBtn'), pw = document.getElementById('delPw').value;
+    const btn = document.getElementById('delBtn'), word = document.getElementById('delPw').value.trim().toLowerCase();
     if(!sb || !currentUser) return false;
-    if(!pw){ dashMsg('deleteMsg','dash.deleteBad',false); return false; }
+    /* typed confirmation (the password check cannot be used here: Supabase's captcha protection rejects a password sign-in without a captcha token) */
+    if(word !== 'delete' && word !== 'حذف'){ dashMsg('deleteMsg','dash.deleteBad',false); return false; }
     if(!btn.dataset.armed){          // first press arms the button, the second one deletes
       btn.dataset.armed = '1'; btn.textContent = translations['dash.deleteArm'][currentLang]; dashMsg('deleteMsg', null);
       setTimeout(()=>{ if(btn.isConnected){ delete btn.dataset.armed; btn.textContent = translations['dash.deleteBtn'][currentLang]; } }, 5000);
@@ -2142,8 +2144,8 @@
     }
     btn.disabled = true;
     try{
-      const chk = await sb.auth.signInWithPassword({ email: currentUser.email, password: pw });   // proves it is really the owner
-      if(chk.error || !chk.data.session){ dashMsg('deleteMsg','dash.deleteBad',false); return false; }
+      const chk = await sb.auth.getSession();   // the logged-in session proves who the owner is; the server checks the token again
+      if(chk.error || !chk.data || !chk.data.session){ dashMsg('deleteMsg','auth.genericErr',false); return false; }
       const r = await fetch(SUPABASE_URL + '/functions/v1/delete-account', { method:'POST', headers:{ 'Content-Type':'application/json', 'apikey': SUPABASE_KEY, 'Authorization':'Bearer ' + chk.data.session.access_token }, body:'{}' });
       const j = await r.json().catch(()=>({}));
       if(!r.ok){ dashMsg('deleteMsg', j.error === 'admin' ? 'dash.deleteAdmin' : 'auth.genericErr', false); return false; }
